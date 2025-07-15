@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 # VortexArtec AI Engine by Marianne Nems
 
 ## Overview
 
 The VortexArtec AI Engine is a pioneering methodology developed by Marianne Nems for integrating traditional artistic principles with AI-generated art. This technique allows artists to maintain their unique artistic signature and style while leveraging AI tools for creative exploration and efficiency.
+=======
+# VortexArtec AI Engine by Mariana Villard
+
+## Overview
+
+The VortexArtec AI Engine is a pioneering methodology developed by Mariana Villard for integrating traditional artistic principles with AI-generated art. This technique allows artists to maintain their unique artistic signature and style while leveraging AI tools for creative exploration and efficiency.
+>>>>>>> 0101a98b6de446cf96407b9f0b7418bcf7daa961
 
 ## Core Components
 
@@ -191,4 +199,8 @@ The VortexArtec AI Engine is deeply integrated into the VORTEX AI Marketplace ec
 
 ## Conclusion
 
+<<<<<<< HEAD
 Marianne Nems' VortexArtec AI Engine represents a groundbreaking approach to AI-assisted art creation that preserves the human artistic essence while enhancing creative possibilities. By focusing on the six core principles of sacred geometry, color weight, light and shadow, texture, perspective, and movement/layering, the technique ensures that AI-generated art maintains the depth, intention, and quality of traditional artistic methods. 
+=======
+Mariana Villard' VortexArtec AI Engine represents a groundbreaking approach to AI-assisted art creation that preserves the human artistic essence while enhancing creative possibilities. By focusing on the six core principles of sacred geometry, color weight, light and shadow, texture, perspective, and movement/layering, the technique ensures that AI-generated art maintains the depth, intention, and quality of traditional artistic methods. 
+>>>>>>> 0101a98b6de446cf96407b9f0b7418bcf7daa961
