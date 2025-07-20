@@ -82,7 +82,6 @@ coverage/
 *.test.php
 test-*.php
 *-test.php
-comprehensive-system-tests.php
 test-output/
 test-reports/
 
