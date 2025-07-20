@@ -1,6 +1,6 @@
 # WordPress Plugin .gitignore
 
-# WordPress core files (if any)
+# WordPress core files and sensitive configuration
 wp-config.php
 wp-config-*.php
 wp-salt.php
@@ -45,40 +45,52 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 
-# Node modules (if any)
+# Node modules and npm/yarn files
 node_modules/
 npm-debug.log
 yarn-error.log
+yarn.lock
+package-lock.json
+
+# Composer dependencies
+vendor/
+composer.lock
 
 # Build files
 build/
 dist/
 *.zip
+*.tar.gz
+*.tgz
 
 # Environment files
 .env
 .env.local
 .env.production
+.env.staging
 
 # Backup files
 *.bak
 *.backup
 *_backup.php
+wp-config-backup-*.php
 
-# Test files
+# Test files and outputs
 tests/
 test-results/
 coverage/
+*.test.php
+test-*.php
+*-test.php
+comprehensive-system-tests.php
+test-output/
+test-reports/
 
 # Documentation builds
 docs/_build/
 
 # Redis dump files
 dump.rdb
-
-# Composer (if used)
-vendor/
-composer.lock
 
 # Package files
 *.tar.gz
@@ -91,4 +103,34 @@ debug-*.log
 # Plugin specific
 uploads/
 temp/
-tmp/ 
+tmp/
+
+# Local development files
+local/
+dev/
+development/
+
+# Sensitive configuration files
+config.php
+settings.php
+database.php
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+
+# Local test data
+test-data/
+sample-data/
+fixtures/
+
+# Performance monitoring
+*.prof
+*.cache
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml 
