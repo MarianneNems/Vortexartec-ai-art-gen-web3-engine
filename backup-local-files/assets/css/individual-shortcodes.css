@@ -1,0 +1,944 @@
+/**
+ * Individual Shortcodes CSS
+ * Styles for individual HURAII tab shortcodes
+ * Theme: Professional VORTEX style with magenta accents
+ */
+
+/* ==========================================================================
+   Individual Shortcode Base Styles
+   ========================================================================== */
+
+.huraii-individual-shortcode {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 20px 0;
+    border: 2px solid rgba(233, 30, 99, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.huraii-individual-shortcode::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(233, 30, 99, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.huraii-individual-shortcode * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Individual Shortcode Header
+   ========================================================================== */
+
+.huraii-individual-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(233, 30, 99, 0.3);
+}
+
+.huraii-individual-header h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.huraii-individual-header p {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 15px 0;
+}
+
+.cost-tracker {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cost-tracker span {
+    background: rgba(233, 30, 99, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(233, 30, 99, 0.3);
+}
+
+/* ==========================================================================
+   Form Styles
+   ========================================================================== */
+
+.huraii-individual-shortcode label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 8px;
+}
+
+.huraii-individual-shortcode input[type="text"],
+.huraii-individual-shortcode input[type="email"],
+.huraii-individual-shortcode select,
+.huraii-individual-shortcode textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.huraii-individual-shortcode input:focus,
+.huraii-individual-shortcode select:focus,
+.huraii-individual-shortcode textarea:focus {
+    outline: none;
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2);
+}
+
+.huraii-individual-shortcode textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+.huraii-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    min-height: 48px;
+    box-sizing: border-box;
+}
+
+.huraii-btn-primary {
+    background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+    color: #ffffff;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 16px rgba(233, 30, 99, 0.3);
+}
+
+.huraii-btn-primary:hover {
+    background: linear-gradient(135deg, #f06292 0%, #e91e63 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(233, 30, 99, 0.4);
+}
+
+.huraii-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.huraii-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(233, 30, 99, 0.5);
+}
+
+.huraii-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.huraii-btn .btn-loading {
+    display: none;
+}
+
+.huraii-btn.loading .btn-text {
+    display: none;
+}
+
+.huraii-btn.loading .btn-loading {
+    display: block;
+}
+
+/* ==========================================================================
+   Generate Shortcode Styles
+   ========================================================================== */
+
+.huraii-generate-container .generation-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.preset-buttons,
+.ratio-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.preset-btn,
+.ratio-btn,
+.factor-btn {
+    padding: 8px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.preset-btn:hover,
+.ratio-btn:hover,
+.factor-btn:hover,
+.preset-btn.active,
+.ratio-btn.active,
+.factor-btn.active {
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(233, 30, 99, 0.2);
+    color: #ffffff;
+}
+
+.advanced-controls {
+    margin-top: 20px;
+}
+
+.advanced-controls details {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.advanced-controls summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 16px;
+}
+
+.advanced-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.setting-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.setting-group label {
+    min-width: 120px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.creativity-slider,
+.detail-slider {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.creativity-slider::-webkit-slider-thumb,
+.detail-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e91e63;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+}
+
+.slider-value {
+    min-width: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.agent-selection {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.agent-selection input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+.generation-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.generation-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+.quality-metrics {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.metric-item:last-child {
+    margin-bottom: 0;
+}
+
+.metric-item label {
+    min-width: 120px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.quality-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.quality-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e91e63 0%, #f06292 100%);
+    transition: width 0.3s ease;
+}
+
+.quality-value,
+.processing-time,
+.agents-used {
+    min-width: 80px;
+    text-align: right;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ==========================================================================
+   Describe Shortcode Styles
+   ========================================================================== */
+
+.huraii-describe-container .upload-section {
+    margin: 20px 0;
+}
+
+.upload-area {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: rgba(233, 30, 99, 0.6);
+    background: rgba(233, 30, 99, 0.1);
+}
+
+.upload-area.dragover {
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(233, 30, 99, 0.2);
+}
+
+.upload-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.upload-text p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.upload-hint {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.analysis-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.analysis-depth {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.analysis-aspects {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.aspect-checkboxes,
+.agent-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.aspect-checkboxes input[type="checkbox"],
+.agent-checkboxes input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+.aspect-checkboxes label,
+.agent-checkboxes label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.describe-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.describe-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+.analysis-metrics {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-group h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.quality-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.indicator label {
+    min-width: 160px;
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   Upscale Shortcode Styles
+   ========================================================================== */
+
+.huraii-upscale-container .upscale-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.upscale-factor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.factor-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.quality-mode {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.enhancement-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.enhancement-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.enhancement-checkboxes input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+.enhancement-checkboxes label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.upscale-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.upscale-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+/* ==========================================================================
+   Enhance Shortcode Styles
+   ========================================================================== */
+
+.huraii-enhance-container .enhancement-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.enhancement-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.enhancement-card:hover {
+    border-color: rgba(233, 30, 99, 0.6);
+    background: rgba(233, 30, 99, 0.1);
+    transform: translateY(-2px);
+}
+
+.enhancement-card.active {
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(233, 30, 99, 0.2);
+}
+
+.enhancement-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.enhancement-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 8px;
+}
+
+.enhancement-desc {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 16px;
+    line-height: 1.4;
+}
+
+.enhancement-card .enhance-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 2px solid rgba(233, 30, 99, 0.6);
+    background: rgba(233, 30, 99, 0.2);
+    color: #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.enhancement-card .enhance-btn:hover {
+    background: rgba(233, 30, 99, 0.4);
+}
+
+.image-selection {
+    margin: 20px 0;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.batch-options {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.batch-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.enhance-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+/* ==========================================================================
+   Export Shortcode Styles
+   ========================================================================== */
+
+.huraii-export-container .format-selection {
+    margin: 20px 0;
+}
+
+.format-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.format-btn {
+    padding: 8px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.format-btn:hover,
+.format-btn.active {
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(233, 30, 99, 0.2);
+    color: #ffffff;
+}
+
+.quality-selection {
+    margin: 20px 0;
+}
+
+.quality-options {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.quality-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quality-option:hover {
+    border-color: rgba(233, 30, 99, 0.6);
+    background: rgba(233, 30, 99, 0.1);
+}
+
+.quality-option input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+.quality-option label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.export-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.export-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+/* ==========================================================================
+   Share Shortcode Styles
+   ========================================================================== */
+
+.huraii-share-container .platform-selection {
+    margin: 20px 0;
+}
+
+.platform-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.platform-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    justify-content: center;
+}
+
+.platform-btn:hover,
+.platform-btn.active {
+    border-color: rgba(233, 30, 99, 0.8);
+    background: rgba(233, 30, 99, 0.2);
+    color: #ffffff;
+}
+
+.platform-icon {
+    font-size: 18px;
+}
+
+.privacy-settings {
+    margin: 20px 0;
+}
+
+.privacy-select {
+    max-width: 300px;
+}
+
+.watermark-options {
+    margin: 20px 0;
+}
+
+.watermark-controls {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.watermark-controls input[type="checkbox"] {
+    width: auto;
+    margin-right: 6px;
+}
+
+.watermark-controls label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.share-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.share-results {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 200px;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .huraii-individual-shortcode {
+        padding: 16px;
+        margin: 16px 0;
+    }
+    
+    .huraii-individual-header h3 {
+        font-size: 24px;
+    }
+    
+    .cost-tracker {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .generation-controls,
+    .analysis-options,
+    .upscale-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .preset-buttons,
+    .ratio-buttons,
+    .factor-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .advanced-settings {
+        grid-template-columns: 1fr;
+    }
+    
+    .quality-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .platform-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .enhancement-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .generation-actions,
+    .describe-actions,
+    .upscale-actions,
+    .export-actions,
+    .share-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .batch-controls {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .huraii-individual-shortcode {
+        padding: 12px;
+        margin: 12px 0;
+    }
+    
+    .huraii-individual-header h3 {
+        font-size: 20px;
+    }
+    
+    .huraii-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .metric-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .metric-item label {
+        min-width: auto;
+    }
+    
+    .quality-bar {
+        width: 100%;
+    }
+    
+    .indicator {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .indicator label {
+        min-width: auto;
+    }
+} 

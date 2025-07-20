@@ -1,0 +1,41 @@
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+tola_masterpiece = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+[programs.testnet]
+tola_masterpiece = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+[programs.mainnet]
+tola_masterpiece = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "https://api.tola.solana.com"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+[workspace]
+members = [
+    "programs/tola_masterpiece"
+]
+
+[test]
+startup_wait = 5000
+shutdown_wait = 2000
+upgradeable = false
+
+[[test.genesis]]
+address = "H6qNYafSrpCjckH8yVwiPmXYPd1nCNBP8uQMZkv5hkky"
+program = "tola_masterpiece"
+
+[test.validator]
+url = "https://api.tola.solana.com"
+ledger = ".anchor/test-ledger"
+bind_address = "0.0.0.0:8899" 

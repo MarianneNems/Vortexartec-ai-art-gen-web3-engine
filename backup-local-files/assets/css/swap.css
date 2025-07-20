@@ -1,0 +1,445 @@
+/**
+ * VORTEX AI Engine - Swap Interface CSS
+ * Styles for the swap interface component
+ */
+
+.vortex-swap-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.vortex-swap-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 24px;
+    text-align: center;
+}
+
+.vortex-swap-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.vortex-swap-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.vortex-swap-body {
+    padding: 24px;
+}
+
+.vortex-swap-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.vortex-swap-input-group {
+    position: relative;
+}
+
+.vortex-swap-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.vortex-swap-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f9fafb;
+    transition: all 0.2s ease;
+}
+
+.vortex-swap-input-wrapper:focus-within {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.vortex-swap-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    outline: none;
+}
+
+.vortex-swap-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.vortex-swap-token-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f3f4f6;
+    border-left: 1px solid #e5e7eb;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.vortex-swap-token-selector:hover {
+    background: #e5e7eb;
+}
+
+.vortex-swap-token-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+}
+
+.vortex-swap-token-symbol {
+    font-weight: 600;
+    color: #374151;
+}
+
+.vortex-swap-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #f3f4f6;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.vortex-swap-arrow:hover {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+    transform: scale(1.1);
+}
+
+.vortex-swap-rate {
+    text-align: center;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.vortex-swap-rate-value {
+    font-weight: 600;
+    color: #374151;
+}
+
+.vortex-swap-button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.vortex-swap-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+.vortex-swap-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.vortex-swap-button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.vortex-swap-button-loading {
+    position: relative;
+    color: transparent;
+}
+
+.vortex-swap-button-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: vortex-spin 1s linear infinite;
+}
+
+@keyframes vortex-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.vortex-swap-details {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.vortex-swap-details-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 12px 0;
+}
+
+.vortex-swap-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.vortex-swap-detail-row:last-child {
+    margin-bottom: 0;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.vortex-swap-detail-label {
+    color: #6b7280;
+}
+
+.vortex-swap-detail-value {
+    color: #374151;
+    font-weight: 500;
+}
+
+.vortex-swap-error {
+    padding: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #991b1b;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.vortex-swap-success {
+    padding: 12px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    color: #166534;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.vortex-swap-token-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.vortex-swap-token-list.active {
+    display: block;
+}
+
+.vortex-swap-token-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.vortex-swap-token-item:hover {
+    background: #f3f4f6;
+}
+
+.vortex-swap-token-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+}
+
+.vortex-swap-token-item-info {
+    flex: 1;
+}
+
+.vortex-swap-token-item-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.vortex-swap-token-item-balance {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.vortex-swap-slippage {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.vortex-swap-slippage-label {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.vortex-swap-slippage-input {
+    width: 80px;
+    padding: 6px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.vortex-swap-slippage-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .vortex-swap-container {
+        margin: 16px;
+        border-radius: 12px;
+    }
+    
+    .vortex-swap-header {
+        padding: 20px;
+    }
+    
+    .vortex-swap-title {
+        font-size: 20px;
+    }
+    
+    .vortex-swap-body {
+        padding: 20px;
+    }
+    
+    .vortex-swap-input {
+        font-size: 14px;
+        padding: 14px;
+    }
+    
+    .vortex-swap-button {
+        padding: 14px;
+        font-size: 14px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .vortex-swap-container {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .vortex-swap-input-wrapper {
+        background: #374151;
+        border-color: #4b5563;
+    }
+    
+    .vortex-swap-input {
+        color: #f9fafb;
+    }
+    
+    .vortex-swap-input::placeholder {
+        color: #9ca3af;
+    }
+    
+    .vortex-swap-token-selector {
+        background: #4b5563;
+        border-color: #6b7280;
+    }
+    
+    .vortex-swap-token-selector:hover {
+        background: #6b7280;
+    }
+    
+    .vortex-swap-details {
+        background: #374151;
+        border-color: #4b5563;
+    }
+    
+    .vortex-swap-rate {
+        background: #374151;
+    }
+    
+    .vortex-swap-slippage {
+        background: #374151;
+    }
+    
+    .vortex-swap-token-list {
+        background: #1f2937;
+        border-color: #4b5563;
+    }
+    
+    .vortex-swap-token-item:hover {
+        background: #374151;
+    }
+} 
