@@ -1,0 +1,94 @@
+# WordPress Plugin .gitignore
+
+# WordPress core files (if any)
+wp-config.php
+wp-config-*.php
+wp-salt.php
+wp-content/
+wp-admin/
+wp-includes/
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Log files
+*.log
+logs/
+error_log
+
+# Cache files
+cache/
+wp-cache/
+object-cache.php
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (if any)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build files
+build/
+dist/
+*.zip
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Backup files
+*.bak
+*.backup
+*_backup.php
+
+# Test files
+tests/
+test-results/
+coverage/
+
+# Documentation builds
+docs/_build/
+
+# Redis dump files
+dump.rdb
+
+# Composer (if used)
+vendor/
+composer.lock
+
+# Package files
+*.tar.gz
+*.tgz
+
+# WordPress debug files
+debug.log
+debug-*.log
+
+# Plugin specific
+uploads/
+temp/
+tmp/ 
