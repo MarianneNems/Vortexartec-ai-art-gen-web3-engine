@@ -1,0 +1,77 @@
+# VORTEX AI Engine - .gitignore
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+
+# WordPress core
+wp-config.php
+wp-salt.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+
+# Logs
+*.log
+logs/
+error_log
+access_log
+
+# Database
+*.sql
+*.sqlite
+*.db
+
+# Cache
+cache/
+tmp/
+temp/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Sensitive data
+config/aws-credentials.php
+config/blockchain-keys.php
+config/api-keys.php
+keys/
+private/
+sensitive-data/
+
+# Node modules (if any)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Composer
+vendor/
+composer.lock
+
+# Testing
+coverage/
+.phpunit.result.cache
+
+# Deployment
+deployment-package/
+build/
+dist/

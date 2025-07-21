@@ -1,0 +1,429 @@
+/**
+ * VORTEX AI Engine - Activity Monitor Styles
+ * 
+ * Modern, responsive styles for the real-time activity monitor
+ */
+
+/* Main Container */
+.vortex-stats-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.stat-card h3 {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-card .stat-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0073aa;
+}
+
+.stat-card.error .stat-value {
+    color: #dc3545;
+}
+
+.stat-card.warning .stat-value {
+    color: #ffc107;
+}
+
+/* Activity Filters */
+.vortex-activity-filters {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.vortex-activity-filters label {
+    font-weight: 600;
+    color: #333;
+    margin-right: 5px;
+}
+
+.vortex-activity-filters select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    min-width: 150px;
+}
+
+.vortex-activity-filters button {
+    margin-left: auto;
+}
+
+/* Activity Feed */
+.vortex-activity-feed {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.vortex-activity-feed h2 {
+    background: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vortex-activity-feed h2 small {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+}
+
+.refresh-indicator {
+    font-size: 12px;
+    color: #0073aa;
+    font-weight: normal;
+}
+
+.activity-container {
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.activity-entry {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.activity-entry:hover {
+    background-color: #f8f9fa;
+}
+
+.activity-entry:last-child {
+    border-bottom: none;
+}
+
+.activity-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.activity-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.activity-type {
+    background: #e9ecef;
+    color: #495057;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.activity-level {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.activity-time {
+    color: #666;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.activity-message {
+    color: #333;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.activity-details {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #0073aa;
+}
+
+.activity-details pre {
+    margin: 0;
+    font-size: 12px;
+    color: #666;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Level-specific styles */
+.activity-entry.level-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.activity-entry.level-success {
+    border-left: 4px solid #28a745;
+}
+
+.activity-entry.level-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.activity-entry.level-error {
+    border-left: 4px solid #dc3545;
+}
+
+.activity-entry.level-debug {
+    border-left: 4px solid #6c757d;
+}
+
+.level-info .activity-level {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.level-success .activity-level {
+    background: #d4edda;
+    color: #155724;
+}
+
+.level-warning .activity-level {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.level-error .activity-level {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.level-debug .activity-level {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+/* Activity Statistics */
+.vortex-activity-stats {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.vortex-activity-stats h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+}
+
+.stats-section h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 16px;
+}
+
+.stats-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-label {
+    min-width: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-bar-container {
+    flex: 1;
+    height: 20px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0073aa, #005a87);
+    transition: width 0.3s ease;
+}
+
+.stat-bar-fill.level-error {
+    background: linear-gradient(90deg, #dc3545, #c82333);
+}
+
+.stat-bar-fill.level-warning {
+    background: linear-gradient(90deg, #ffc107, #e0a800);
+}
+
+.stat-bar-fill.level-success {
+    background: linear-gradient(90deg, #28a745, #1e7e34);
+}
+
+.stat-bar-fill.level-debug {
+    background: linear-gradient(90deg, #6c757d, #545b62);
+}
+
+.stat-count {
+    min-width: 40px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Loading and empty states */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.no-activities {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .vortex-stats-dashboard {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-card .stat-value {
+        font-size: 24px;
+    }
+    
+    .vortex-activity-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .vortex-activity-filters select {
+        min-width: auto;
+    }
+    
+    .vortex-activity-filters button {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .activity-header {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .activity-time {
+        margin-left: 0;
+        width: 100%;
+        order: 3;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .stat-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+    
+    .stat-label {
+        min-width: auto;
+    }
+    
+    .stat-count {
+        min-width: auto;
+        text-align: left;
+    }
+}
+
+/* Animation for new activities */
+@keyframes highlightNew {
+    0% { background-color: #fff3cd; }
+    100% { background-color: transparent; }
+}
+
+.activity-entry.new {
+    animation: highlightNew 2s ease-out;
+}
+
+/* Scrollbar styling */
+.activity-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.activity-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.activity-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.activity-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+} 

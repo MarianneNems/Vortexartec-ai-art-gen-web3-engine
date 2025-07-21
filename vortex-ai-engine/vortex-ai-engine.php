@@ -66,6 +66,8 @@ define('VORTEX_ARCHER_SYNC_INTERVAL', 5); // 5-second sync intervals
 define('VORTEX_HURAII_GPU_ENABLED', true);
 define('VORTEX_RUNPOD_VAULT_ENABLED', true);
 define('VORTEX_SECRET_SAUCE_ENABLED', true);
+define('VORTEX_GRADIO_ENABLED', true);
+define('VORTEX_ZODIAC_ENABLED', true);
 
 // Define marketplace fee constants
 define('VORTEX_MARKETPLACE_SWAP_FEE', 3.00); // $3 per swap
@@ -161,6 +163,9 @@ class Vortex_AI_Engine {
         // Start AI orchestration
         $this->start_ai_orchestration();
         
+        // Initialize audit and self-improvement system
+        $this->init_audit_system();
+        
         // Admin notices
         add_action('admin_notices', array($this, 'admin_notices'));
     }
@@ -198,6 +203,15 @@ class Vortex_AI_Engine {
         
         // Secret sauce and proprietary systems
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/secret-sauce/class-vortex-secret-sauce.php';
+        
+        // Audit and self-improvement system
+        if (file_exists(VORTEX_AI_ENGINE_PLUGIN_PATH . 'audit-system/class-vortex-auditor.php')) {
+            require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'audit-system/class-vortex-auditor.php';
+        }
+        
+        if (file_exists(VORTEX_AI_ENGINE_PLUGIN_PATH . 'audit-system/class-vortex-self-improvement.php')) {
+            require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'audit-system/class-vortex-self-improvement.php';
+        }
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/secret-sauce/class-vortex-zodiac-intelligence.php';
         
         // Artist journey and subscription management
@@ -216,10 +230,19 @@ class Vortex_AI_Engine {
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/database/class-vortex-database-manager.php';
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/storage/class-vortex-storage-router.php';
         
+        // Activity logger for real-time monitoring
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-activity-logger.php';
+        
+        // Artist journey tracking system
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/artist-journey/class-vortex-artist-journey-tracker.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/database/class-vortex-artist-journey-database.php';
+        
         // Admin interfaces
         if (is_admin()) {
             require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-admin-controller.php';
             require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-admin-dashboard.php';
+            require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-activity-monitor.php';
+            require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-artist-journey-dashboard.php';
         }
         
         // Public interfaces
@@ -232,13 +255,13 @@ class Vortex_AI_Engine {
      */
     private function init_ai_systems() {
         // Initialize ARCHER Orchestrator (master coordinator)
-        $this->archer_orchestrator = Vortex_ARCHER_Orchestrator::get_instance();
+        $this->archer_orchestrator = VORTEX_ARCHER_Orchestrator::get_instance();
         
         // Initialize all AI agents
-        $this->huraii_agent = Vortex_HURAII_Agent::get_instance(); // GPU generative AI
-        $this->cloe_agent = Vortex_CLOE_Agent::get_instance(); // Market analysis
-        $this->horace_agent = Vortex_HORACE_Agent::get_instance(); // Content optimization
-        $this->thorius_agent = Vortex_THORIUS_Agent::get_instance(); // Platform guide
+        $this->huraii_agent = Vortex_Huraii_Agent::get_instance(); // GPU generative AI
+        $this->cloe_agent = Vortex_Cloe_Agent::get_instance(); // Market analysis
+        $this->horace_agent = Vortex_Horace_Agent::get_instance(); // Content optimization
+        $this->thorius_agent = Vortex_Thorius_Agent::get_instance(); // Platform guide
         
         // Register agents with orchestrator
         if ($this->archer_orchestrator) {
@@ -254,10 +277,10 @@ class Vortex_AI_Engine {
      */
     private function init_tola_art_system() {
         // Initialize daily art automation
-        $this->tola_art_automation = Vortex_TOLA_Art_Daily_Automation::get_instance();
+        $this->tola_art_automation = Vortex_Tola_Art_Daily_Automation::get_instance();
         
         // Initialize smart contract automation
-        Vortex_TOLA_Smart_Contract_Automation::get_instance();
+        Vortex_Tola_Smart_Contract_Automation::get_instance();
     }
     
     /**
@@ -268,7 +291,7 @@ class Vortex_AI_Engine {
         Vortex_Smart_Contract_Manager::get_instance();
         
         // Initialize TOLA token handler
-        Vortex_TOLA_Token_Handler::get_instance();
+        Vortex_Tola_Token_Handler::get_instance();
     }
     
     /**
@@ -292,6 +315,11 @@ class Vortex_AI_Engine {
             
             // Initialize admin dashboard
             Vortex_Admin_Dashboard::get_instance();
+            
+            // Initialize TOLA-ART admin page
+            if (file_exists(VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/tola-art-admin-page.php')) {
+                require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/tola-art-admin-page.php';
+            }
         }
         
         // Initialize public interface
@@ -317,36 +345,165 @@ class Vortex_AI_Engine {
             
             // Initialize RunPod vault if enabled
             if (VORTEX_RUNPOD_VAULT_ENABLED) {
-                $this->runpod_vault = Vortex_RunPod_Vault::get_instance();
+                $this->runpod_vault = Vortex_Runpod_Vault::get_instance();
                 $this->archer_orchestrator->register_system('RUNPOD_VAULT', $this->runpod_vault);
             }
+            
+            // Initialize Gradio client if enabled
+            if (VORTEX_GRADIO_ENABLED) {
+                $this->gradio_client = Vortex_Gradio_Client::get_instance();
+                $this->archer_orchestrator->register_system('GRADIO_CLIENT', $this->gradio_client);
+            }
+            
+            // Initialize Zodiac Intelligence if enabled
+            if (VORTEX_ZODIAC_ENABLED) {
+                $this->zodiac_intelligence = Vortex_Zodiac_Intelligence::get_instance();
+                $this->archer_orchestrator->register_system('ZODIAC_INTELLIGENCE', $this->zodiac_intelligence);
+            }
         }
+    }
+    
+    /**
+     * Initialize audit and self-improvement system
+     */
+    private function init_audit_system() {
+        // Initialize self-improvement system
+        if (class_exists('VortexAIEngine_SelfImprovement')) {
+            $self_improvement = new VortexAIEngine_SelfImprovement();
+            $self_improvement->init();
+        }
+        
+        // Schedule regular audits
+        if (!wp_next_scheduled('vortex_daily_audit')) {
+            wp_schedule_event(time(), 'daily', 'vortex_daily_audit');
+        }
+        add_action('vortex_daily_audit', array($this, 'run_daily_audit'));
+        
+        // Add admin menu for audit system
+        add_action('admin_menu', array($this, 'add_audit_admin_menu'));
+    }
+    
+    /**
+     * Run daily audit
+     */
+    public function run_daily_audit() {
+        if (class_exists('VortexAIEngine_Auditor')) {
+            $auditor = new VortexAIEngine_Auditor();
+            $results = $auditor->run_full_audit();
+            
+            // Log audit results
+            error_log('VORTEX AI Engine: Daily audit completed - ' . json_encode($results));
+        }
+    }
+    
+    /**
+     * Add audit system admin menu
+     */
+    public function add_audit_admin_menu() {
+        add_submenu_page(
+            'vortex-ai-engine',
+            'Audit System',
+            'Audit & Security',
+            'manage_options',
+            'vortex-audit-system',
+            array($this, 'audit_admin_page')
+        );
+    }
+    
+    /**
+     * Audit system admin page
+     */
+    public function audit_admin_page() {
+        echo '<div class="wrap">';
+        echo '<h1>VORTEX AI Engine - Audit & Security System</h1>';
+        echo '<p>Monitor and manage the audit and self-improvement system.</p>';
+        
+        if (isset($_POST['run_audit'])) {
+            if (class_exists('VortexAIEngine_Auditor')) {
+                $auditor = new VortexAIEngine_Auditor();
+                $results = $auditor->run_full_audit();
+                
+                echo '<div class="notice notice-success"><p>Audit completed successfully!</p></div>';
+                echo '<h3>Audit Results:</h3>';
+                echo '<pre>' . print_r($results, true) . '</pre>';
+            }
+        }
+        
+        echo '<form method="post">';
+        echo '<p><input type="submit" name="run_audit" class="button button-primary" value="Run Full Audit"></p>';
+        echo '</form>';
+        
+        echo '</div>';
     }
     
     /**
      * Plugin activation
      */
     public function activate() {
-        // Create all database tables
-        $this->create_database_tables();
-        
-        // Set default options
-        $this->set_default_options();
-        
-        // Schedule automation tasks
-        $this->schedule_automation_tasks();
-        
-        // Initialize RunPod vault
-        $this->initialize_runpod_vault();
-        
-        // Set activation flag
-        update_option('vortex_ai_engine_activated', true);
-        update_option('vortex_ai_engine_version', VORTEX_AI_ENGINE_VERSION);
-        
-        // Flush rewrite rules
-        flush_rewrite_rules();
-        
-        $this->activated = true;
+        try {
+            // Check database connection first
+            global $wpdb;
+            if (!$wpdb->check_connection()) {
+                error_log('VORTEX AI Engine: Database connection failed during activation');
+                throw new Exception('Database connection failed');
+            }
+            
+            // Create all database tables with error handling
+            $this->create_database_tables_safe();
+            
+            // Set default options
+            $this->set_default_options();
+            
+            // Schedule automation tasks
+            $this->schedule_automation_tasks();
+            
+            // Initialize RunPod vault (optional)
+            $this->initialize_runpod_vault();
+            
+            // Set activation flag
+            update_option('vortex_ai_engine_activated', true);
+            update_option('vortex_ai_engine_version', VORTEX_AI_ENGINE_VERSION);
+            
+            // Flush rewrite rules
+            flush_rewrite_rules();
+            
+            $this->activated = true;
+            
+            error_log('VORTEX AI Engine: Plugin activated successfully');
+            
+        } catch (Exception $e) {
+            error_log('VORTEX AI Engine: Activation failed: ' . $e->getMessage());
+            
+            // Set a flag to show activation error
+            update_option('vortex_ai_engine_activation_error', $e->getMessage());
+            
+            // Don't throw the exception to prevent WordPress from showing activation error
+            // Instead, we'll handle it gracefully
+        }
+    }
+    
+    /**
+     * Create database tables with error handling
+     */
+    private function create_database_tables_safe() {
+        try {
+            // Check if database manager class exists
+            if (!class_exists('Vortex_Database_Manager')) {
+                error_log('VORTEX AI Engine: Database manager class not found');
+                return;
+            }
+            
+            // Create tables using our database manager
+            $database_manager = Vortex_Database_Manager::get_instance();
+            $database_manager->create_tables();
+            
+            // Log table creation
+            error_log('VORTEX AI Engine: Database tables created successfully');
+            
+        } catch (Exception $e) {
+            error_log('VORTEX AI Engine: Database table creation failed: ' . $e->getMessage());
+            // Don't throw exception - allow plugin to activate without tables
+        }
     }
     
     /**
@@ -369,52 +526,6 @@ class Vortex_AI_Engine {
         
         // Set deactivation flag
         update_option('vortex_ai_engine_activated', false);
-    }
-    
-    /**
-     * Create all database tables
-     */
-    private function create_database_tables() {
-        global $wpdb;
-        
-        $charset_collate = $wpdb->get_charset_collate();
-        
-        // All the database tables we've created throughout the system
-        $tables = array(
-            // TOLA-ART tables
-            'vortex_daily_art',
-            'vortex_artist_participation', 
-            'vortex_royalty_distribution',
-            
-            // AI orchestration tables
-            'vortex_ai_orchestration_log',
-            'vortex_ai_agent_performance',
-            'vortex_ai_task_queue',
-            
-            // Artist journey tables
-            'vortex_artist_profiles',
-            'vortex_artist_journey_progress',
-            'vortex_subscription_tiers',
-            
-            // Secret sauce tables
-            'vortex_secret_sauce_algorithms',
-            'vortex_zodiac_intelligence',
-            'vortex_seed_art_generation',
-            
-            // Smart contract tables  
-            'vortex_smart_contracts',
-            'vortex_blockchain_transactions',
-            'vortex_tola_token_operations',
-            
-            // System monitoring tables
-            'vortex_system_health',
-            'vortex_performance_metrics',
-            'vortex_error_logs'
-        );
-        
-        // Create tables using our existing database manager
-        $database_manager = new Vortex_Database_Manager();
-        $database_manager->create_all_tables();
     }
     
     /**
@@ -525,7 +636,7 @@ class Vortex_AI_Engine {
     private function initialize_runpod_vault() {
         if (VORTEX_RUNPOD_VAULT_ENABLED) {
             // Initialize RunPod vault with secure AI processing
-            $vault = Vortex_RunPod_Vault::get_instance();
+            $vault = Vortex_Runpod_Vault::get_instance();
             $vault->initialize_vault();
         }
     }
@@ -547,6 +658,33 @@ class Vortex_AI_Engine {
      * Admin notices
      */
     public function admin_notices() {
+        // Check for activation errors
+        $activation_error = get_option('vortex_ai_engine_activation_error');
+        if ($activation_error) {
+            ?>
+            <div class="notice notice-error is-dismissible">
+                <h3><strong><?php _e('⚠️ VORTEX AI Engine Activation Issue', 'vortex-ai-engine'); ?></strong></h3>
+                <div style="background: #fff5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    <p><strong>Error:</strong> <?php echo esc_html($activation_error); ?></p>
+                    <h4>🔧 Troubleshooting Steps:</h4>
+                    <ol style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>Database Connection:</strong> Check your WordPress database connection</li>
+                        <li><strong>File Permissions:</strong> Ensure plugin files are readable (644)</li>
+                        <li><strong>PHP Version:</strong> Verify PHP 7.4+ is installed</li>
+                        <li><strong>Memory Limit:</strong> Increase PHP memory limit to 256MB+</li>
+                        <li><strong>Plugin Conflicts:</strong> Temporarily disable other plugins</li>
+                    </ol>
+                    <p>
+                        <a href="<?php echo admin_url('admin.php?page=vortex-ai-dashboard'); ?>" class="button button-primary">🎛️ Try Dashboard</a>
+                        <a href="<?php echo admin_url('plugins.php'); ?>" class="button">📋 Plugin List</a>
+                    </p>
+                </div>
+            </div>
+            <?php
+            // Clear the error after showing it
+            delete_option('vortex_ai_engine_activation_error');
+        }
+        
         if ($this->activated && get_option('vortex_ai_engine_activated')) {
             ?>
             <div class="notice notice-success is-dismissible">

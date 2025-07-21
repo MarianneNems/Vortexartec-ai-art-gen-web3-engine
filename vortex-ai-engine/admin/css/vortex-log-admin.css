@@ -1,0 +1,484 @@
+/* VORTEX AI Engine - Real-Time Log Admin Styles */
+
+.vortex-log-dashboard {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.vortex-log-stats h2 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vortex-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.vortex-stat-item {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.vortex-stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.vortex-stat-level {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.vortex-stat-count {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0073aa;
+}
+
+/* Log level colors */
+.vortex-stat-debug {
+    border-left: 4px solid #6c757d;
+}
+
+.vortex-stat-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.vortex-stat-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.vortex-stat-error {
+    border-left: 4px solid #dc3545;
+}
+
+.vortex-stat-critical {
+    border-left: 4px solid #721c24;
+}
+
+.vortex-stat-security {
+    border-left: 4px solid #28a745;
+}
+
+.vortex-db-info {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.vortex-db-info h3 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vortex-alerts {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.vortex-alerts h3 {
+    margin-top: 0;
+    color: #dc3545;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vortex-alert-item {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vortex-alert-type {
+    font-weight: 600;
+    color: #721c24;
+}
+
+.vortex-alert-message {
+    flex: 1;
+    margin: 0 15px;
+    color: #721c24;
+}
+
+.vortex-alert-time {
+    font-size: 12px;
+    color: #856404;
+}
+
+/* Log Filters */
+.vortex-log-filters {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.vortex-log-filters h2 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.vortex-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: end;
+}
+
+.vortex-filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.vortex-filter-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #23282d;
+}
+
+.vortex-filter-group input,
+.vortex-filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.vortex-filter-group input:focus,
+.vortex-filter-group select:focus {
+    border-color: #0073aa;
+    outline: none;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+/* Log Actions */
+.vortex-log-actions {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Log Container */
+.vortex-log-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.vortex-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+#vortex-log-table {
+    border: none;
+    border-radius: 0;
+}
+
+#vortex-log-table thead th {
+    background: #f9f9f9;
+    border-bottom: 2px solid #ddd;
+    font-weight: 600;
+    color: #23282d;
+    padding: 12px 8px;
+}
+
+#vortex-log-table tbody td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+#vortex-log-table tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* Log level badges */
+.vortex-log-level {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.vortex-log-level-debug {
+    background: #6c757d;
+}
+
+.vortex-log-level-info {
+    background: #17a2b8;
+}
+
+.vortex-log-level-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.vortex-log-level-error {
+    background: #dc3545;
+}
+
+.vortex-log-level-critical {
+    background: #721c24;
+}
+
+.vortex-log-level-security {
+    background: #28a745;
+}
+
+/* Log row colors */
+.vortex-log-row.vortex-log-level-error {
+    background: #fff5f5;
+}
+
+.vortex-log-row.vortex-log-level-critical {
+    background: #fff5f5;
+    border-left: 4px solid #dc3545;
+}
+
+.vortex-log-row.vortex-log-level-security {
+    background: #f0fff4;
+    border-left: 4px solid #28a745;
+}
+
+/* Pagination */
+.vortex-pagination {
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+}
+
+.vortex-pagination .page-numbers {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #0073aa;
+    background: #fff;
+}
+
+.vortex-pagination .page-numbers.current {
+    background: #0073aa;
+    color: #fff;
+    border-color: #0073aa;
+}
+
+.vortex-pagination .page-numbers:hover {
+    background: #f0f0f0;
+}
+
+/* Modal */
+.vortex-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.vortex-modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 4px;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.vortex-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.vortex-modal-close:hover {
+    color: #000;
+}
+
+.vortex-modal h2 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+#vortex-log-details {
+    margin-top: 20px;
+}
+
+.vortex-log-detail-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.vortex-log-detail-label {
+    font-weight: 600;
+    color: #23282d;
+    margin-bottom: 5px;
+}
+
+.vortex-log-detail-value {
+    color: #666;
+    word-break: break-word;
+}
+
+.vortex-log-detail-value pre {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 3px;
+    overflow-x: auto;
+    margin: 5px 0 0 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .vortex-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .vortex-filter-group {
+        min-width: auto;
+    }
+    
+    .vortex-log-actions {
+        flex-direction: column;
+    }
+    
+    .vortex-modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .vortex-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    
+    #vortex-log-table {
+        font-size: 12px;
+    }
+    
+    #vortex-log-table th,
+    #vortex-log-table td {
+        padding: 8px 4px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .vortex-log-dashboard,
+    .vortex-log-filters,
+    .vortex-log-container,
+    .vortex-modal-content {
+        background: #1e1e1e;
+        color: #fff;
+        border-color: #444;
+    }
+    
+    .vortex-log-filters h2,
+    .vortex-log-stats h2,
+    .vortex-db-info h3,
+    .vortex-filter-group label {
+        color: #fff;
+    }
+    
+    .vortex-filter-group input,
+    .vortex-filter-group select {
+        background: #2d2d2d;
+        border-color: #444;
+        color: #fff;
+    }
+    
+    #vortex-log-table thead th {
+        background: #2d2d2d;
+        border-color: #444;
+        color: #fff;
+    }
+    
+    #vortex-log-table tbody tr:hover {
+        background: #2d2d2d;
+    }
+    
+    .vortex-pagination {
+        background: #2d2d2d;
+        border-color: #444;
+    }
+    
+    .vortex-pagination .page-numbers {
+        background: #1e1e1e;
+        border-color: #444;
+        color: #fff;
+    }
+    
+    .vortex-pagination .page-numbers:hover {
+        background: #2d2d2d;
+    }
+    
+    .vortex-log-detail-item {
+        background: #2d2d2d;
+    }
+    
+    .vortex-log-detail-value pre {
+        background: #1e1e1e;
+    }
+} 

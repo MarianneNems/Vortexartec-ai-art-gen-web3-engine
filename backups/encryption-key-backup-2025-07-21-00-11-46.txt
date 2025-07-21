@@ -1,0 +1,7 @@
+VORTEX AI Engine - Encryption Key Backup
+Generated: 2025-07-21 00:11:46
+Key: cgejAfNBk8InPpDLp1WXdgt+BhgKGMj2WOLkOo7n3iQ=
+
+IMPORTANT: Store this key securely!
+This key is required to decrypt sensitive data.
+Set as environment variable: VORTEX_ENCRYPTION_KEY
