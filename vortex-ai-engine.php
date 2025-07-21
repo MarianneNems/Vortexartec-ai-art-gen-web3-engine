@@ -190,6 +190,9 @@ class Vortex_AI_Engine {
      * Load all plugin dependencies
      */
     private function load_dependencies() {
+        // Agreement policy (must be loaded first)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-agreement-policy.php';
+        
         // Core AI systems
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/ai-agents/class-vortex-archer-orchestrator.php';
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/ai-agents/class-vortex-huraii-agent.php';

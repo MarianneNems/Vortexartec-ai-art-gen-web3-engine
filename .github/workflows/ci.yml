@@ -1,172 +1,307 @@
-name: VORTEX AI Engine CI/CD Pipeline
+name: Vortex AI Engine CI/CD
 
 on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
 
 jobs:
-  test:
+  # PHP Linting and Syntax Check
+  php-lint:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        php-version: [7.4, 8.0, 8.1, 8.2]
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php-version }}
-        extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, json, curl, openssl
+      - name: Checkout code
+        uses: actions/checkout@v4
         
-    - name: Setup WordPress test environment
-      run: |
-        # Download WordPress
-        wget https://wordpress.org/latest.zip
-        unzip latest.zip
-        mv wordpress/* .
-        rm -rf wordpress latest.zip
-        
-        # Create wp-config.php for testing
-        cp wp-config-sample.php wp-config.php
-        sed -i 's/database_name_here/vortex_test/g' wp-config.php
-        sed -i 's/username_here/root/g' wp-config.php
-        sed -i 's/password_here//g' wp-config.php
-        sed -i 's/localhost/127.0.0.1/g' wp-config.php
-        
-        # Create wp-salt.php
-        echo "<?php" > wp-salt.php
-        echo "define('AUTH_KEY',         'test');" >> wp-salt.php
-        echo "define('SECURE_AUTH_KEY',  'test');" >> wp-salt.php
-        echo "define('LOGGED_IN_KEY',    'test');" >> wp-salt.php
-        echo "define('NONCE_KEY',        'test');" >> wp-salt.php
-        echo "define('AUTH_SALT',        'test');" >> wp-salt.php
-        echo "define('SECURE_AUTH_SALT', 'test');" >> wp-salt.php
-        echo "define('LOGGED_IN_SALT',   'test');" >> wp-salt.php
-        echo "define('NONCE_SALT',       'test');" >> wp-salt.php
-        
-    - name: Install dependencies
-      run: |
-        composer install --no-dev --optimize-autoloader
-        
-    - name: Run PHP syntax check
-      run: |
-        find . -name "*.php" -not -path "./vendor/*" -not -path "./node_modules/*" -exec php -l {} \;
-        
-    - name: Run comprehensive system tests
-      run: |
-        php comprehensive-system-tests.php
-        
-    - name: Test plugin activation
-      run: |
-        # Simulate WordPress environment
-        export ABSPATH=$(pwd)/
-        php -r "
-        require_once 'wp-config.php';
-        require_once 'wp-settings.php';
-        require_once 'vortex-ai-engine/vortex-ai-engine.php';
-        echo 'Plugin loaded successfully\n';
-        "
-        
-    - name: Check file structure
-      run: |
-        # Verify required directories exist
-        test -d vortex-ai-engine/admin && echo "✅ Admin directory exists"
-        test -d vortex-ai-engine/includes && echo "✅ Includes directory exists"
-        test -d vortex-ai-engine/public && echo "✅ Public directory exists"
-        test -d vortex-ai-engine/contracts && echo "✅ Contracts directory exists"
-        test -d vortex-ai-engine/audit-system && echo "✅ Audit system directory exists"
-        
-    - name: Security check
-      run: |
-        # Check for ABSPATH guards
-        grep -r "if (!defined('ABSPATH'))" vortex-ai-engine/ --include="*.php" | wc -l
-        
-    - name: Documentation check
-      run: |
-        # Verify documentation exists
-        test -f vortex-ai-engine/README.md && echo "✅ README.md exists"
-        test -f vortex-ai-engine/readme.txt && echo "✅ readme.txt exists"
-        
-  security:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+          
+      - name: PHP Syntax Check
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+          
+      - name: PHP CodeSniffer
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          ./vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore=vendor/ .
+
+  # Unit Tests
+  unit-tests:
     runs-on: ubuntu-latest
-    needs: test
-    
+    needs: php-lint
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Run security scan
-      run: |
-        # Basic security checks
-        echo "🔒 Running security checks..."
+      - name: Checkout code
+        uses: actions/checkout@v4
         
-        # Check for sensitive files
-        if find . -name "wp-config.php" -o -name "*.env" -o -name "*.key" -o -name "*.pem"; then
-          echo "❌ Sensitive files found in repository"
-          exit 1
-        else
-          echo "✅ No sensitive files found"
-        fi
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Install dependencies
+        run: |
+          composer install
+          
+      - name: Run unit tests
+        run: |
+          ./vendor/bin/phpunit --testdox
+        env:
+          WP_TESTS_DIR: /tmp/wordpress-tests-lib
+          
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+
+  # Security Audit
+  security-audit:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         
-        # Check for hardcoded credentials
-        if grep -r "password\|secret\|key" . --include="*.php" | grep -v "//\|#" | grep -v "define\|const"; then
-          echo "⚠️ Potential hardcoded credentials found"
-        else
-          echo "✅ No obvious hardcoded credentials"
-        fi
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          
+      - name: Install dependencies
+        run: |
+          composer install --no-dev
+          
+      - name: Run security audit
+        run: |
+          composer audit --format=json > security-audit.json
+          
+      - name: Upload security audit
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-audit
+          path: security-audit.json
+
+  # Comprehensive Recursive Audit
+  recursive-audit:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Run comprehensive audit
+        run: |
+          php scripts/comprehensive-recursive-audit.php --full --output=AUDIT-REPORT.md
+          
+      - name: Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-report
+          path: AUDIT-REPORT.md
+
+  # Environment Verification
+  env-verification:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Setup WordPress test environment
+        run: |
+          bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
+          
+      - name: Run environment verification
+        run: |
+          php deployment/verify-environment.php
+          
+      - name: Upload verification results
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-verification
+          path: verification-results.txt
+
+  # Build and Package
   build:
     runs-on: ubuntu-latest
-    needs: [test, security]
+    needs: [php-lint, unit-tests, security-audit, recursive-audit, env-verification]
     if: github.ref == 'refs/heads/main'
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Create plugin package
-      run: |
-        # Create plugin zip file
-        cd vortex-ai-engine
-        zip -r ../vortex-ai-engine.zip . -x "*.git*" "node_modules/*" "vendor/*" "*.log" "*.tmp"
+      - name: Checkout code
+        uses: actions/checkout@v4
         
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: vortex-ai-engine-plugin
-        path: vortex-ai-engine.zip
-        
-  deploy:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          
+      - name: Create plugin package
+        run: |
+          # Remove development files
+          rm -rf .git .github scripts tests vendor composer.*
+          
+          # Create zip file
+          zip -r vortex-ai-engine.zip . -x "*.git*" "*.github*" "scripts/*" "tests/*" "vendor/*" "composer.*"
+          
+      - name: Upload plugin package
+        uses: actions/upload-artifact@v3
+        with:
+          name: vortex-ai-engine
+          path: vortex-ai-engine.zip
+
+  # Deploy to Staging
+  deploy-staging:
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+    if: github.ref == 'refs/heads/main'
+    environment: staging
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: vortex-ai-engine-plugin
+      - name: Download plugin package
+        uses: actions/download-artifact@v3
+        with:
+          name: vortex-ai-engine
+          
+      - name: Deploy to staging
+        run: |
+          # Add your staging deployment commands here
+          echo "Deploying to staging environment..."
+          # Example: rsync, FTP, or cloud deployment
+          
+      - name: Run smoke tests on staging
+        run: |
+          # Run smoke tests against staging environment
+          curl -X POST ${{ secrets.STAGING_URL }}/wp-json/vortex/v1/health-check
+          
+      - name: Notify staging deployment
+        if: always()
+        run: |
+          echo "Staging deployment completed"
+          # Add notification logic (Slack, email, etc.)
+
+  # Deploy to Production
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [build, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - name: Download plugin package
+        uses: actions/download-artifact@v3
+        with:
+          name: vortex-ai-engine
+          
+      - name: Deploy to production
+        run: |
+          # Add your production deployment commands here
+          echo "Deploying to production environment..."
+          # Example: rsync, FTP, or cloud deployment
+          
+      - name: Run smoke tests on production
+        run: |
+          # Run smoke tests against production environment
+          curl -X POST ${{ secrets.PRODUCTION_URL }}/wp-json/vortex/v1/health-check
+          
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Vortex AI Engine v${{ github.run_number }}
+          body: |
+            Automated release from CI/CD pipeline
+            
+            ## Changes
+            - Automated deployment from main branch
+            - All tests passed
+            - Security audit completed
+            - Environment verification successful
+            
+            ## Installation
+            1. Download the plugin package
+            2. Upload to WordPress plugins directory
+            3. Activate the plugin
+            4. Configure AWS credentials
+            5. Run smoke tests
+          draft: false
+          prerelease: false
+          
+      - name: Notify production deployment
+        if: always()
+        run: |
+          echo "Production deployment completed"
+          # Add notification logic (Slack, email, etc.)
+
+  # Daily Health Check
+  daily-health-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
         
-    - name: Create release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: vortex-ai-engine.zip
-        tag_name: v${{ github.run_number }}
-        name: VORTEX AI Engine v${{ github.run_number }}
-        body: |
-          Automated release from CI/CD pipeline
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
           
-          Changes in this release:
-          - Automated build and test
-          - Comprehensive system validation
-          - Security checks passed
+      - name: Run health checks
+        run: |
+          # Check staging environment
+          curl -f ${{ secrets.STAGING_URL }}/wp-json/vortex/v1/health-check || echo "Staging health check failed"
           
-          Download the plugin zip file above for installation.
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          # Check production environment
+          curl -f ${{ secrets.PRODUCTION_URL }}/wp-json/vortex/v1/health-check || echo "Production health check failed"
+          
+      - name: Generate health report
+        run: |
+          echo "Daily health check completed at $(date)" > health-report.txt
+          
+      - name: Upload health report
+        uses: actions/upload-artifact@v3
+        with:
+          name: daily-health-report
+          path: health-report.txt
+
+  # Notifications
+  notify:
+    runs-on: ubuntu-latest
+    needs: [php-lint, unit-tests, security-audit, recursive-audit, env-verification]
+    if: always()
+    steps:
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "CI/CD pipeline failed!"
+          # Add notification logic for failures
+          
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "CI/CD pipeline completed successfully!"
+          # Add notification logic for success 
