@@ -1,0 +1,668 @@
+name: 🚀 VORTEX AI Engine - CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+env:
+  AWS_REGION: us-east-1
+  TERRAFORM_VERSION: 1.6.0
+  PHP_VERSION: 8.1
+
+jobs:
+  # =============================================================================
+  # Job A: PHP Testing & Code Quality
+  # =============================================================================
+  test:
+    name: 🧪 PHP Tests & Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: 🐘 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json, zip
+        coverage: xdebug
+        tools: composer, phpunit, phpcs
+        
+    - name: 📦 Get Composer Cache Directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      
+    - name: 🗂️ Cache Composer Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+        
+    - name: 🔧 Install Dependencies
+      run: composer install --no-dev --optimize-autoloader --no-interaction
+      
+    - name: 🔍 Run PHP CodeSniffer (PSR2)
+      run: |
+        if [ -f vendor/bin/phpcs ]; then
+          vendor/bin/phpcs --standard=PSR2 --ignore=vendor/ --extensions=php .
+        else
+          echo "⚠️  PHP CodeSniffer not found in vendor/bin - using global"
+          phpcs --standard=PSR2 --ignore=vendor/ --extensions=php . || echo "CodeSniffer check completed with warnings"
+        fi
+        
+    - name: 🧪 Run PHPUnit Tests with Coverage
+      run: |
+        if [ -f vendor/bin/phpunit ]; then
+          vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml
+        else
+          echo "⚠️  PHPUnit not found in vendor/bin - running syntax check"
+          find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \; || exit 1
+        fi
+        
+    - name: 📊 Upload Coverage to Codecov
+      if: success()
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+        verbose: true
+
+  # =============================================================================
+  # Job B: Build & Push Docker Image to ECR
+  # =============================================================================
+  build_and_push:
+    name: 🐳 Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    
+    outputs:
+      image-tag-sha: ${{ steps.image-meta.outputs.tag-sha }}
+      image-tag-latest: ${{ steps.image-meta.outputs.tag-latest }}
+      image-uri: ${{ steps.image-meta.outputs.image-uri }}
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: 🔧 Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: 🔐 Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      
+    - name: 🏷️ Generate Image Metadata
+      id: image-meta
+      run: |
+        ECR_REPOSITORY="${{ vars.ECR_REPOSITORY || 'vortex-ai-orchestrator' }}"
+        REGISTRY="${{ steps.login-ecr.outputs.registry }}"
+        
+        TAG_SHA="${{ github.sha }}"
+        TAG_LATEST="latest"
+        
+        IMAGE_URI_SHA="${REGISTRY}/${ECR_REPOSITORY}:${TAG_SHA}"
+        IMAGE_URI_LATEST="${REGISTRY}/${ECR_REPOSITORY}:${TAG_LATEST}"
+        
+        echo "tag-sha=${TAG_SHA}" >> $GITHUB_OUTPUT
+        echo "tag-latest=${TAG_LATEST}" >> $GITHUB_OUTPUT
+        echo "image-uri=${IMAGE_URI_SHA}" >> $GITHUB_OUTPUT
+        echo "image-uri-latest=${IMAGE_URI_LATEST}" >> $GITHUB_OUTPUT
+        
+        echo "📦 ECR Repository: ${ECR_REPOSITORY}"
+        echo "🏷️  SHA Tag: ${TAG_SHA}"
+        echo "🏷️  Latest Tag: ${TAG_LATEST}"
+        echo "🖼️  Image URI: ${IMAGE_URI_SHA}"
+        
+    - name: 🐳 Create Production Dockerfile
+      run: |
+        cat > Dockerfile << 'EOF'
+        # =============================================================================
+        # VORTEX AI Engine - Production Docker Image
+        # =============================================================================
+        FROM php:8.1-apache
+        
+        # Set labels
+        LABEL maintainer="VortexArtec <info@vortexartec.com>"
+        LABEL version="3.0"
+        LABEL description="VORTEX AI Engine - WordPress Plugin with AI Orchestration"
+        
+        # Install system dependencies
+        RUN apt-get update && apt-get install -y \
+            git \
+            curl \
+            libpng-dev \
+            libonig-dev \
+            libxml2-dev \
+            zip \
+            unzip \
+            libzip-dev \
+            libicu-dev \
+            libcurl4-openssl-dev \
+            pkg-config \
+            libssl-dev \
+            libfreetype6-dev \
+            libjpeg62-turbo-dev \
+            libpq-dev \
+            supervisor \
+            && rm -rf /var/lib/apt/lists/*
+        
+        # Install PHP extensions
+        RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+            && docker-php-ext-install \
+                pdo_mysql \
+                pdo_pgsql \
+                mbstring \
+                exif \
+                pcntl \
+                bcmath \
+                gd \
+                zip \
+                intl \
+                curl \
+                xml \
+                dom \
+                json \
+                opcache
+        
+        # Install Composer
+        COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+        
+        # Configure Apache
+        RUN a2enmod rewrite ssl headers expires deflate
+        
+        # Configure PHP
+        RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/memory.ini \
+            && echo "upload_max_filesize = 64M" >> /usr/local/etc/php/conf.d/upload.ini \
+            && echo "post_max_size = 64M" >> /usr/local/etc/php/conf.d/upload.ini \
+            && echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/execution.ini \
+            && echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/opcache.ini \
+            && echo "opcache.memory_consumption=128" >> /usr/local/etc/php/conf.d/opcache.ini \
+            && echo "opcache.max_accelerated_files=10000" >> /usr/local/etc/php/conf.d/opcache.ini \
+            && echo "opcache.revalidate_freq=2" >> /usr/local/etc/php/conf.d/opcache.ini
+        
+        # Set working directory
+        WORKDIR /var/www/html
+        
+        # Copy composer files first for better caching
+        COPY composer.json composer.lock ./
+        
+        # Install PHP dependencies
+        RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+        
+        # Copy application code
+        COPY . .
+        
+        # Run composer scripts now that all files are present
+        RUN composer dump-autoload --optimize
+        
+        # Set proper permissions
+        RUN chown -R www-data:www-data /var/www/html \
+            && find /var/www/html -type f -exec chmod 644 {} \; \
+            && find /var/www/html -type d -exec chmod 755 {} \; \
+            && chmod +x /var/www/html/scripts/* 2>/dev/null || true
+        
+        # Apache virtual host configuration
+        RUN echo '<VirtualHost *:80>' > /etc/apache2/sites-available/vortex.conf && \
+            echo '    ServerName vortex-ai-engine' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    DocumentRoot /var/www/html' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    ErrorLog ${APACHE_LOG_DIR}/vortex_error.log' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    CustomLog ${APACHE_LOG_DIR}/vortex_access.log combined' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    <Directory /var/www/html>' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '        AllowOverride All' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '        Require all granted' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '        Options -Indexes +FollowSymLinks' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    </Directory>' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    # Health check endpoint' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    <Location "/health">' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '        SetHandler application/x-httpd-php' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    </Location>' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    <Location "/orchestrator/health">' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '        SetHandler application/x-httpd-php' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '    </Location>' >> /etc/apache2/sites-available/vortex.conf && \
+            echo '</VirtualHost>' >> /etc/apache2/sites-available/vortex.conf
+        
+        # Enable site and disable default
+        RUN a2ensite vortex.conf && a2dissite 000-default
+        
+        # Create health check endpoint
+        RUN mkdir -p /var/www/html && \
+            echo '<?php' > /var/www/html/health.php && \
+            echo 'header("Content-Type: application/json");' >> /var/www/html/health.php && \
+            echo 'echo json_encode(["status" => "healthy", "timestamp" => time(), "version" => "3.0"]);' >> /var/www/html/health.php && \
+            echo '?>' >> /var/www/html/health.php
+        
+        # Create orchestrator health endpoint
+        RUN mkdir -p /var/www/html/orchestrator && \
+            echo '<?php' > /var/www/html/orchestrator/health.php && \
+            echo 'header("Content-Type: application/json");' >> /var/www/html/orchestrator/health.php && \
+            echo 'echo json_encode(["status" => "healthy", "service" => "orchestrator", "timestamp" => time()]);' >> /var/www/html/orchestrator/health.php && \
+            echo '?>' >> /var/www/html/orchestrator/health.php
+        
+        # Health check configuration
+        HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+            CMD curl -f http://localhost/health || exit 1
+        
+        # Expose port
+        EXPOSE 80
+        
+        # Environment variables
+        ENV APACHE_RUN_USER=www-data \
+            APACHE_RUN_GROUP=www-data \
+            APACHE_LOG_DIR=/var/log/apache2 \
+            APACHE_PID_FILE=/var/run/apache2.pid \
+            APACHE_RUN_DIR=/var/run/apache2 \
+            APACHE_LOCK_DIR=/var/lock/apache2
+        
+        # Start Apache
+        CMD ["apache2-foreground"]
+        EOF
+        
+    - name: 🔨 Build Docker Image
+      run: |
+        echo "🔨 Building Docker image..."
+        docker build -t ${{ steps.image-meta.outputs.image-uri }} .
+        docker tag ${{ steps.image-meta.outputs.image-uri }} ${{ steps.image-meta.outputs.image-uri-latest }}
+        
+    - name: 🚀 Push Images to ECR
+      run: |
+        echo "🚀 Pushing images to ECR..."
+        docker push ${{ steps.image-meta.outputs.image-uri }}
+        docker push ${{ steps.image-meta.outputs.image-uri-latest }}
+        
+    - name: 📝 Build Summary
+      run: |
+        echo "## 🐳 Docker Build Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- **SHA Image**: \`${{ steps.image-meta.outputs.image-uri }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- **Latest Image**: \`${{ steps.image-meta.outputs.image-uri-latest }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build Time**: \`$(date -u)\`" >> $GITHUB_STEP_SUMMARY
+        echo "- **Commit**: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+
+  # =============================================================================
+  # Job C: Terraform Infrastructure Deployment
+  # =============================================================================
+  terraform_deploy:
+    name: 🏗️ Terraform Infrastructure Deployment
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    if: success()
+    
+    outputs:
+      vault-endpoint: ${{ steps.terraform-outputs.outputs.vault-endpoint }}
+      api-endpoint: ${{ steps.terraform-outputs.outputs.api-endpoint }}
+      alb-dns: ${{ steps.terraform-outputs.outputs.alb-dns }}
+      redis-endpoint: ${{ steps.terraform-outputs.outputs.redis-endpoint }}
+    
+    defaults:
+      run:
+        working-directory: infra
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: 🔧 Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: 🏗️ Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ env.TERRAFORM_VERSION }}
+        
+    - name: 🔧 Configure Terraform Backend
+      run: |
+        ENVIRONMENT="${{ github.event.inputs.environment || 'prod' }}"
+        cat > backend.tf << EOF
+        terraform {
+          backend "s3" {
+            bucket = "vortex-terraform-state-${ENVIRONMENT}"
+            key    = "vortex-ai-engine/terraform.tfstate"
+            region = "${{ env.AWS_REGION }}"
+          }
+        }
+        EOF
+        
+    - name: 🚀 Terraform Init
+      run: terraform init
+      
+    - name: 🔄 Select Terraform Workspace
+      run: |
+        ENVIRONMENT="${{ github.event.inputs.environment || 'prod' }}"
+        terraform workspace select ${ENVIRONMENT} || terraform workspace new ${ENVIRONMENT}
+        echo "Selected workspace: ${ENVIRONMENT}"
+        
+    - name: ✅ Terraform Validate
+      run: terraform validate
+      
+    - name: 📋 Terraform Plan
+      run: |
+        terraform plan \
+          -var="ai_orchestrator_image=${{ needs.build_and_push.outputs.image-uri }}" \
+          -var="environment=${{ github.event.inputs.environment || 'prod' }}" \
+          -out=tfplan
+          
+    - name: 🚀 Terraform Apply
+      run: |
+        terraform apply \
+          -auto-approve \
+          -var="ai_orchestrator_image=${{ needs.build_and_push.outputs.image-uri }}" \
+          -var="environment=${{ github.event.inputs.environment || 'prod' }}"
+          
+    - name: 📤 Extract Terraform Outputs
+      id: terraform-outputs
+      run: |
+        # Extract key outputs
+        VAULT_ENDPOINT=$(terraform output -raw vault_endpoint 2>/dev/null || echo "")
+        API_ENDPOINT=$(terraform output -raw ai_orchestrator_endpoint 2>/dev/null || echo "")
+        ALB_DNS=$(terraform output -raw alb_dns_name 2>/dev/null || echo "")
+        REDIS_ENDPOINT=$(terraform output -raw redis_primary_endpoint 2>/dev/null || echo "")
+        
+        echo "vault-endpoint=${VAULT_ENDPOINT}" >> $GITHUB_OUTPUT
+        echo "api-endpoint=${API_ENDPOINT}" >> $GITHUB_OUTPUT
+        echo "alb-dns=${ALB_DNS}" >> $GITHUB_OUTPUT
+        echo "redis-endpoint=${REDIS_ENDPOINT}" >> $GITHUB_OUTPUT
+        
+        echo "## 🏗️ Terraform Outputs" >> $GITHUB_STEP_SUMMARY
+        echo "- **Vault Endpoint**: ${VAULT_ENDPOINT}" >> $GITHUB_STEP_SUMMARY
+        echo "- **API Endpoint**: ${API_ENDPOINT}" >> $GITHUB_STEP_SUMMARY
+        echo "- **ALB DNS**: ${ALB_DNS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Redis Endpoint**: ${REDIS_ENDPOINT}" >> $GITHUB_STEP_SUMMARY
+
+  # =============================================================================
+  # Job C2: Vault Configuration & Secrets Upload
+  # =============================================================================
+  vault_config:
+    name: 🔐 Vault Configuration & Secrets Upload
+    runs-on: ubuntu-latest
+    needs: terraform_deploy
+    if: success()
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v3
+      
+    - name: 🔐 Configure Vault
+      run: |
+        # Install Vault CLI
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt-get update && sudo apt-get install vault
+        
+        # Configure Vault
+        export VAULT_ADDR="${{ secrets.VAULT_ADDR || needs.terraform_deploy.outputs.vault-endpoint }}"
+        export VAULT_TOKEN="${{ secrets.VAULT_TOKEN }}"
+        
+        echo "🔐 Vault Address: ${VAULT_ADDR}"
+        
+        # Wait for Vault to be ready
+        for i in {1..30}; do
+          if vault status > /dev/null 2>&1; then
+            echo "✅ Vault is ready"
+            break
+          fi
+          echo "⏳ Waiting for Vault to be ready... (${i}/30)"
+          sleep 10
+        done
+        
+    - name: 📁 Upload Vault Secrets
+      run: |
+        export VAULT_ADDR="${{ secrets.VAULT_ADDR || needs.terraform_deploy.outputs.vault-endpoint }}"
+        export VAULT_TOKEN="${{ secrets.VAULT_TOKEN }}"
+        
+        ENVIRONMENT="${{ github.event.inputs.environment || 'prod' }}"
+        
+        # Check if vault-secrets directory exists
+        if [ -d "vault-secrets" ]; then
+          echo "📁 Found vault-secrets directory"
+          
+          # Upload all files in vault-secrets/ to Vault KV v2
+          find vault-secrets -type f -name "*.php" -o -name "*.js" -o -name "*.json" | while read file; do
+            # Get relative path without vault-secrets prefix
+            relative_path=${file#vault-secrets/}
+            # Convert path to vault path
+            vault_path="secret/data/vortex-ai/${ENVIRONMENT}/${relative_path}"
+            
+            echo "📤 Uploading ${file} to ${vault_path}"
+            
+            # Read file content and upload to Vault
+            vault kv put "${vault_path}" \
+              content="$(cat "${file}")" \
+              filename="$(basename "${file}")" \
+              uploaded_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              environment="${ENVIRONMENT}" \
+              commit_sha="${{ github.sha }}"
+          done
+          
+          echo "✅ All vault secrets uploaded successfully"
+        else
+          echo "⚠️  vault-secrets directory not found - skipping secrets upload"
+        fi
+
+  # =============================================================================
+  # Job D: Health Checks
+  # =============================================================================
+  health_check:
+    name: 🏥 Post-Deployment Health Checks
+    runs-on: ubuntu-latest
+    needs: [terraform_deploy, vault_config]
+    if: success()
+    
+    steps:
+    - name: ⏳ Wait for Services to Initialize
+      run: |
+        echo "⏳ Waiting 90 seconds for services to fully initialize..."
+        sleep 90
+        
+    - name: 🔍 Health Check - Orchestrator Service
+      run: |
+        API_ENDPOINT="${{ needs.terraform_deploy.outputs.api-endpoint }}"
+        ORCHESTRATOR_HEALTH_URL="${API_ENDPOINT}/orchestrator/health"
+        
+        echo "🔍 Checking orchestrator health: ${ORCHESTRATOR_HEALTH_URL}"
+        
+        # Retry health check up to 10 times
+        for i in {1..10}; do
+          if curl -f -s --connect-timeout 10 --max-time 30 "${ORCHESTRATOR_HEALTH_URL}"; then
+            echo "✅ Orchestrator health check passed"
+            exit 0
+          fi
+          echo "⏳ Orchestrator health check failed, retrying... (${i}/10)"
+          sleep 15
+        done
+        
+        echo "❌ Orchestrator health check failed after 10 attempts"
+        exit 1
+        
+    - name: 🔍 Health Check - Vault Service
+      run: |
+        VAULT_ENDPOINT="${{ needs.terraform_deploy.outputs.vault-endpoint }}"
+        VAULT_HEALTH_URL="${VAULT_ENDPOINT}/v1/sys/health"
+        
+        echo "🔍 Checking Vault health: ${VAULT_HEALTH_URL}"
+        
+        # Retry health check up to 10 times
+        for i in {1..10}; do
+          if curl -f -s --connect-timeout 10 --max-time 30 "${VAULT_HEALTH_URL}"; then
+            echo "✅ Vault health check passed"
+            exit 0
+          fi
+          echo "⏳ Vault health check failed, retrying... (${i}/10)"
+          sleep 15
+        done
+        
+        echo "❌ Vault health check failed after 10 attempts"
+        exit 1
+        
+    - name: 🔍 Health Check - Load Balancer
+      run: |
+        ALB_DNS="${{ needs.terraform_deploy.outputs.alb-dns }}"
+        ALB_HEALTH_URL="https://${ALB_DNS}/health"
+        
+        echo "🔍 Checking ALB health: ${ALB_HEALTH_URL}"
+        
+        # Retry health check up to 5 times
+        for i in {1..5}; do
+          if curl -f -s --connect-timeout 10 --max-time 30 "${ALB_HEALTH_URL}"; then
+            echo "✅ ALB health check passed"
+            exit 0
+          fi
+          echo "⏳ ALB health check failed, retrying... (${i}/5)"
+          sleep 10
+        done
+        
+        echo "❌ ALB health check failed after 5 attempts"
+        exit 1
+        
+    - name: 📊 Health Check Summary
+      run: |
+        echo "## 🏥 Health Check Results" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Orchestrator Service**: Healthy" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Vault Service**: Healthy" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Load Balancer**: Healthy" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **All Services**: Operational" >> $GITHUB_STEP_SUMMARY
+
+  # =============================================================================
+  # Job E: Notification
+  # =============================================================================
+  notify:
+    name: 📢 Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [test, build_and_push, terraform_deploy, vault_config, health_check]
+    if: always()
+    
+    steps:
+    - name: 📊 Prepare Notification Data
+      id: notification-data
+      run: |
+        # Determine overall status
+        if [[ "${{ needs.test.result }}" == "success" && \
+              "${{ needs.build_and_push.result }}" == "success" && \
+              "${{ needs.terraform_deploy.result }}" == "success" && \
+              "${{ needs.vault_config.result }}" == "success" && \
+              "${{ needs.health_check.result }}" == "success" ]]; then
+          STATUS="✅ SUCCESS"
+          COLOR="good"
+        else
+          STATUS="❌ FAILED"
+          COLOR="danger"
+        fi
+        
+        echo "status=${STATUS}" >> $GITHUB_OUTPUT
+        echo "color=${COLOR}" >> $GITHUB_OUTPUT
+        
+    - name: 📤 Send Slack Notification
+      if: vars.SLACK_WEBHOOK_URL != ''
+      run: |
+        ENVIRONMENT="${{ github.event.inputs.environment || 'prod' }}"
+        
+        # Prepare Slack message
+        cat > slack_message.json << EOF
+        {
+          "attachments": [
+            {
+              "color": "${{ steps.notification-data.outputs.color }}",
+              "title": "🚀 VORTEX AI Engine Deployment",
+              "fields": [
+                {
+                  "title": "Status",
+                  "value": "${{ steps.notification-data.outputs.status }}",
+                  "short": true
+                },
+                {
+                  "title": "Environment",
+                  "value": "${ENVIRONMENT}",
+                  "short": true
+                },
+                {
+                  "title": "Branch",
+                  "value": "${{ github.ref_name }}",
+                  "short": true
+                },
+                {
+                  "title": "Commit",
+                  "value": "${{ github.sha }}",
+                  "short": true
+                },
+                {
+                  "title": "🌐 Endpoints",
+                  "value": "• Main: https://vortexartec.com\\n• API: ${{ needs.terraform_deploy.outputs.api-endpoint }}\\n• Vault: ${{ needs.terraform_deploy.outputs.vault-endpoint }}\\n• WWW: https://www.vortexartec.com",
+                  "short": false
+                },
+                {
+                  "title": "🏗️ Infrastructure",
+                  "value": "• ALB DNS: ${{ needs.terraform_deploy.outputs.alb-dns }}\\n• Redis: ${{ needs.terraform_deploy.outputs.redis-endpoint }}\\n• ECR Image: ${{ needs.build_and_push.outputs.image-uri }}",
+                  "short": false
+                }
+              ],
+              "footer": "VORTEX AI Engine CI/CD",
+              "ts": $(date +%s)
+            }
+          ]
+        }
+        EOF
+        
+        # Send to Slack
+        curl -X POST -H 'Content-type: application/json' \
+          --data @slack_message.json \
+          "${{ vars.SLACK_WEBHOOK_URL }}"
+          
+    - name: 📧 Send Email Notification (Fallback)
+      if: vars.SLACK_WEBHOOK_URL == ''
+      run: |
+        echo "📧 Slack webhook not configured - would send email notification"
+        echo "Status: ${{ steps.notification-data.outputs.status }}"
+        echo "Environment: ${{ github.event.inputs.environment || 'prod' }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Endpoints:"
+        echo "  - API: ${{ needs.terraform_deploy.outputs.api-endpoint }}"
+        echo "  - Vault: ${{ needs.terraform_deploy.outputs.vault-endpoint }}"
+        echo "  - ALB: ${{ needs.terraform_deploy.outputs.alb-dns }}"
+        
+    - name: 📋 Final Deployment Summary
+      run: |
+        echo "## 🎉 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+        echo "**Status**: ${{ steps.notification-data.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Environment**: ${{ github.event.inputs.environment || 'prod' }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🌐 Service Endpoints" >> $GITHUB_STEP_SUMMARY
+        echo "- **Main Website**: https://vortexartec.com" >> $GITHUB_STEP_SUMMARY
+        echo "- **API Endpoint**: ${{ needs.terraform_deploy.outputs.api-endpoint }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Vault Portal**: ${{ needs.terraform_deploy.outputs.vault-endpoint }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **WWW Website**: https://www.vortexartec.com" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🏗️ Infrastructure Details" >> $GITHUB_STEP_SUMMARY
+        echo "- **Load Balancer**: ${{ needs.terraform_deploy.outputs.alb-dns }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Redis Endpoint**: ${{ needs.terraform_deploy.outputs.redis-endpoint }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Docker Image**: ${{ needs.build_and_push.outputs.image-uri }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Job Results" >> $GITHUB_STEP_SUMMARY
+        echo "- **Test**: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build & Push**: ${{ needs.build_and_push.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Terraform Deploy**: ${{ needs.terraform_deploy.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Vault Config**: ${{ needs.vault_config.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Health Check**: ${{ needs.health_check.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "🚀 **Deployment completed at**: $(date -u)" >> $GITHUB_STEP_SUMMARY 

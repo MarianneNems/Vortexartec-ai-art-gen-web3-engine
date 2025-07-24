@@ -1,0 +1,486 @@
+/**
+ * Vortex AI Engine - Agreement Modal CSS
+ * 
+ * Modern styling for the agreement modal with responsive design
+ * 
+ * @package VortexAIEngine
+ * @since 2.2.0
+ */
+
+/* Modal Overlay */
+.vortex-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Modal Content */
+.vortex-modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal Header */
+.vortex-modal-header {
+    background: linear-gradient(135deg, #0073aa 0%, #005a87 100%);
+    color: #ffffff;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.vortex-modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vortex-modal-close {
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ffffff;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.vortex-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* Modal Body */
+.vortex-modal-body {
+    padding: 25px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: 60vh;
+}
+
+/* Agreement Tabs */
+.agreement-tabs {
+    display: flex;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-button:hover {
+    color: #0073aa;
+    background: rgba(0, 115, 170, 0.05);
+}
+
+.tab-button.active {
+    color: #0073aa;
+    border-bottom-color: #0073aa;
+    background: rgba(0, 115, 170, 0.1);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Terms and Privacy Content */
+.terms-content,
+.privacy-content {
+    line-height: 1.6;
+    color: #333;
+}
+
+.terms-content h3,
+.privacy-content h3 {
+    color: #0073aa;
+    margin: 0 0 15px 0;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.terms-content h4,
+.privacy-content h4 {
+    color: #1a1a1a;
+    margin: 20px 0 10px 0;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.terms-content p,
+.privacy-content p {
+    margin: 10px 0;
+    color: #495057;
+}
+
+.terms-content ul,
+.privacy-content ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.terms-content li,
+.privacy-content li {
+    margin: 5px 0;
+    color: #495057;
+}
+
+.terms-content strong,
+.privacy-content strong {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* Agreement Checkbox */
+.agreement-checkbox {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.agreement-checkbox:hover {
+    border-color: #0073aa;
+    background: rgba(0, 115, 170, 0.05);
+}
+
+.agreement-checkbox label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 1.4;
+}
+
+.agreement-checkbox input[type="checkbox"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: #0073aa;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.agreement-checkbox input[type="checkbox"]:checked {
+    background-color: #0073aa;
+    border-color: #0073aa;
+}
+
+/* Modal Footer */
+.vortex-modal-footer {
+    padding: 20px 25px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.vortex-modal-footer .button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.vortex-modal-footer .button-primary {
+    background: #0073aa;
+    color: #ffffff;
+}
+
+.vortex-modal-footer .button-primary:hover:not(:disabled) {
+    background: #005a87;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 115, 170, 0.3);
+}
+
+.vortex-modal-footer .button-primary:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.vortex-modal-footer .button:not(.button-primary) {
+    background: #ffffff;
+    color: #6c757d;
+    border: 1px solid #e9ecef;
+}
+
+.vortex-modal-footer .button:not(.button-primary):hover {
+    background: #f8f9fa;
+    color: #495057;
+    border-color: #0073aa;
+}
+
+/* Messages */
+.vortex-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 500;
+    z-index: 1000000;
+    animation: slideInRight 0.3s ease-out;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.vortex-success {
+    background: #28a745;
+    border-left: 4px solid #1e7e34;
+}
+
+.vortex-error {
+    background: #dc3545;
+    border-left: 4px solid #c82333;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .vortex-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .vortex-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .vortex-modal-header h2 {
+        font-size: 1.3em;
+    }
+    
+    .vortex-modal-body {
+        padding: 20px;
+        max-height: 50vh;
+    }
+    
+    .vortex-modal-footer {
+        padding: 15px 20px;
+        flex-direction: column;
+    }
+    
+    .vortex-modal-footer .button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .agreement-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+        border-right: none;
+    }
+    
+    .tab-button.active {
+        border-bottom-color: #0073aa;
+        border-right: 3px solid #0073aa;
+    }
+}
+
+@media (max-width: 480px) {
+    .vortex-modal-content {
+        width: 98%;
+        margin: 10px;
+    }
+    
+    .vortex-modal-header h2 {
+        font-size: 1.2em;
+    }
+    
+    .vortex-modal-body {
+        padding: 15px;
+    }
+    
+    .agreement-checkbox {
+        padding: 15px;
+    }
+    
+    .agreement-checkbox label {
+        font-size: 14px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .vortex-modal {
+        position: static;
+        background: none;
+    }
+    
+    .vortex-modal-content {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .vortex-modal-header {
+        background: #000 !important;
+        color: #fff !important;
+    }
+    
+    .vortex-modal-footer {
+        display: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .vortex-modal {
+        background: rgba(0, 0, 0, 0.9);
+    }
+    
+    .vortex-modal-content {
+        border: 2px solid #000;
+    }
+    
+    .vortex-modal-header {
+        background: #000 !important;
+        border-bottom: 2px solid #000;
+    }
+    
+    .tab-button.active {
+        background: #000 !important;
+        color: #fff !important;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .vortex-modal,
+    .vortex-modal-content,
+    .tab-content,
+    .vortex-message {
+        animation: none;
+    }
+    
+    .vortex-modal-close:hover,
+    .vortex-modal-footer .button:hover {
+        transform: none;
+    }
+}
+
+/* Focus Styles for Accessibility */
+.vortex-modal-close:focus,
+.tab-button:focus,
+.agreement-checkbox input:focus,
+.vortex-modal-footer .button:focus {
+    outline: 2px solid #0073aa;
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.vortex-modal.loading {
+    pointer-events: none;
+}
+
+.vortex-modal.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1000001;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 

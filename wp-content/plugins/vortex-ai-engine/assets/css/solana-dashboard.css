@@ -1,0 +1,888 @@
+/* VORTEX AI Engine - Solana Dashboard Styles */
+
+.vortex-solana-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.vortex-solana-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.vortex-solana-section h2 {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5em;
+    border-bottom: 2px solid #0073aa;
+    padding-bottom: 10px;
+}
+
+.vortex-solana-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.vortex-solana-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.vortex-solana-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.vortex-solana-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.vortex-solana-card h3 {
+    margin: 0 0 10px 0;
+    color: #495057;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vortex-solana-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #212529;
+    margin: 10px 0;
+}
+
+.vortex-solana-value.large {
+    font-size: 2.2em;
+}
+
+.vortex-solana-value.status-ok {
+    color: #28a745;
+}
+
+.vortex-solana-value.status-error {
+    color: #dc3545;
+}
+
+.vortex-solana-value.status-warning {
+    color: #ffc107;
+}
+
+.vortex-solana-card.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.status-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.status-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-badge.status-ok {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.status-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Actions */
+.vortex-solana-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.vortex-solana-actions .button {
+    margin: 0;
+}
+
+/* Modal */
+.vortex-solana-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.vortex-solana-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.vortex-solana-modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.vortex-solana-modal-close:hover,
+.vortex-solana-modal-close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Tables */
+.vortex-solana-dashboard table {
+    margin: 20px 0;
+}
+
+.vortex-solana-dashboard th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.vortex-solana-dashboard td {
+    vertical-align: middle;
+}
+
+.vortex-solana-dashboard code {
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .vortex-solana-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vortex-solana-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .vortex-solana-actions {
+        flex-direction: column;
+    }
+    
+    .vortex-solana-modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+    
+    .vortex-solana-value {
+        font-size: 1.5em;
+    }
+    
+    .vortex-solana-value.large {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .vortex-solana-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .vortex-solana-section {
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .vortex-solana-card {
+        padding: 15px;
+    }
+}
+
+/* Loading states */
+.vortex-solana-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.vortex-solana-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Network status indicators */
+.network-status {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.network-status.online {
+    background: #28a745;
+}
+
+.network-status.offline {
+    background: #dc3545;
+}
+
+.network-status.warning {
+    background: #ffc107;
+}
+
+/* Performance indicators */
+.performance-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.performance-bar {
+    flex: 1;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin: 0 10px;
+    overflow: hidden;
+}
+
+.performance-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    transition: width 0.3s ease;
+}
+
+/* Charts and graphs placeholder */
+.vortex-solana-chart {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 20px 0;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+/* Solana theme colors */
+.solana-primary {
+    color: #9945FF;
+}
+
+.solana-secondary {
+    color: #14F195;
+}
+
+.solana-accent {
+    color: #FF6B6B;
+}
+
+/* Button styles */
+.button.solana-primary {
+    background: #9945FF;
+    border-color: #9945FF;
+    color: white;
+}
+
+.button.solana-primary:hover {
+    background: #7B3FD9;
+    border-color: #7B3FD9;
+}
+
+.button.solana-secondary {
+    background: #14F195;
+    border-color: #14F195;
+    color: #000;
+}
+
+.button.solana-secondary:hover {
+    background: #0FD885;
+    border-color: #0FD885;
+}
+
+/* Tooltips */
+.vortex-solana-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.vortex-solana-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8em;
+}
+
+.vortex-solana-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.vortex-solana-card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.vortex-solana-card:nth-child(1) { animation-delay: 0.1s; }
+.vortex-solana-card:nth-child(2) { animation-delay: 0.2s; }
+.vortex-solana-card:nth-child(3) { animation-delay: 0.3s; }
+.vortex-solana-card:nth-child(4) { animation-delay: 0.4s; }
+.vortex-solana-card:nth-child(5) { animation-delay: 0.5s; }
+.vortex-solana-card:nth-child(6) { animation-delay: 0.6s; } 
+
+/* TOLA Token Specific Styles */
+
+.tola-card {
+    border-left: 4px solid #9945FF;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.tola-card h3 {
+    color: #9945FF;
+}
+
+.tola-subtitle {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Distribution bars */
+.distribution-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.distribution-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Transaction types */
+.transaction-type {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-transfer {
+    background: #d4edda;
+    color: #155724;
+}
+
+.transaction-stake {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.transaction-unstake {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.transaction-reward {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.transaction-mint {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+/* TOLA specific colors */
+.tola-primary {
+    color: #9945FF;
+}
+
+.tola-secondary {
+    color: #14F195;
+}
+
+.tola-accent {
+    color: #FF6B6B;
+}
+
+.tola-warning {
+    color: #FFD93D;
+}
+
+.tola-success {
+    color: #6BCF7F;
+}
+
+/* TOLA metrics grid */
+.tola-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tola-metric-card {
+    background: linear-gradient(135deg, #9945FF 0%, #7B3FD9 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tola-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(153, 69, 255, 0.3);
+}
+
+.tola-metric-card h3 {
+    color: white;
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tola-metric-card .vortex-solana-value {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.tola-metric-card .tola-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8em;
+}
+
+/* TOLA rewards system */
+.rewards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.reward-card {
+    background: linear-gradient(135deg, #14F195 0%, #0FD885 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.reward-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(20, 241, 149, 0.3);
+}
+
+.reward-card h3 {
+    color: white;
+    margin: 0 0 8px 0;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reward-card .vortex-solana-value {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.reward-card .tola-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.7em;
+}
+
+/* TOLA holders table */
+.holder-rank {
+    font-weight: bold;
+    color: #9945FF;
+}
+
+.holder-address {
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+.holder-percentage {
+    font-weight: bold;
+    color: #14F195;
+}
+
+/* TOLA operations modal */
+.tola-operation-form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.tola-operation-form h3 {
+    color: #9945FF;
+    margin-bottom: 15px;
+}
+
+.tola-operation-form .form-table th {
+    color: #495057;
+    font-weight: 600;
+}
+
+.tola-operation-form input,
+.tola-operation-form select {
+    border: 2px solid #e9ecef;
+    border-radius: 4px;
+    padding: 8px 12px;
+    transition: border-color 0.3s ease;
+}
+
+.tola-operation-form input:focus,
+.tola-operation-form select:focus {
+    border-color: #9945FF;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(153, 69, 255, 0.1);
+}
+
+/* TOLA price ticker */
+.tola-price-ticker {
+    background: linear-gradient(135deg, #9945FF 0%, #7B3FD9 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.tola-price-ticker .price {
+    font-size: 1.2em;
+}
+
+.tola-price-ticker .change {
+    font-size: 0.8em;
+    padding: 2px 6px;
+    border-radius: 12px;
+}
+
+.tola-price-ticker .change.positive {
+    background: rgba(20, 241, 149, 0.2);
+    color: #14F195;
+}
+
+.tola-price-ticker .change.negative {
+    background: rgba(255, 107, 107, 0.2);
+    color: #FF6B6B;
+}
+
+/* TOLA charts */
+.tola-chart-container {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.tola-chart-title {
+    color: #9945FF;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.tola-chart-placeholder {
+    height: 200px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* TOLA statistics */
+.tola-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.tola-stat-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tola-stat-card:hover {
+    border-color: #9945FF;
+    box-shadow: 0 4px 8px rgba(153, 69, 255, 0.1);
+}
+
+.tola-stat-card h4 {
+    color: #495057;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 8px 0;
+}
+
+.tola-stat-card .stat-value {
+    color: #9945FF;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.tola-stat-card .stat-change {
+    font-size: 0.7em;
+    color: #6c757d;
+}
+
+/* Responsive design for TOLA elements */
+@media (max-width: 768px) {
+    .tola-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .rewards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .tola-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .tola-price-ticker {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .tola-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .rewards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tola-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tola-metric-card {
+        padding: 15px;
+    }
+    
+    .reward-card {
+        padding: 12px;
+    }
+}
+
+/* TOLA animations */
+@keyframes tolaPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.tola-card:hover {
+    animation: tolaPulse 0.3s ease-in-out;
+}
+
+@keyframes tolaGlow {
+    0% { box-shadow: 0 0 5px rgba(153, 69, 255, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(153, 69, 255, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(153, 69, 255, 0.3); }
+}
+
+.tola-metric-card:hover {
+    animation: tolaGlow 2s ease-in-out infinite;
+}
+
+/* TOLA loading states */
+.tola-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.tola-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(153, 69, 255, 0.2), transparent);
+    animation: tolaShimmer 1.5s infinite;
+}
+
+@keyframes tolaShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* TOLA tooltips */
+.tola-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tola-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #9945FF;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8em;
+}
+
+.tola-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* TOLA badges */
+.tola-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tola-badge.primary {
+    background: #9945FF;
+    color: white;
+}
+
+.tola-badge.secondary {
+    background: #14F195;
+    color: #000;
+}
+
+.tola-badge.accent {
+    background: #FF6B6B;
+    color: white;
+}
+
+.tola-badge.warning {
+    background: #FFD93D;
+    color: #000;
+}
+
+.tola-badge.success {
+    background: #6BCF7F;
+    color: white;
+} 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # WordPress Plugin .gitignore
 
 # WordPress core files and sensitive configuration
@@ -133,3 +134,34 @@ fixtures/
 htmlcov/
 .coverage
 coverage.xml 
+=======
+﻿# Dependencies
+/vendor/
+/node_modules/
+
+# Build
+/dist/
+
+# Environment
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Tests
+/coverage/
+.phpunit.result.cache
+
+# Track composer.lock for dependency reproducibility
+# /composer.lock
+>>>>>>> a8f66794812da14c3f250839d506c51ce209c4ee

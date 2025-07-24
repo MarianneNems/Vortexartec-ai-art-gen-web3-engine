@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "created": "2025-07-24 01:01:09",
+    "files": [
+        "mu-plugins\/woocommerce-blocks-fix.php",
+        "test-fix.php",
+        "monitor-fix.php",
+        "deploy.php",
+        "README.md",
+        "DEPLOYMENT-SUMMARY-REPORT.md",
+        "DEPLOYMENT-VERIFICATION.md",
+        "FIX-DEPLOYMENT-SUMMARY.md",
+        "DEPLOYMENT-READINESS-CONFIRMATION.md"
+    ],
+    "total_size": 38563,
+    "total_size_kb": 37.66
+}

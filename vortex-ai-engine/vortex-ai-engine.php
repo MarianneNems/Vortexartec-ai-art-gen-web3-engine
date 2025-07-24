@@ -190,6 +190,15 @@ class Vortex_AI_Engine {
      * Load all plugin dependencies
      */
     private function load_dependencies() {
+        // Recursive Self-Improvement Wrapper (MUST BE LOADED FIRST)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement-wrapper.php';
+        
+        // WooCommerce Blocks integration fix (must be loaded first)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-woocommerce-fix.php';
+        
+        // Agreement policy (must be loaded first)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-agreement-policy.php';
+        
         // Core AI systems
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/ai-agents/class-vortex-archer-orchestrator.php';
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/ai-agents/class-vortex-huraii-agent.php';
@@ -225,6 +234,8 @@ class Vortex_AI_Engine {
         // Blockchain and smart contracts
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/blockchain/class-vortex-smart-contract-manager.php';
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/blockchain/class-vortex-tola-token-handler.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/blockchain/class-vortex-solana-integration.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/blockchain/class-vortex-solana-database.php';
         
         // Database and storage
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/database/class-vortex-database-manager.php';
@@ -243,6 +254,7 @@ class Vortex_AI_Engine {
             require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-admin-dashboard.php';
             require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-activity-monitor.php';
             require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-artist-journey-dashboard.php';
+            require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/class-vortex-solana-dashboard.php';
         }
         
         // Public interfaces
@@ -292,6 +304,17 @@ class Vortex_AI_Engine {
         
         // Initialize TOLA token handler
         Vortex_Tola_Token_Handler::get_instance();
+        
+        // Initialize Solana integration
+        if (class_exists('Vortex_Solana_Integration')) {
+            $this->solana_integration = new Vortex_Solana_Integration();
+            $this->solana_integration->init();
+        }
+        
+        // Initialize Solana database manager
+        if (class_exists('Vortex_Solana_Database_Manager')) {
+            Vortex_Solana_Database_Manager::create_tables();
+        }
     }
     
     /**
@@ -315,6 +338,12 @@ class Vortex_AI_Engine {
             
             // Initialize admin dashboard
             Vortex_Admin_Dashboard::get_instance();
+            
+            // Initialize Solana dashboard
+            if (class_exists('Vortex_Solana_Dashboard')) {
+                $solana_dashboard = new Vortex_Solana_Dashboard();
+                $solana_dashboard->init();
+            }
             
             // Initialize TOLA-ART admin page
             if (file_exists(VORTEX_AI_ENGINE_PLUGIN_PATH . 'admin/tola-art-admin-page.php')) {
