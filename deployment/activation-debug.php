@@ -1,383 +1,308 @@
 <?php
 /**
- * VORTEX AI Engine - Activation Debug Script
+ * Vortex AI Engine - Activation Debug Script
  * 
- * This script helps identify what's preventing the plugin from activating
+ * Diagnoses and fixes activation issues, especially WooCommerce conflicts
  * 
- * @package VORTEX_AI_Engine
- * @version 2.2.0
+ * @package VortexAIEngine
+ * @since 2.2.0
  */
 
 // Prevent direct access
 if (!defined('ABSPATH')) {
-    // If not in WordPress, simulate basic environment
-    define('ABSPATH', dirname(__FILE__) . '/../../');
-    if (file_exists(ABSPATH . 'wp-config.php')) {
-        require_once ABSPATH . 'wp-config.php';
-    } else {
-        echo "❌ WordPress not found. Please run this from within WordPress.\n";
-        exit;
+    // Load WordPress if not already loaded
+    if (!file_exists('../../../wp-config.php')) {
+        die('❌ WordPress not found. Please run this script from wp-content/plugins/vortex-ai-engine/deployment/');
     }
+    require_once '../../../wp-config.php';
 }
 
-/**
- * VORTEX Activation Debug Class
- */
-class VORTEX_Activation_Debug {
+class Vortex_Activation_Debug {
     
-    private $errors = array();
-    private $warnings = array();
-    private $success = array();
+    private $issues = [];
+    private $fixes = [];
     
-    public function run_debug() {
-        echo "🔍 VORTEX AI Engine - Activation Debug\n";
+    /**
+     * Run activation diagnostics
+     */
+    public function run_diagnostics() {
+        echo "🔍 VORTEX AI ENGINE - ACTIVATION DEBUG\n";
         echo "=====================================\n\n";
         
-        // Test WordPress environment
-        $this->test_wordpress_environment();
+        $this->check_woocommerce_conflicts();
+        $this->check_plugin_structure();
+        $this->check_php_compatibility();
+        $this->check_wordpress_compatibility();
+        $this->check_file_permissions();
+        $this->check_database_tables();
         
-        // Test file structure
-        $this->test_file_structure();
-        
-        // Test required classes
-        $this->test_required_classes();
-        
-        // Test database connection
-        $this->test_database_connection();
-        
-        // Test plugin loading
-        $this->test_plugin_loading();
-        
-        // Generate report
-        $this->generate_report();
+        $this->display_results();
+        $this->suggest_fixes();
     }
     
     /**
-     * Test WordPress environment
+     * Check WooCommerce conflicts
      */
-    private function test_wordpress_environment() {
-        echo "📋 Testing WordPress Environment...\n";
+    private function check_woocommerce_conflicts() {
+        echo "🛒 Checking WooCommerce conflicts...\n";
         
-        // Check if WordPress is loaded
-        if (function_exists('get_bloginfo')) {
-            $this->add_success('WordPress loaded successfully');
+        // Check if WooCommerce is active
+        if (is_plugin_active('woocommerce/woocommerce.php')) {
+            $this->issues[] = "WooCommerce is active - potential integration conflicts";
+            
+            // Check WooCommerce Blocks
+            if (is_plugin_active('woocommerce-blocks/woocommerce-blocks.php')) {
+                $this->issues[] = "WooCommerce Blocks is active - causing integration registry conflicts";
+                $this->fixes[] = "Temporarily deactivate WooCommerce Blocks plugin";
+            }
+            
+            // Check WooCommerce version
+            if (defined('WC_VERSION')) {
+                $wc_version = WC_VERSION;
+                if (version_compare($wc_version, '5.0', '<')) {
+                    $this->issues[] = "WooCommerce version $wc_version may have compatibility issues";
+                    $this->fixes[] = "Update WooCommerce to version 5.0 or higher";
+                }
+            }
         } else {
-            $this->add_error('WordPress not loaded');
-            return;
+            echo "✅ WooCommerce not active - no conflicts detected\n";
         }
         
-        // Check WordPress version
-        $wp_version = get_bloginfo('version');
-        $this->add_success("WordPress version: $wp_version");
+        echo "   Completed WooCommerce conflict check\n\n";
+    }
+    
+    /**
+     * Check plugin structure
+     */
+    private function check_plugin_structure() {
+        echo "📁 Checking plugin structure...\n";
         
-        // Check PHP version
+        $required_files = [
+            'vortex-ai-engine.php',
+            'includes/class-vortex-agreement-policy.php',
+            'includes/class-vortex-health-check.php',
+            'assets/js/agreement.js',
+            'assets/css/agreement.css'
+        ];
+        
+        foreach ($required_files as $file) {
+            if (!file_exists($file)) {
+                $this->issues[] = "Missing required file: $file";
+            } else {
+                echo "✅ $file exists\n";
+            }
+        }
+        
+        // Check main plugin file header
+        if (file_exists('vortex-ai-engine.php')) {
+            $plugin_data = get_plugin_data('vortex-ai-engine.php');
+            if (empty($plugin_data['Plugin Name'])) {
+                $this->issues[] = "Invalid plugin header in vortex-ai-engine.php";
+            } else {
+                echo "✅ Plugin header valid: {$plugin_data['Plugin Name']}\n";
+            }
+        }
+        
+        echo "   Completed plugin structure check\n\n";
+    }
+    
+    /**
+     * Check PHP compatibility
+     */
+    private function check_php_compatibility() {
+        echo "🐘 Checking PHP compatibility...\n";
+        
         $php_version = PHP_VERSION;
-        $this->add_success("PHP version: $php_version");
+        $required_php = '7.4';
         
-        // Check memory limit
-        $memory_limit = ini_get('memory_limit');
-        $this->add_success("Memory limit: $memory_limit");
-        
-        // Check if we're in admin
-        if (is_admin()) {
-            $this->add_success('Running in admin context');
+        if (version_compare($php_version, $required_php, '<')) {
+            $this->issues[] = "PHP version $php_version is below required version $required_php";
+            $this->fixes[] = "Upgrade PHP to version $required_php or higher";
         } else {
-            $this->add_warning('Not running in admin context');
+            echo "✅ PHP version $php_version is compatible\n";
         }
         
-        echo "✅ WordPress Environment Test Complete\n\n";
+        // Check required PHP extensions
+        $required_extensions = ['json', 'curl', 'mbstring'];
+        foreach ($required_extensions as $ext) {
+            if (!extension_loaded($ext)) {
+                $this->issues[] = "Missing PHP extension: $ext";
+                $this->fixes[] = "Install PHP $ext extension";
+            } else {
+                echo "✅ PHP extension $ext is loaded\n";
+            }
+        }
+        
+        echo "   Completed PHP compatibility check\n\n";
     }
     
     /**
-     * Test file structure
+     * Check WordPress compatibility
      */
-    private function test_file_structure() {
-        echo "📁 Testing File Structure...\n";
+    private function check_wordpress_compatibility() {
+        echo "📝 Checking WordPress compatibility...\n";
         
-        $plugin_path = ABSPATH . 'wp-content/plugins/vortex-ai-engine/';
+        global $wp_version;
+        $required_wp = '5.0';
+        
+        if (version_compare($wp_version, $required_wp, '<')) {
+            $this->issues[] = "WordPress version $wp_version is below required version $required_wp";
+            $this->fixes[] = "Upgrade WordPress to version $required_wp or higher";
+        } else {
+            echo "✅ WordPress version $wp_version is compatible\n";
+        }
+        
+        // Check if REST API is working
+        $rest_url = get_rest_url();
+        if (empty($rest_url)) {
+            $this->issues[] = "WordPress REST API is not available";
+            $this->fixes[] = "Enable WordPress REST API";
+        } else {
+            echo "✅ WordPress REST API is available\n";
+        }
+        
+        echo "   Completed WordPress compatibility check\n\n";
+    }
+    
+    /**
+     * Check file permissions
+     */
+    private function check_file_permissions() {
+        echo "🔐 Checking file permissions...\n";
+        
+        $directories = ['includes', 'assets', 'admin', 'public'];
+        foreach ($directories as $dir) {
+            if (is_dir($dir)) {
+                if (!is_readable($dir)) {
+                    $this->issues[] = "Directory $dir is not readable";
+                    $this->fixes[] = "Set directory $dir permissions to 755";
+                } else {
+                    echo "✅ Directory $dir is readable\n";
+                }
+            }
+        }
         
         // Check main plugin file
-        $main_file = $plugin_path . 'vortex-ai-engine.php';
-        if (file_exists($main_file)) {
-            $this->add_success('Main plugin file exists');
-        } else {
-            $this->add_error('Main plugin file missing: ' . $main_file);
-        }
-        
-        // Check includes directory
-        $includes_dir = $plugin_path . 'includes/';
-        if (is_dir($includes_dir)) {
-            $this->add_success('Includes directory exists');
-        } else {
-            $this->add_error('Includes directory missing: ' . $includes_dir);
-        }
-        
-        // Check AI agents
-        $ai_agents_dir = $includes_dir . 'ai-agents/';
-        if (is_dir($ai_agents_dir)) {
-            $this->add_success('AI agents directory exists');
-            
-            // Check individual agent files
-            $agents = array(
-                'class-vortex-archer-orchestrator.php',
-                'class-vortex-huraii-agent.php',
-                'class-vortex-cloe-agent.php',
-                'class-vortex-horace-agent.php',
-                'class-vortex-thorius-agent.php'
-            );
-            
-            foreach ($agents as $agent) {
-                $agent_file = $ai_agents_dir . $agent;
-                if (file_exists($agent_file)) {
-                    $this->add_success("AI agent exists: $agent");
-                } else {
-                    $this->add_error("AI agent missing: $agent");
-                }
-            }
-        } else {
-            $this->add_error('AI agents directory missing: ' . $ai_agents_dir);
-        }
-        
-        // Check database directory
-        $database_dir = $includes_dir . 'database/';
-        if (is_dir($database_dir)) {
-            $this->add_success('Database directory exists');
-            
-            $db_files = array(
-                'class-vortex-database-manager.php',
-                'class-vortex-artist-journey-database.php'
-            );
-            
-            foreach ($db_files as $file) {
-                $db_file = $database_dir . $file;
-                if (file_exists($db_file)) {
-                    $this->add_success("Database file exists: $file");
-                } else {
-                    $this->add_error("Database file missing: $file");
-                }
-            }
-        } else {
-            $this->add_error('Database directory missing: ' . $database_dir);
-        }
-        
-        echo "✅ File Structure Test Complete\n\n";
-    }
-    
-    /**
-     * Test required classes
-     */
-    private function test_required_classes() {
-        echo "🔧 Testing Required Classes...\n";
-        
-        $plugin_path = ABSPATH . 'wp-content/plugins/vortex-ai-engine/';
-        
-        // Test loading main plugin file
-        $main_file = $plugin_path . 'vortex-ai-engine.php';
-        if (file_exists($main_file)) {
-            try {
-                // Include the main plugin file
-                include_once $main_file;
-                
-                // Check if main class exists
-                if (class_exists('Vortex_AI_Engine')) {
-                    $this->add_success('Main plugin class loaded successfully');
-                } else {
-                    $this->add_error('Main plugin class not found after loading');
-                }
-                
-                // Check if global function exists
-                if (function_exists('vortex_ai_engine_init')) {
-                    $this->add_success('Plugin init function exists');
-                } else {
-                    $this->add_error('Plugin init function not found');
-                }
-                
-            } catch (Exception $e) {
-                $this->add_error('Error loading main plugin file: ' . $e->getMessage());
-            } catch (Error $e) {
-                $this->add_error('Fatal error loading main plugin file: ' . $e->getMessage());
-            }
-        }
-        
-        // Test individual class files
-        $classes_to_test = array(
-            'includes/ai-agents/class-vortex-archer-orchestrator.php' => 'VORTEX_ARCHER_Orchestrator',
-            'includes/ai-agents/class-vortex-huraii-agent.php' => 'Vortex_Huraii_Agent',
-            'includes/ai-agents/class-vortex-cloe-agent.php' => 'Vortex_Cloe_Agent',
-            'includes/ai-agents/class-vortex-horace-agent.php' => 'Vortex_Horace_Agent',
-            'includes/ai-agents/class-vortex-thorius-agent.php' => 'Vortex_Thorius_Agent',
-            'includes/database/class-vortex-database-manager.php' => 'Vortex_Database_Manager'
-        );
-        
-        foreach ($classes_to_test as $file => $class_name) {
-            $full_path = $plugin_path . $file;
-            if (file_exists($full_path)) {
-                try {
-                    include_once $full_path;
-                    if (class_exists($class_name)) {
-                        $this->add_success("Class loaded: $class_name");
-                    } else {
-                        $this->add_error("Class not found after loading: $class_name");
-                    }
-                } catch (Exception $e) {
-                    $this->add_error("Error loading $file: " . $e->getMessage());
-                } catch (Error $e) {
-                    $this->add_error("Fatal error loading $file: " . $e->getMessage());
-                }
+        if (file_exists('vortex-ai-engine.php')) {
+            if (!is_readable('vortex-ai-engine.php')) {
+                $this->issues[] = "Main plugin file is not readable";
+                $this->fixes[] = "Set vortex-ai-engine.php permissions to 644";
             } else {
-                $this->add_error("File not found: $file");
+                echo "✅ Main plugin file is readable\n";
             }
         }
         
-        echo "✅ Required Classes Test Complete\n\n";
+        echo "   Completed file permissions check\n\n";
     }
     
     /**
-     * Test database connection
+     * Check database tables
      */
-    private function test_database_connection() {
-        echo "🗄️ Testing Database Connection...\n";
+    private function check_database_tables() {
+        echo "🗄️ Checking database tables...\n";
         
         global $wpdb;
         
-        if (!$wpdb) {
-            $this->add_error('WordPress database object not available');
-            return;
-        }
+        // Check if Vortex tables exist
+        $tables = [
+            $wpdb->prefix . 'vortex_activity_logs',
+            $wpdb->prefix . 'vortex_artist_journey',
+            $wpdb->prefix . 'vortex_agreements'
+        ];
         
-        // Test basic connection
-        $test_query = $wpdb->get_var("SELECT 1");
-        if ($test_query) {
-            $this->add_success('Database connection successful');
-        } else {
-            $this->add_error('Database connection failed');
-            return;
-        }
-        
-        // Test if we can create tables
-        $test_table = $wpdb->prefix . 'vortex_test_table';
-        $create_result = $wpdb->query("CREATE TABLE IF NOT EXISTS $test_table (id INT PRIMARY KEY)");
-        
-        if ($create_result !== false) {
-            $this->add_success('Database table creation successful');
-            // Clean up test table
-            $wpdb->query("DROP TABLE IF EXISTS $test_table");
-        } else {
-            $this->add_error('Database table creation failed: ' . $wpdb->last_error);
-        }
-        
-        echo "✅ Database Connection Test Complete\n\n";
-    }
-    
-    /**
-     * Test plugin loading
-     */
-    private function test_plugin_loading() {
-        echo "🚀 Testing Plugin Loading...\n";
-        
-        // Check if plugin is already active
-        if (is_plugin_active('vortex-ai-engine/vortex-ai-engine.php')) {
-            $this->add_success('Plugin is already active');
-        } else {
-            $this->add_warning('Plugin is not active');
-        }
-        
-        // Test activation function
-        $plugin_path = ABSPATH . 'wp-content/plugins/vortex-ai-engine/vortex-ai-engine.php';
-        if (file_exists($plugin_path)) {
-            try {
-                // Get plugin data
-                $plugin_data = get_plugin_data($plugin_path);
-                if ($plugin_data) {
-                    $this->add_success('Plugin data loaded: ' . $plugin_data['Name'] . ' v' . $plugin_data['Version']);
-                } else {
-                    $this->add_error('Failed to load plugin data');
-                }
-            } catch (Exception $e) {
-                $this->add_error('Error loading plugin data: ' . $e->getMessage());
+        foreach ($tables as $table) {
+            $exists = $wpdb->get_var("SHOW TABLES LIKE '$table'");
+            if (!$exists) {
+                echo "⚠️  Table $table does not exist (will be created on activation)\n";
+            } else {
+                echo "✅ Table $table exists\n";
             }
         }
         
-        echo "✅ Plugin Loading Test Complete\n\n";
+        echo "   Completed database tables check\n\n";
     }
     
     /**
-     * Add success message
+     * Display diagnostic results
      */
-    private function add_success($message) {
-        $this->success[] = $message;
-    }
-    
-    /**
-     * Add warning message
-     */
-    private function add_warning($message) {
-        $this->warnings[] = $message;
-    }
-    
-    /**
-     * Add error message
-     */
-    private function add_error($message) {
-        $this->errors[] = $message;
-    }
-    
-    /**
-     * Generate debug report
-     */
-    private function generate_report() {
-        echo "📊 Debug Report\n";
-        echo "===============\n\n";
+    private function display_results() {
+        echo "📊 DIAGNOSTIC RESULTS\n";
+        echo "====================\n\n";
         
-        echo "✅ Successes (" . count($this->success) . "):\n";
-        foreach ($this->success as $success) {
-            echo "  ✓ $success\n";
-        }
-        echo "\n";
-        
-        if (!empty($this->warnings)) {
-            echo "⚠️ Warnings (" . count($this->warnings) . "):\n";
-            foreach ($this->warnings as $warning) {
-                echo "  ⚠ $warning\n";
+        if (empty($this->issues)) {
+            echo "✅ No issues detected! Plugin should activate normally.\n\n";
+        } else {
+            echo "❌ Issues found:\n";
+            foreach ($this->issues as $issue) {
+                echo "   • $issue\n";
             }
             echo "\n";
         }
-        
-        if (!empty($this->errors)) {
-            echo "❌ Errors (" . count($this->errors) . "):\n";
-            foreach ($this->errors as $error) {
-                echo "  ✗ $error\n";
+    }
+    
+    /**
+     * Suggest fixes
+     */
+    private function suggest_fixes() {
+        if (!empty($this->fixes)) {
+            echo "🔧 SUGGESTED FIXES\n";
+            echo "==================\n\n";
+            
+            foreach ($this->fixes as $fix) {
+                echo "   • $fix\n";
             }
             echo "\n";
+            
+            echo "🚀 QUICK FIX COMMANDS:\n";
+            echo "======================\n\n";
+            
+            if (in_array("Temporarily deactivate WooCommerce Blocks plugin", $this->fixes)) {
+                echo "1. Go to WordPress Admin → Plugins\n";
+                echo "2. Deactivate 'WooCommerce Blocks'\n";
+                echo "3. Try activating Vortex AI Engine\n";
+                echo "4. Re-activate WooCommerce Blocks after Vortex is active\n\n";
+            }
+            
+            echo "📞 If issues persist, check the WordPress debug log for more details.\n";
+        }
+    }
+    
+    /**
+     * Attempt to fix WooCommerce conflicts
+     */
+    public function fix_woocommerce_conflicts() {
+        echo "🔧 Attempting to fix WooCommerce conflicts...\n";
+        
+        // Deactivate WooCommerce Blocks temporarily
+        if (is_plugin_active('woocommerce-blocks/woocommerce-blocks.php')) {
+            deactivate_plugins('woocommerce-blocks/woocommerce-blocks.php');
+            echo "✅ WooCommerce Blocks deactivated\n";
         }
         
-        // Summary
-        $total_tests = count($this->success) + count($this->warnings) + count($this->errors);
-        $success_rate = $total_tests > 0 ? round((count($this->success) / $total_tests) * 100, 1) : 0;
-        
-        echo "📈 Summary:\n";
-        echo "  Total Tests: $total_tests\n";
-        echo "  Success Rate: $success_rate%\n";
-        echo "  Errors: " . count($this->errors) . "\n";
-        echo "  Warnings: " . count($this->warnings) . "\n\n";
-        
-        if (empty($this->errors)) {
-            echo "🎉 All critical tests passed! Plugin should activate successfully.\n";
-        } else {
-            echo "🔧 Fix the errors above before attempting to activate the plugin.\n";
+        // Clear any cached integration registries
+        if (class_exists('Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry')) {
+            // Clear any cached registrations
+            wp_cache_flush();
+            echo "✅ Cache cleared\n";
         }
         
-        // Save report to file
-        $report_file = ABSPATH . 'wp-content/uploads/vortex-activation-debug-' . date('Y-m-d-H-i-s') . '.txt';
-        $report_content = ob_get_contents();
-        file_put_contents($report_file, $report_content);
-        
-        echo "\n📄 Debug report saved to: $report_file\n";
+        echo "🔄 Please try activating Vortex AI Engine now.\n";
+        echo "   You can re-activate WooCommerce Blocks after Vortex is active.\n";
     }
 }
 
-// Run debug if called directly
+// Run diagnostics if script is executed directly
 if (basename(__FILE__) === basename($_SERVER['SCRIPT_NAME'])) {
-    $debug = new VORTEX_Activation_Debug();
-    $debug->run_debug();
+    $debug = new Vortex_Activation_Debug();
+    $debug->run_diagnostics();
+    
+    // Ask if user wants to attempt fixes
+    echo "Would you like to attempt automatic fixes? (y/n): ";
+    $handle = fopen("php://stdin", "r");
+    $line = fgets($handle);
+    fclose($handle);
+    
+    if (trim(strtolower($line)) === 'y') {
+        $debug->fix_woocommerce_conflicts();
+    }
 } 

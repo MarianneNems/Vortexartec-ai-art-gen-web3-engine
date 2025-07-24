@@ -6,15 +6,24 @@
  * Run this from your browser or command line
  */
 
-echo "🔍 VORTEX AI Engine - Quick Log Checker\n";
-echo "=====================================\n\n";
-
-// Check if we're in WordPress
+// Bootstrap WordPress if not already loaded
 if (!defined('ABSPATH')) {
-    echo "❌ This script must be run from within WordPress\n";
-    echo "Access via: yoursite.com/wp-content/plugins/vortex-ai-engine/QUICK-LOG-CHECK.php\n";
+    if (file_exists(__DIR__ . '/../../../wp-load.php')) {
+        require_once __DIR__ . '/../../../wp-load.php';
+    } else {
+        echo "❌ WordPress not found. Please place this file in: wp-content/plugins/vortex-ai-engine/\n";
+        exit;
+    }
+}
+
+// Security check
+if (!current_user_can('activate_plugins')) {
+    echo "❌ Insufficient permissions to run this script.\n";
     exit;
 }
+
+echo "🔍 VORTEX AI Engine - Quick Log Checker\n";
+echo "=====================================\n\n";
 
 $errors_found = 0;
 $warnings_found = 0;
@@ -85,7 +94,44 @@ if (is_plugin_active('vortex-ai-engine/vortex-ai-engine.php')) {
     $errors_found++;
 }
 
-// 5. Check Error Logs
+// 5. Check Solana Integration
+echo "\n⛓️ Solana Integration:\n";
+if (class_exists('Vortex_Solana_Integration')) {
+    echo "  ✅ Solana Integration: Available\n";
+} else {
+    echo "  ❌ Solana Integration: Not found\n";
+    $errors_found++;
+}
+
+if (class_exists('Vortex_Tola_Token_Handler')) {
+    echo "  ✅ TOLA Token Handler: Available\n";
+} else {
+    echo "  ❌ TOLA Token Handler: Not found\n";
+    $errors_found++;
+}
+
+// 6. Check Database Tables
+echo "\n🗄️ Database Tables:\n";
+global $wpdb;
+$required_tables = [
+    $wpdb->prefix . 'vortex_solana_metrics' => 'Solana Metrics',
+    $wpdb->prefix . 'vortex_solana_programs' => 'Solana Programs',
+    $wpdb->prefix . 'vortex_solana_health' => 'Solana Health',
+    $wpdb->prefix . 'vortex_tola_balances' => 'TOLA Balances',
+    $wpdb->prefix . 'vortex_token_rewards' => 'Token Rewards'
+];
+
+foreach ($required_tables as $table => $description) {
+    $exists = $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+    if ($exists) {
+        echo "  ✅ {$description}: Exists\n";
+    } else {
+        echo "  ❌ {$description}: Missing\n";
+        $errors_found++;
+    }
+}
+
+// 7. Check Error Logs
 echo "\n📝 Error Logs:\n";
 $log_file = WP_CONTENT_DIR . '/debug.log';
 if (file_exists($log_file)) {
@@ -113,7 +159,7 @@ if (file_exists($log_file)) {
     echo "  ✅ No debug.log file found (Good - no errors)\n";
 }
 
-// 6. Check PHP Configuration
+// 8. Check PHP Configuration
 echo "\n🐘 PHP Configuration:\n";
 $php_version = PHP_VERSION;
 $memory_limit = ini_get('memory_limit');
@@ -140,7 +186,48 @@ if ($max_execution_time >= 300 || $max_execution_time == 0) {
     $warnings_found++;
 }
 
-// 7. Summary
+// 9. Check WooCommerce Blocks Integration
+echo "\n🔗 WooCommerce Blocks Integration:\n";
+if (class_exists('Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry')) {
+    echo "  ✅ IntegrationRegistry: Available\n";
+    
+    // Check if there are integration conflicts
+    $registry = Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry::get_instance();
+    $reflection = new ReflectionClass($registry);
+    
+    if ($reflection->hasProperty('integrations')) {
+        $integrations_property = $reflection->getProperty('integrations');
+        $integrations_property->setAccessible(true);
+        $integrations = $integrations_property->getValue($registry);
+        
+        if (empty($integrations)) {
+            echo "  ✅ Integrations: Cleared (Good)\n";
+        } else {
+            echo "  ⚠️ Integrations: " . count($integrations) . " registered\n";
+            $warnings_found++;
+        }
+    }
+} else {
+    echo "  ℹ️ WooCommerce Blocks: Not active\n";
+}
+
+// 10. Check File Permissions
+echo "\n📁 File Permissions:\n";
+$plugin_dir = WP_PLUGIN_DIR . '/vortex-ai-engine';
+if (is_dir($plugin_dir)) {
+    $perms = substr(sprintf('%o', fileperms($plugin_dir)), -4);
+    if ($perms == '0755') {
+        echo "  ✅ Plugin Directory: {$perms} (Correct)\n";
+    } else {
+        echo "  ⚠️ Plugin Directory: {$perms} (Should be 0755)\n";
+        $warnings_found++;
+    }
+} else {
+    echo "  ❌ Plugin Directory: Not found\n";
+    $errors_found++;
+}
+
+// 11. Summary
 echo "\n📊 SUMMARY:\n";
 echo "=====================================\n";
 echo "Errors found: {$errors_found}\n";
@@ -149,13 +236,26 @@ echo "Warnings found: {$warnings_found}\n";
 if ($errors_found == 0) {
     echo "\n🎉 SUCCESS: All critical errors are fixed!\n";
     echo "Your VORTEX AI Engine is running properly.\n";
+    
+    if ($warnings_found == 0) {
+        echo "✅ No warnings - system is optimal!\n";
+    } else {
+        echo "⚠️ Consider addressing {$warnings_found} warnings for optimal performance.\n";
+    }
 } else {
     echo "\n❌ ISSUES: There are {$errors_found} critical errors to fix.\n";
+    echo "Please run the emergency fix: EMERGENCY-WOOCOMMERCE-FIX.php\n";
 }
 
 if ($warnings_found > 0) {
     echo "\n⚠️ WARNINGS: There are {$warnings_found} warnings to consider.\n";
 }
 
-echo "\nFor detailed analysis, run: LOG-CHECKER.php\n";
+echo "\n🔧 Available Tools:\n";
+echo "  • EMERGENCY-WOOCOMMERCE-FIX.php - Fix activation issues\n";
+echo "  • PRE-ACTIVATION-CHECKLIST.php - Comprehensive system check\n";
+echo "  • vortex-debug-dashboard.php - Interactive debugging\n";
+echo "  • comprehensive-audit.php - Full system audit\n";
+
+echo "\n📅 Check completed at: " . current_time('Y-m-d H:i:s') . "\n";
 ?> 
