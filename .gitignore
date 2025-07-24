@@ -1,6 +1,147 @@
+<<<<<<< HEAD
 ﻿# WordPress Plugin .gitignore
 
 # Composer dependencies
+=======
+<<<<<<< HEAD
+# WordPress Plugin .gitignore
+
+# WordPress core files and sensitive configuration
+wp-config.php
+wp-config-*.php
+wp-salt.php
+wp-content/
+wp-admin/
+wp-includes/
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Log files
+*.log
+logs/
+error_log
+
+# Cache files
+cache/
+wp-cache/
+object-cache.php
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node modules and npm/yarn files
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Composer dependencies
+vendor/
+composer.lock
+
+# Build files
+build/
+dist/
+*.zip
+*.tar.gz
+*.tgz
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.staging
+
+# Backup files
+*.bak
+*.backup
+*_backup.php
+wp-config-backup-*.php
+
+# Test files and outputs
+tests/
+test-results/
+coverage/
+*.test.php
+test-*.php
+*-test.php
+test-output/
+test-reports/
+
+# Documentation builds
+docs/_build/
+
+# Redis dump files
+dump.rdb
+
+# Package files
+*.tar.gz
+*.tgz
+
+# WordPress debug files
+debug.log
+debug-*.log
+
+# Plugin specific
+uploads/
+temp/
+tmp/
+
+# Local development files
+local/
+dev/
+development/
+
+# Sensitive configuration files
+config.php
+settings.php
+database.php
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+*.csr
+
+# Local test data
+test-data/
+sample-data/
+fixtures/
+
+# Performance monitoring
+*.prof
+*.cache
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml 
+=======
+﻿# Dependencies
+>>>>>>> 6cb736593f75087a9d2393b01ddcf8a6c6ae773b
 /vendor/
 composer.lock
 
@@ -42,6 +183,7 @@ error_log
 *.bak
 *.backup
 
+<<<<<<< HEAD
 # WordPress specific
 wp-config.php
 wp-content/uploads/
@@ -89,3 +231,8 @@ coverage/
 
 # Backup files
 backup-local-files/
+=======
+# Track composer.lock for dependency reproducibility
+# /composer.lock
+>>>>>>> a8f66794812da14c3f250839d506c51ce209c4ee
+>>>>>>> 6cb736593f75087a9d2393b01ddcf8a6c6ae773b

@@ -1,0 +1,464 @@
+<<<<<<< HEAD
+name: Vortex AI Engine CI/CD
+=======
+name: CI Pipeline
+>>>>>>> a8f66794812da14c3f250839d506c51ce209c4ee
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+<<<<<<< HEAD
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  # PHP Linting and Syntax Check
+  php-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+          
+      - name: PHP Syntax Check
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+          
+      - name: PHP CodeSniffer
+        run: |
+          composer require --dev squizlabs/php_codesniffer
+          ./vendor/bin/phpcs --standard=PSR12 --extensions=php --ignore=vendor/ .
+
+  # Unit Tests
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Install dependencies
+        run: |
+          composer install
+          
+      - name: Run unit tests
+        run: |
+          ./vendor/bin/phpunit --testdox
+        env:
+          WP_TESTS_DIR: /tmp/wordpress-tests-lib
+          
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+
+  # Security Audit
+  security-audit:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          
+      - name: Install dependencies
+        run: |
+          composer install --no-dev
+          
+      - name: Run security audit
+        run: |
+          composer audit --format=json > security-audit.json
+          
+      - name: Upload security audit
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-audit
+          path: security-audit.json
+
+  # Comprehensive Recursive Audit
+  recursive-audit:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Run comprehensive audit
+        run: |
+          php scripts/comprehensive-recursive-audit.php --full --output=AUDIT-REPORT.md
+          
+      - name: Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-report
+          path: AUDIT-REPORT.md
+
+  # Environment Verification
+  env-verification:
+    runs-on: ubuntu-latest
+    needs: php-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, redis
+          
+      - name: Setup WordPress test environment
+        run: |
+          bash bin/install-wp-tests.sh wordpress_test root '' localhost latest
+          
+      - name: Run environment verification
+        run: |
+          php deployment/verify-environment.php
+          
+      - name: Upload verification results
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-verification
+          path: verification-results.txt
+
+  # Build and Package
+  build:
+    runs-on: ubuntu-latest
+    needs: [php-lint, unit-tests, security-audit, recursive-audit, env-verification]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          
+      - name: Create plugin package
+        run: |
+          # Remove development files
+          rm -rf .git .github scripts tests vendor composer.*
+          
+          # Create zip file
+          zip -r vortex-ai-engine.zip . -x "*.git*" "*.github*" "scripts/*" "tests/*" "vendor/*" "composer.*"
+          
+      - name: Upload plugin package
+        uses: actions/upload-artifact@v3
+        with:
+          name: vortex-ai-engine
+          path: vortex-ai-engine.zip
+
+  # Deploy to Staging
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+    steps:
+      - name: Download plugin package
+        uses: actions/download-artifact@v3
+        with:
+          name: vortex-ai-engine
+          
+      - name: Deploy to staging
+        run: |
+          # Add your staging deployment commands here
+          echo "Deploying to staging environment..."
+          # Example: rsync, FTP, or cloud deployment
+          
+      - name: Run smoke tests on staging
+        run: |
+          # Run smoke tests against staging environment
+          curl -X POST ${{ secrets.STAGING_URL }}/wp-json/vortex/v1/health-check
+          
+      - name: Notify staging deployment
+        if: always()
+        run: |
+          echo "Staging deployment completed"
+          # Add notification logic (Slack, email, etc.)
+
+  # Deploy to Production
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [build, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: production
+    steps:
+      - name: Download plugin package
+        uses: actions/download-artifact@v3
+        with:
+          name: vortex-ai-engine
+          
+      - name: Deploy to production
+        run: |
+          # Add your production deployment commands here
+          echo "Deploying to production environment..."
+          # Example: rsync, FTP, or cloud deployment
+          
+      - name: Run smoke tests on production
+        run: |
+          # Run smoke tests against production environment
+          curl -X POST ${{ secrets.PRODUCTION_URL }}/wp-json/vortex/v1/health-check
+          
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Vortex AI Engine v${{ github.run_number }}
+          body: |
+            Automated release from CI/CD pipeline
+            
+            ## Changes
+            - Automated deployment from main branch
+            - All tests passed
+            - Security audit completed
+            - Environment verification successful
+            
+            ## Installation
+            1. Download the plugin package
+            2. Upload to WordPress plugins directory
+            3. Activate the plugin
+            4. Configure AWS credentials
+            5. Run smoke tests
+          draft: false
+          prerelease: false
+          
+      - name: Notify production deployment
+        if: always()
+        run: |
+          echo "Production deployment completed"
+          # Add notification logic (Slack, email, etc.)
+
+  # Daily Health Check
+  daily-health-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          
+      - name: Run health checks
+        run: |
+          # Check staging environment
+          curl -f ${{ secrets.STAGING_URL }}/wp-json/vortex/v1/health-check || echo "Staging health check failed"
+          
+          # Check production environment
+          curl -f ${{ secrets.PRODUCTION_URL }}/wp-json/vortex/v1/health-check || echo "Production health check failed"
+          
+      - name: Generate health report
+        run: |
+          echo "Daily health check completed at $(date)" > health-report.txt
+          
+      - name: Upload health report
+        uses: actions/upload-artifact@v3
+        with:
+          name: daily-health-report
+          path: health-report.txt
+
+  # Notifications
+  notify:
+    runs-on: ubuntu-latest
+    needs: [php-lint, unit-tests, security-audit, recursive-audit, env-verification]
+    if: always()
+    steps:
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "CI/CD pipeline failed!"
+          # Add notification logic for failures
+          
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "CI/CD pipeline completed successfully!"
+          # Add notification logic for success 
+=======
+    branches: [ main ]
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: [8.1, 8.2, 8.3]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+        coverage: xdebug
+    
+    - name: Install Composer dependencies
+      run: composer install --no-dev --optimize-autoloader
+    
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --standard=WordPress includes/ admin/ public/
+    
+    - name: Run PHPUnit tests
+      run: vendor/bin/phpunit
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run JavaScript linting
+      run: npm run lint:js
+
+    - name: Build frontend assets
+      run: npm run build
+    
+    - name: Security audit (production dependencies only)
+      run: |
+        npm ci --omit=dev
+        npm audit --audit-level=high
+
+  python-tests:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 black
+    
+    - name: Code formatting check with Black
+      run: |
+        black --check --diff server/ tests/
+    
+    - name: Lint with flake8
+      run: |
+        # Stop build if there are Python syntax errors or undefined names
+        flake8 server/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings. Line length set to 88 (Black's default)
+        flake8 server/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    
+    - name: Test with pytest - API Stubs
+      run: |
+        pytest tests/test_api_stubs.py -v --tb=short
+    
+    - name: Test API endpoint coverage
+      run: |
+        # Ensure all endpoints return 200
+        pytest tests/test_api_stubs.py --maxfail=1 --disable-warnings -q
+    
+    - name: Start FastAPI server (smoke test)
+      run: |
+        # Test that the server can start without errors
+        timeout 10s uvicorn server.main:app --host 0.0.0.0 --port 8000 &
+        sleep 5
+        curl -f http://localhost:8000/health || exit 1
+        curl -f http://localhost:8000/ || exit 1
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+    
+    - name: Install security tools
+      run: |
+        pip install safety bandit
+    
+    - name: Check for security vulnerabilities
+      run: |
+        safety check --json
+        bandit -r server/ -f json
+    
+    continue-on-error: true
+
+  docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate API documentation
+      run: |
+        # Check that API docs exist and are not empty
+        test -f docs/api-documentation.md
+        test -s docs/api-documentation.md
+        echo "✅ API documentation validation passed"
+>>>>>>> a8f66794812da14c3f250839d506c51ce209c4ee

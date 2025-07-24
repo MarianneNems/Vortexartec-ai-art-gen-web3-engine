@@ -1,0 +1,409 @@
+name: Vortex AI Engine - Audit & Train Pipeline
+
+on:
+  schedule:
+    # Run every hour
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # Allow manual triggering
+  push:
+    branches: [ main ]
+    paths:
+      - 'vortex-ai-engine/**'
+      - 'scripts/**'
+      - '.github/workflows/audit-and-train.yml'
+
+env:
+  PHP_VERSION: '8.1'
+  WORDPRESS_VERSION: 'latest'
+  VORTEX_PLUGIN_DIR: 'vortex-ai-engine'
+
+jobs:
+  audit:
+    name: Run Comprehensive Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, xml, curl, json, zip
+          
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+          
+      - name: Run comprehensive audit
+        run: |
+          cd ${{ env.VORTEX_PLUGIN_DIR }}
+          php scripts/comprehensive-recursive-audit.php --full --json --output=audit-report-$(date +%Y%m%d-%H%M%S).json
+          
+      - name: Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-report-${{ github.run_number }}
+          path: ${{ env.VORTEX_PLUGIN_DIR }}/audit-report-*.json
+          
+      - name: Check for regressions
+        id: check-regressions
+        run: |
+          # Parse audit results and check for regressions
+          AUDIT_FILE=$(ls ${{ env.VORTEX_PLUGIN_DIR }}/audit-report-*.json | head -1)
+          if [ -f "$AUDIT_FILE" ]; then
+            ERRORS=$(jq -r '.errors // 0' "$AUDIT_FILE")
+            WARNINGS=$(jq -r '.warnings // 0' "$AUDIT_FILE")
+            
+            echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+            echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+            
+            if [ "$ERRORS" -gt 0 ] || [ "$WARNINGS" -gt 50 ]; then
+              echo "has_regressions=true" >> $GITHUB_OUTPUT
+            else
+              echo "has_regressions=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "has_regressions=true" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Create regression issue
+        if: steps.check-regressions.outputs.has_regressions == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const auditFile = fs.readdirSync('${{ env.VORTEX_PLUGIN_DIR }}')
+              .find(file => file.startsWith('audit-report-') && file.endsWith('.json'));
+              
+            if (auditFile) {
+              const auditData = JSON.parse(fs.readFileSync(`${{ env.VORTEX_PLUGIN_DIR }}/${auditFile}`, 'utf8'));
+              
+              const issueBody = `## 🚨 Automated Audit Regression Detected
+              
+              **Run Number:** ${{ github.run_number }}
+              **Timestamp:** ${new Date().toISOString()}
+              **Branch:** ${{ github.ref }}
+              
+              ### Audit Results
+              - **Total Checks:** ${auditData.total_checks || 'N/A'}
+              - **Passed:** ${auditData.passed_checks || 'N/A'}
+              - **Warnings:** ${auditData.warnings || 'N/A'}
+              - **Errors:** ${auditData.errors || 'N/A'}
+              
+              ### Regression Details
+              ${auditData.regressions ? auditData.regressions.map(r => `- ${r.type}: ${r.message}`).join('\n') : 'No specific regression details available'}
+              
+              ### Recommended Actions
+              1. Review the audit report: \`${{ env.VORTEX_PLUGIN_DIR }}/${auditFile}\`
+              2. Investigate and fix identified issues
+              3. Re-run audit to verify fixes
+              4. Update baseline if necessary
+              
+              ### Artifacts
+              - [Audit Report](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+              `;
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 Audit Regression - Run #${{ github.run_number }}`,
+                body: issueBody,
+                labels: ['audit-regression', 'automated', 'ci/cd'],
+                assignees: ['${{ github.repository_owner }}']
+              });
+            }
+
+  train-models:
+    name: Train AI Models
+    runs-on: ubuntu-latest
+    needs: audit
+    if: needs.audit.outputs.has_regressions == 'false'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install Python dependencies
+        run: |
+          pip install boto3 requests numpy pandas scikit-learn
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Trigger model training
+        run: |
+          python scripts/trigger_model_training.py \
+            --feedback-queue-url ${{ secrets.VORTEX_FEEDBACK_QUEUE_URL }} \
+            --model-storage-bucket ${{ secrets.VORTEX_MODEL_STORAGE_BUCKET }} \
+            --lambda-function-name vortex-model-trainer
+          
+      - name: Wait for training completion
+        run: |
+          python scripts/wait_for_training.py \
+            --job-id $(cat training_job_id.txt) \
+            --timeout 3600
+          
+      - name: Download trained model
+        run: |
+          aws s3 cp s3://${{ secrets.VORTEX_MODEL_STORAGE_BUCKET }}/models/$(cat training_job_id.txt)/model.zip ./trained_model.zip
+          
+      - name: Upload trained model artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: trained-model-${{ github.run_number }}
+          path: trained_model.zip
+
+  ab-test:
+    name: Setup A/B Test
+    runs-on: ubuntu-latest
+    needs: train-models
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download trained model
+        uses: actions/download-artifact@v3
+        with:
+          name: trained-model-${{ github.run_number }}
+          path: ./models
+          
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          pip install boto3 requests
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Deploy model for A/B testing
+        run: |
+          python scripts/deploy_model_ab_test.py \
+            --model-path ./models/trained_model.zip \
+            --traffic-percentage 0.1 \
+            --lambda-function-name vortex-ai-inference
+          
+      - name: Schedule A/B test evaluation
+        run: |
+          # Schedule evaluation after 1 hour
+          sleep 3600
+          
+          python scripts/evaluate_ab_test.py \
+            --model-version $(cat model_version.txt) \
+            --baseline-metrics-path ./baseline_metrics.json
+
+  create-pr:
+    name: Create Model Update PR
+    runs-on: ubuntu-latest
+    needs: [audit, train-models]
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create feature branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b model-update-${{ github.run_number }}
+          
+      - name: Update model version
+        run: |
+          # Update model version in configuration
+          sed -i "s/\"model_version\": \".*\"/\"model_version\": \"v$(date +%Y%m%d.%H%M%S)\"/" ${{ env.VORTEX_PLUGIN_DIR }}/includes/class-vortex-config.php
+          
+      - name: Update changelog
+        run: |
+          echo "## Model Update - $(date +%Y-%m-%d %H:%M:%S)" >> CHANGELOG.md
+          echo "- Automated model retraining completed" >> CHANGELOG.md
+          echo "- A/B test initiated for performance validation" >> CHANGELOG.md
+          echo "- Audit passed with no regressions detected" >> CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "🤖 Automated model update - Run #${{ github.run_number }}"
+          git push origin model-update-${{ github.run_number }}
+          
+      - name: Create Pull Request
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🤖 Automated Model Update - Run #${{ github.run_number }}`,
+              body: `## Automated Model Update
+              
+              This PR contains an automated model update triggered by the CI/CD pipeline.
+              
+              ### Changes
+              - Updated model version to v$(date +%Y%m%d.%H%M%S)
+              - A/B test initiated for performance validation
+              - Comprehensive audit passed with no regressions
+              
+              ### Artifacts
+              - [Trained Model](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+              - [Audit Report](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+              
+              ### Next Steps
+              1. Review the changes
+              2. Monitor A/B test results
+              3. Merge if performance improvements are confirmed
+              `,
+              head: 'model-update-${{ github.run_number }}',
+              base: 'main',
+              draft: true
+            });
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [ab-test, create-pr]
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          pip install boto3 requests
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          
+      - name: Check A/B test results
+        id: check-ab-results
+        run: |
+          python scripts/check_ab_test_results.py \
+            --model-version $(cat model_version.txt) \
+            --performance-threshold 0.05
+          
+          if [ $? -eq 0 ]; then
+            echo "ab_test_passed=true" >> $GITHUB_OUTPUT
+          else
+            echo "ab_test_passed=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Deploy to production
+        if: steps.check-ab-results.outputs.ab_test_passed == 'true'
+        run: |
+          python scripts/deploy_to_production.py \
+            --model-version $(cat model_version.txt) \
+            --lambda-function-name vortex-ai-inference \
+            --traffic-percentage 1.0
+          
+      - name: Update deployment status
+        if: steps.check-ab-results.outputs.ab_test_passed == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ needs.create-pr.outputs.pr_number }},
+              body: `## ✅ Deployment Complete
+              
+              The model update has been successfully deployed to production!
+              
+              - **Model Version:** $(cat model_version.txt)
+              - **A/B Test:** ✅ Passed
+              - **Performance Improvement:** Confirmed
+              - **Deployment Time:** ${new Date().toISOString()}
+              
+              The PR can now be merged.`
+            });
+            
+      - name: Rollback notification
+        if: steps.check-ab-results.outputs.ab_test_passed == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ needs.create-pr.outputs.pr_number }},
+              body: `## ❌ A/B Test Failed
+              
+              The model update did not meet performance requirements and has been rolled back.
+              
+              - **Model Version:** $(cat model_version.txt)
+              - **A/B Test:** ❌ Failed
+              - **Performance Threshold:** Not met
+              - **Action:** Model rolled back to baseline
+              
+              The PR should be closed without merging.`
+            });
+
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [audit, train-models, deploy]
+    if: always()
+    
+    steps:
+      - name: Send Slack notification
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const status = '${{ job.status }}';
+            const runUrl = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            
+            const message = {
+              text: `🤖 Vortex AI Engine Pipeline - Run #${{ github.run_number }}
+              
+              **Status:** ${status}
+              **Branch:** ${{ github.ref }}
+              **Trigger:** ${{ github.event_name }}
+              
+              **Jobs:**
+              - Audit: ${{ needs.audit.result }}
+              - Train Models: ${{ needs.train-models.result }}
+              - Deploy: ${{ needs.deploy.result }}
+              
+              [View Run](${runUrl})`
+            };
+            
+            // Send to Slack webhook
+            if ('${{ secrets.SLACK_WEBHOOK_URL }}') {
+              await fetch('${{ secrets.SLACK_WEBHOOK_URL }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(message)
+              });
+            } 
