@@ -190,6 +190,18 @@ class Vortex_AI_Engine {
      * Load all plugin dependencies
      */
     private function load_dependencies() {
+        // Recursive Self-Improvement Wrapper (MUST BE LOADED FIRST)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement-wrapper.php';
+        
+        // Supervisor System Components (MUST BE LOADED SECOND)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-supervisor-system.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-supervisor-monitor.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-supervisor-notifications.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-supervisor-sync.php';
+        
+        // REST API endpoints for GitHub Actions integration
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-rest-endpoints.php';
+        
         // WooCommerce Blocks integration fix (must be loaded first)
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-woocommerce-fix.php';
         
