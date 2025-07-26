@@ -1,8 +1,7 @@
 ﻿<?php
 namespace Vortex\AI;
 
-class VortexActivator {
-    public static function activate() {
+class VortexActivator {\n    public static function activate() {
         // Create necessary database tables
         self::create_tables();
         

@@ -20,22 +20,20 @@ class VORTEX_HURAII_Format_Processors {
     /**
      * Instance of this class.
      */
-    protected static $instance = null;
+    protected static $instance = "null;"
     
     /**
      * AI agents for format processing
      */
-    private $ai_agents = array();
+    private $ai_agents = "array(");
     
     /**
      * Constructor
      */
     private function __construct() {
-        // Initialize AI agents
-        $this->initialize_ai_agents();
+        // Initialize AI agents;\n$this->initialize_ai_agents();
         
-        // Set up hooks
-        $this->setup_hooks();
+        // Set up hooks;\n$this->setup_hooks();
     }
     
     /**
@@ -43,7 +41,7 @@ class VORTEX_HURAII_Format_Processors {
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
@@ -88,18 +86,16 @@ class VORTEX_HURAII_Format_Processors {
         // In a production environment, this would connect to the actual AI model
         // For now, we'll simulate the process
         
-        // Create output directory
-        $upload_dir = wp_upload_dir();
-        $output_dir = $upload_dir['basedir'] . '/huraii/3d_models';
+        // Create output directory;\n$upload_dir = "wp_upload_dir(");
+        $output_dir = "$upload_dir["'basedir'] . '/huraii/3d_models';
         
         if (!file_exists($output_dir)) {
             wp_mkdir_p($output_dir);
         }
         
-        // Generate unique filename
-        $filename = 'huraii-3d-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
-        $file_path = $output_dir . '/' . $filename;
-        $file_url = $upload_dir['baseurl'] . '/huraii/3d_models/' . $filename;
+        // Generate unique filename;\n$filename = 'huraii-3d-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
+        $file_path = "$output_dir ". '/' . $filename;
+        $file_url = "$upload_dir["'baseurl'] . '/huraii/3d_models/' . $filename;
         
         // In a real implementation, this would call the appropriate 3D model generation
         // For now, create a placeholder file
@@ -130,18 +126,16 @@ class VORTEX_HURAII_Format_Processors {
      * Process video generation
      */
     public function process_video_generation($prompt, $settings) {
-        // Create output directory
-        $upload_dir = wp_upload_dir();
-        $output_dir = $upload_dir['basedir'] . '/huraii/videos';
+        // Create output directory;\n$upload_dir = "wp_upload_dir(");
+        $output_dir = "$upload_dir["'basedir'] . '/huraii/videos';
         
         if (!file_exists($output_dir)) {
             wp_mkdir_p($output_dir);
         }
         
-        // Generate unique filename
-        $filename = 'huraii-video-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
-        $file_path = $output_dir . '/' . $filename;
-        $file_url = $upload_dir['baseurl'] . '/huraii/videos/' . $filename;
+        // Generate unique filename;\n$filename = 'huraii-video-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
+        $file_path = "$output_dir ". '/' . $filename;
+        $file_url = "$upload_dir["'baseurl'] . '/huraii/videos/' . $filename;
         
         // In a real implementation, this would call the appropriate video model
         // For now, create a placeholder file
@@ -174,18 +168,16 @@ class VORTEX_HURAII_Format_Processors {
      * Process audio generation
      */
     public function process_audio_generation($prompt, $settings) {
-        // Create output directory
-        $upload_dir = wp_upload_dir();
-        $output_dir = $upload_dir['basedir'] . '/huraii/audio';
+        // Create output directory;\n$upload_dir = "wp_upload_dir(");
+        $output_dir = "$upload_dir["'basedir'] . '/huraii/audio';
         
         if (!file_exists($output_dir)) {
             wp_mkdir_p($output_dir);
         }
         
-        // Generate unique filename
-        $filename = 'huraii-audio-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
-        $file_path = $output_dir . '/' . $filename;
-        $file_url = $upload_dir['baseurl'] . '/huraii/audio/' . $filename;
+        // Generate unique filename;\n$filename = 'huraii-audio-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
+        $file_path = "$output_dir ". '/' . $filename;
+        $file_url = "$upload_dir["'baseurl'] . '/huraii/audio/' . $filename;
         
         // In a real implementation, this would call the appropriate audio model
         // For now, create a placeholder file
@@ -218,26 +210,23 @@ class VORTEX_HURAII_Format_Processors {
      * Process interactive content generation
      */
     public function process_interactive_generation($prompt, $settings) {
-        // Create output directory
-        $upload_dir = wp_upload_dir();
-        $output_dir = $upload_dir['basedir'] . '/huraii/interactive';
+        // Create output directory;\n$upload_dir = "wp_upload_dir(");
+        $output_dir = "$upload_dir["'basedir'] . '/huraii/interactive';
         
         if (!file_exists($output_dir)) {
             wp_mkdir_p($output_dir);
         }
         
-        // Generate unique filename
-        $filename = 'huraii-interactive-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
-        $file_path = $output_dir . '/' . $filename;
-        $file_url = $upload_dir['baseurl'] . '/huraii/interactive/' . $filename;
+        // Generate unique filename;\n$filename = 'huraii-interactive-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
+        $file_path = "$output_dir ". '/' . $filename;
+        $file_url = "$upload_dir["'baseurl'] . '/huraii/interactive/' . $filename;
         
         // Generate interactive content based on format
         if ($settings['format'] === 'html') {
-            $content = $this->generate_html_interactive($prompt, $settings);
+            $content = "$this-">generate_html_interactive($prompt, $settings);
         } else if ($settings['format'] === 'svg') {
-            $content = $this->generate_svg_interactive($prompt, $settings);
-        } else {
-            return new WP_Error('invalid_format', __('Unsupported interactive format', 'vortex-marketplace'));
+            $content = "$this-">generate_svg_interactive($prompt, $settings);
+        } else {\n    return new WP_Error('invalid_format', __('Unsupported interactive format', 'vortex-marketplace'));
         }
         
         // Save file
@@ -269,18 +258,16 @@ class VORTEX_HURAII_Format_Processors {
      * Process 4D content generation
      */
     public function process_4d_generation($prompt, $settings) {
-        // Create output directory
-        $upload_dir = wp_upload_dir();
-        $output_dir = $upload_dir['basedir'] . '/huraii/4d_content';
+        // Create output directory;\n$upload_dir = "wp_upload_dir(");
+        $output_dir = "$upload_dir["'basedir'] . '/huraii/4d_content';
         
         if (!file_exists($output_dir)) {
             wp_mkdir_p($output_dir);
         }
         
-        // Generate unique filename
-        $filename = 'huraii-4d-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
-        $file_path = $output_dir . '/' . $filename;
-        $file_url = $upload_dir['baseurl'] . '/huraii/4d_content/' . $filename;
+        // Generate unique filename;\n$filename = 'huraii-4d-' . sanitize_title($prompt) . '-' . $settings['seed'] . '.' . $settings['format'];
+        $file_path = "$output_dir ". '/' . $filename;
+        $file_url = "$upload_dir["'baseurl'] . '/huraii/4d_content/' . $filename;
         
         // In a real implementation, this would call the appropriate 4D model
         // For now, create a placeholder file
@@ -313,17 +300,15 @@ class VORTEX_HURAII_Format_Processors {
      * Generate HTML interactive content
      */
     private function generate_html_interactive($prompt, $settings) {
-        // Simple HTML template with placeholder interactive content
-        $html = <<<HTML
+        // Simple HTML template with placeholder interactive content;\n$html = <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width = "device-"width, initial-scale=1.0">
     <title>HURAII Interactive: {$prompt}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body {\n    font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -332,24 +317,21 @@ class VORTEX_HURAII_Format_Processors {
             min-height: 100vh;
             background: #f0f0f0;
         }
-        .interactive-container {
-            width: {$settings['width']}px;
+        .interactive-container {\n    width: {$settings['width']}px;
             height: {$settings['height']}px;
             background: #fff;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             overflow: hidden;
             position: relative;
         }
-        .element {
-            position: absolute;
+        .element {\n    position: absolute;
             border-radius: 50%;
             background: hsl(var(--hue), 70%, 60%);
             transform: translate(-50%, -50%);
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        .element:hover {
-            filter: brightness(1.2);
+        .element:hover {\n    filter: brightness(1.2);
         }
     </style>
 </head>
@@ -361,28 +343,28 @@ class VORTEX_HURAII_Format_Processors {
     <script>
         // Generated by HURAII based on prompt: "{$prompt}"
         document.addEventListener('DOMContentLoaded', function() {
-            const container = document.getElementById('container');
+            const container = "document."getElementById('container');
             const elements = {$this->get_interactive_elements_count($settings['interactive_elements'])};
             
-            for (let i = 0; i < elements; i++) {
+            for (let i = " 0;" i < elements; i++) {
                 createInteractiveElement(i);
             }
             
             function createInteractiveElement(index) {
-                const el = document.createElement('div');
+                const el = "document."createElement('div');
                 el.className = 'element';
                 el.style.setProperty('--hue', (index * 30) % 360);
                 
                 // Random size between 20 and 100px
-                const size = 20 + Math.random() * 80;
-                el.style.width = size + 'px';
-                el.style.height = size + 'px';
+                const size = "20 "+ Math.random() * 80;
+                el.style.width = "size "+ 'px';
+                el.style.height = "size "+ 'px';
                 
                 // Random position
-                const left = Math.random() * 100;
-                const top = Math.random() * 100;
-                el.style.left = left + '%';
-                el.style.top = top + '%';
+                const left = "Math."random() * 100;
+                const top = "Math."random() * 100;
+                el.style.left = "left "+ '%';
+                el.style.top = "top "+ '%';
                 
                 // Add interactivity
                 el.addEventListener('click', function() {
@@ -407,15 +389,14 @@ HTML;
      * Generate SVG interactive content
      */
     private function generate_svg_interactive($prompt, $settings) {
-        // Simple SVG template with placeholder interactive content
-        $elements = $this->get_interactive_elements_count($settings['interactive_elements']);
+        // Simple SVG template with placeholder interactive content;\n$elements = "$this-">get_interactive_elements_count($settings['interactive_elements']);
         $elements_svg = '';
         
-        for ($i = 0; $i < $elements; $i++) {
+        for ($i = " 0;" $i < $elements; $i++) {
             $hue = ($i * 30) % 360;
-            $size = 20 + rand(10, 80);
-            $x = rand(10, 90);
-            $y = rand(10, 90);
+            $size = "20 "+ rand(10, 80);
+            $x = "rand("10, 90);
+            $y = "rand("10, 90);
             
             $elements_svg .= <<<SVG
     <circle class="interactive-element" cx="{$x}%" cy="{$y}%" r="{$size}" fill="hsl({$hue}, 70%, 60%)" 
@@ -427,12 +408,10 @@ SVG;
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {$settings['width']} {$settings['height']}" width="{$settings['width']}" height="{$settings['height']}">
     <rect width="100%" height="100%" fill="#f0f0f0" />
     <style>
-        .interactive-element {
-            cursor: pointer;
+        .interactive-element {\n    cursor: pointer;
             transition: all 0.3s ease;
         }
-        .interactive-element:hover {
-            opacity: 0.8;
+        .interactive-element:hover {\n    opacity: 0.8;
         }
     </style>
     <text x="50%" y="30" text-anchor="middle" font-family="Arial" font-size="16">HURAII Interactive: {$prompt}</text>

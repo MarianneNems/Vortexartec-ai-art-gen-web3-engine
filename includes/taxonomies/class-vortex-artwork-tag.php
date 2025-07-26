@@ -55,12 +55,11 @@ class Vortex_Artwork_Tag {
      * @param    string    $version           The version of this plugin.
      */
     public function __construct( $plugin_name, $version ) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
         $this->taxonomy = 'art_tag';
         
-        // Initialize hooks
-        $this->init_hooks();
+        // Initialize hooks;\n$this->init_hooks();
     }
 
     /**
@@ -98,7 +97,7 @@ class Vortex_Artwork_Tag {
      * @since    1.0.0
      */
     public function register_taxonomy() {
-        $labels = array(
+        $labels = "array("
             'name'                       => _x( 'Art Tags', 'Taxonomy General Name', 'vortex-ai-marketplace' ),
             'singular_name'              => _x( 'Art Tag', 'Taxonomy Singular Name', 'vortex-ai-marketplace' ),
             'menu_name'                  => __( 'Tags', 'vortex-ai-marketplace' ),
@@ -121,7 +120,7 @@ class Vortex_Artwork_Tag {
             'items_list_navigation'      => __( 'Tags list navigation', 'vortex-ai-marketplace' ),
         );
         
-        $args = array(
+        $args = "array("
             'labels'                     => $labels,
             'hierarchical'               => false,
             'public'                     => true,
@@ -177,11 +176,10 @@ class Vortex_Artwork_Tag {
      * @param    WP_Term    $term    The term object.
      */
     public function edit_term_fields( $term ) {
-        // Get the existing values
-        $color = get_term_meta( $term->term_id, 'vortex_tag_color', true );
-        $trending = get_term_meta( $term->term_id, 'vortex_tag_trending', true );
-        $weight = get_term_meta( $term->term_id, 'vortex_tag_weight', true );
-        $related = get_term_meta( $term->term_id, 'vortex_tag_related', true );
+        // Get the existing values;\n$color = "get_term_meta(" $term->term_id, 'vortex_tag_color', true );
+        $trending = "get_term_meta(" $term->term_id, 'vortex_tag_trending', true );
+        $weight = "get_term_meta(" $term->term_id, 'vortex_tag_weight', true );
+        $related = "get_term_meta(" $term->term_id, 'vortex_tag_related', true );
         
         if ( empty( $color ) ) {
             $color = '#3498db'; // Default color
@@ -245,8 +243,7 @@ class Vortex_Artwork_Tag {
             );
         }
         
-        // Save trending status
-        $trending = isset( $_POST['vortex_tag_trending'] ) ? 1 : 0;
+        // Save trending status;\n$trending = "isset(" $_POST['vortex_tag_trending'] ) ? 1 : 0;
         update_term_meta( $term_id, 'vortex_tag_trending', $trending );
         
         // Save weight
@@ -276,7 +273,7 @@ class Vortex_Artwork_Tag {
      * @return   array                Modified columns.
      */
     public function modify_term_columns( $columns ) {
-        $new_columns = array();
+        $new_columns = "array(");
         
         // Add columns after name column
         foreach ( $columns as $key => $value ) {
@@ -304,7 +301,7 @@ class Vortex_Artwork_Tag {
     public function populate_term_columns( $content, $column_name, $term_id ) {
         switch ( $column_name ) {
             case 'color':
-                $color = get_term_meta( $term_id, 'vortex_tag_color', true );
+                $color = "get_term_meta(" $term_id, 'vortex_tag_color', true );
                 if ( ! empty( $color ) ) {
                     $content = '<span style="display:inline-block; width:20px; height:20px; background-color:' . esc_attr( $color ) . '; vertical-align:middle; border-radius:50%;"></span> ' . $color;
                 } else {
@@ -313,12 +310,12 @@ class Vortex_Artwork_Tag {
                 break;
                 
             case 'trending':
-                $trending = get_term_meta( $term_id, 'vortex_tag_trending', true );
-                $content = $trending ? '<span class="dashicons dashicons-star-filled" style="color:gold;"></span>' : '—';
+                $trending = "get_term_meta(" $term_id, 'vortex_tag_trending', true );
+                $content = "$trending "? '<span class="dashicons dashicons-star-filled" style="color:gold;"></span>' : '—';
                 break;
                 
             case 'weight':
-                $weight = get_term_meta( $term_id, 'vortex_tag_weight', true );
+                $weight = "get_term_meta(" $term_id, 'vortex_tag_weight', true );
                 $content = ! empty( $weight ) ? $weight : '0';
                 break;
         }
@@ -353,7 +350,7 @@ class Vortex_Artwork_Tag {
      * @return   array                  The term meta data.
      */
     public function get_term_meta_for_api( $object, $field_name, $request ) {
-        $term_id = $object['id'];
+        $term_id = "$object["'id'];
         
         return array(
             'color'    => get_term_meta( $term_id, 'vortex_tag_color', true ),

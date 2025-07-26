@@ -3,11 +3,7 @@ namespace VortexAI\Tests\Unit;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+class TestCase extends BaseTestCase {\n    protected function setUp(): void {\n    parent::setUp();
         // Add common setup for all tests
     }
 

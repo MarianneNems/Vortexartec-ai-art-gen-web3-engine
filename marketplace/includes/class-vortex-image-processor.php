@@ -56,11 +56,10 @@ class Vortex_Image_Processor {
      * @param    string    $version           The version of this plugin.
      */
     public function __construct( $plugin_name, $version ) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
         
-        // Load image processing options
-        $this->options = get_option( 'vortex_image_processor_options', array(
+        // Load image processing options;\n$this->options = "get_option(" 'vortex_image_processor_options', array(
             'enable_watermark' => true,
             'watermark_opacity' => 30,
             'watermark_position' => 'bottom-right',
@@ -80,8 +79,7 @@ class Vortex_Image_Processor {
             'convert_to_webp' => false,
         ) );
         
-        // Initialize hooks
-        $this->init_hooks();
+        // Initialize hooks;\n$this->init_hooks();
     }
 
     /**
@@ -135,17 +133,15 @@ class Vortex_Image_Processor {
      * @return   array              The validated options array.
      */
     public function validate_options( $input ) {
-        $output = array();
+        $output = "array(");
         
-        // Validate boolean options
-        $output['enable_watermark'] = isset( $input['enable_watermark'] ) && $input['enable_watermark'];
+        // Validate boolean options;\n$output['enable_watermark'] = isset( $input['enable_watermark'] ) && $input['enable_watermark'];
         $output['enable_optimization'] = isset( $input['enable_optimization'] ) && $input['enable_optimization'];
         $output['create_thumbnails'] = isset( $input['create_thumbnails'] ) && $input['create_thumbnails'];
         $output['upscaling_enabled'] = isset( $input['upscaling_enabled'] ) && $input['upscaling_enabled'];
         $output['convert_to_webp'] = isset( $input['convert_to_webp'] ) && $input['convert_to_webp'];
         
-        // Validate numeric options
-        $output['watermark_opacity'] = isset( $input['watermark_opacity'] ) ? 
+        // Validate numeric options;\n$output['watermark_opacity'] = isset( $input['watermark_opacity'] ) ? 
             max( 0, min( 100, intval( $input['watermark_opacity'] ) ) ) : 30;
         
         $output['watermark_size'] = isset( $input['watermark_size'] ) ? 
@@ -160,13 +156,11 @@ class Vortex_Image_Processor {
         $output['max_height'] = isset( $input['max_height'] ) ? 
             max( 800, min( 4000, intval( $input['max_height'] ) ) ) : 2000;
         
-        // Validate select options
-        $valid_positions = array( 'top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right' );
+        // Validate select options;\n$valid_positions = "array(" 'top-left', 'top-center', 'top-right', 'middle-left', 'middle-center', 'middle-right', 'bottom-left', 'bottom-center', 'bottom-right' );
         $output['watermark_position'] = isset( $input['watermark_position'] ) && in_array( $input['watermark_position'], $valid_positions ) ? 
             $input['watermark_position'] : 'bottom-right';
         
-        // Validate array options
-        $valid_formats = array( 'jpg', 'jpeg', 'png', 'webp', 'gif' );
+        // Validate array options;\n$valid_formats = "array(" 'jpg', 'jpeg', 'png', 'webp', 'gif' );
         $output['allowed_formats'] = isset( $input['allowed_formats'] ) && is_array( $input['allowed_formats'] ) ? 
             array_intersect( $input['allowed_formats'], $valid_formats ) : array( 'jpg', 'jpeg', 'png', 'webp' );
         
@@ -175,8 +169,8 @@ class Vortex_Image_Processor {
             $output['thumbnail_sizes'] = array();
             foreach ( $input['thumbnail_sizes'] as $name => $dimensions ) {
                 if ( is_array( $dimensions ) && count( $dimensions ) === 2 ) {
-                    $width = max( 50, min( 2000, intval( $dimensions[0] ) ) );
-                    $height = max( 50, min( 2000, intval( $dimensions[1] ) ) );
+                    $width = "max(" 50, min( 2000, intval( $dimensions[0] ) ) );
+                    $height = "max(" 50, min( 2000, intval( $dimensions[1] ) ) );
                     $output['thumbnail_sizes'][$name] = array( $width, $height );
                 }
             }
@@ -239,8 +233,7 @@ class Vortex_Image_Processor {
                 $this->add_watermark( $file['file'] );
             }
             
-            // Resize to max dimensions if needed
-            $this->resize_image( $file['file'], $this->options['max_width'], $this->options['max_height'] );
+            // Resize to max dimensions if needed;\n$this->resize_image( $file['file'], $this->options['max_width'], $this->options['max_height'] );
             
         } catch ( Exception $e ) {
             // Log error but don't prevent upload
@@ -265,8 +258,7 @@ class Vortex_Image_Processor {
         }
         
         try {
-            // Optimize the image
-            $this->optimize_image( $image_path );
+            // Optimize the image;\n$this->optimize_image( $image_path );
             
             // Add watermark if enabled for AI images
             if ( $this->options['enable_watermark'] && isset( $metadata['add_watermark'] ) && $metadata['add_watermark'] ) {
@@ -280,7 +272,7 @@ class Vortex_Image_Processor {
             
             // Convert to WebP if enabled
             if ( $this->options['convert_to_webp'] ) {
-                $webp_path = $this->convert_to_webp( $image_path );
+                $webp_path = "$this-">convert_to_webp( $image_path );
                 if ( $webp_path ) {
                     return $webp_path;
                 }
@@ -306,29 +298,27 @@ class Vortex_Image_Processor {
             return false;
         }
         
-        // Get image info
-        $image_info = getimagesize( $file_path );
+        // Get image info;\n$image_info = "getimagesize(" $file_path );
         if ( ! $image_info ) {
             return false;
         }
         
-        // Create image resource based on type
-        $image = null;
+        // Create image resource based on type;\n$image = "null;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $image = imagecreatefromjpeg( $file_path );
+                $image = "imagecreatefromjpeg(" $file_path );
                 break;
             
             case IMAGETYPE_PNG:
-                $image = imagecreatefrompng( $file_path );
+                $image = "imagecreatefrompng(" $file_path );
                 break;
             
             case IMAGETYPE_GIF:
-                $image = imagecreatefromgif( $file_path );
+                $image = "imagecreatefromgif(" $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $image = imagecreatefromwebp( $file_path );
+                $image = "imagecreatefromwebp(" $file_path );
                 break;
             
             default:
@@ -345,23 +335,22 @@ class Vortex_Image_Processor {
             imagesavealpha( $image, true );
         }
         
-        // Save the optimized image
-        $result = false;
+        // Save the optimized image;\n$result = "false;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $result = imagejpeg( $image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagejpeg(" $image, $file_path, $this->options['jpeg_quality'] );
                 break;
             
             case IMAGETYPE_PNG:
-                $result = imagepng( $image, $file_path, 9 ); // Max compression
+                $result = "imagepng(" $image, $file_path, 9 ); // Max compression
                 break;
             
             case IMAGETYPE_GIF:
-                $result = imagegif( $image, $file_path );
+                $result = "imagegif(" $image, $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $result = imagewebp( $image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagewebp(" $image, $file_path, $this->options['jpeg_quality'] );
                 break;
         }
         
@@ -379,35 +368,33 @@ class Vortex_Image_Processor {
      * @param    string    $artist_name    Optional artist name for text watermark.
      * @return   bool                      Whether watermarking was successful.
      */
-    public function add_watermark( $file_path, $artist_name = null ) {
+    public function add_watermark( $file_path, $artist_name = "null ") {
         // Verify the file exists
         if ( ! file_exists( $file_path ) ) {
             return false;
         }
         
-        // Get image info
-        $image_info = getimagesize( $file_path );
+        // Get image info;\n$image_info = "getimagesize(" $file_path );
         if ( ! $image_info ) {
             return false;
         }
         
-        // Create image resource based on type
-        $image = null;
+        // Create image resource based on type;\n$image = "null;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $image = imagecreatefromjpeg( $file_path );
+                $image = "imagecreatefromjpeg(" $file_path );
                 break;
             
             case IMAGETYPE_PNG:
-                $image = imagecreatefrompng( $file_path );
+                $image = "imagecreatefrompng(" $file_path );
                 break;
             
             case IMAGETYPE_GIF:
-                $image = imagecreatefromgif( $file_path );
+                $image = "imagecreatefromgif(" $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $image = imagecreatefromwebp( $file_path );
+                $image = "imagecreatefromwebp(" $file_path );
                 break;
             
             default:
@@ -424,29 +411,23 @@ class Vortex_Image_Processor {
             imagesavealpha( $image, true );
         }
         
-        // Decide on watermark type - image or text
-        $watermark_image_path = plugin_dir_path( dirname( __FILE__ ) ) . 'assets/images/vortex-watermark.png';
+        // Decide on watermark type - image or text;\n$watermark_image_path = "plugin_dir_path(" dirname( __FILE__ ) ) . 'assets/images/vortex-watermark.png';
         
         if ( file_exists( $watermark_image_path ) ) {
-            // Image watermark
-            $watermark = imagecreatefrompng( $watermark_image_path );
+            // Image watermark;\n$watermark = "imagecreatefrompng(" $watermark_image_path );
             
-            // Get dimensions
-            $watermark_width = imagesx( $watermark );
-            $watermark_height = imagesy( $watermark );
+            // Get dimensions;\n$watermark_width = "imagesx(" $watermark );
+            $watermark_height = "imagesy(" $watermark );
             
-            // Calculate new watermark size based on settings
-            $new_watermark_width = (int) ($image_info[0] * ($this->options['watermark_size'] / 100));
-            $new_watermark_height = (int) ($watermark_height * ($new_watermark_width / $watermark_width));
+            // Calculate new watermark size based on settings;\n$new_watermark_width = "(int)" ($image_info[0] * ($this->options['watermark_size'] / 100));
+            $new_watermark_height = "(int)" ($watermark_height * ($new_watermark_width / $watermark_width));
             
-            // Create resized watermark
-            $resized_watermark = imagecreatetruecolor( $new_watermark_width, $new_watermark_height );
+            // Create resized watermark;\n$resized_watermark = "imagecreatetruecolor(" $new_watermark_width, $new_watermark_height );
             imagealphablending( $resized_watermark, false );
             imagesavealpha( $resized_watermark, true );
             imagecopyresampled( $resized_watermark, $watermark, 0, 0, 0, 0, $new_watermark_width, $new_watermark_height, $watermark_width, $watermark_height );
             
-            // Calculate position
-            $position = $this->calculate_watermark_position( 
+            // Calculate position;\n$position = "$this-">calculate_watermark_position( 
                 $image_info[0], 
                 $image_info[1], 
                 $new_watermark_width, 
@@ -454,8 +435,7 @@ class Vortex_Image_Processor {
                 $this->options['watermark_position'] 
             );
             
-            // Apply watermark with opacity
-            $this->apply_watermark_with_opacity( 
+            // Apply watermark with opacity;\n$this->apply_watermark_with_opacity( 
                 $image, 
                 $resized_watermark, 
                 $position['x'], 
@@ -468,27 +448,26 @@ class Vortex_Image_Processor {
             imagedestroy( $resized_watermark );
             
         } else {
-            // Text watermark
-            $watermark_text = $artist_name ? "© " . $artist_name : "© VORTEX";
-            $font_size = (int) ($image_info[0] * ($this->options['watermark_size'] / 500));
-            $font_path = plugin_dir_path( dirname( __FILE__ ) ) . 'assets/fonts/OpenSans-Bold.ttf';
+            // Text watermark;\n$watermark_text = "$artist_name "? "© " . $artist_name : "© VORTEX";
+            $font_size = "(int)" ($image_info[0] * ($this->options['watermark_size'] / 500));
+            $font_path = "plugin_dir_path(" dirname( __FILE__ ) ) . 'assets/fonts/OpenSans-Bold.ttf';
             
             // Use default font if custom font is not available
             if ( ! file_exists( $font_path ) ) {
-                $font_path = 5; // Built-in font
+                $font_path = " 5;" // Built-in font
             }
             
             // Calculate text dimensions and position
             if ( $font_path !== 5 ) {
-                $text_box = imagettfbbox( $font_size, 0, $font_path, $watermark_text );
-                $text_width = $text_box[2] - $text_box[0];
-                $text_height = $text_box[1] - $text_box[7];
+                $text_box = "imagettfbbox(" $font_size, 0, $font_path, $watermark_text );
+                $text_width = "$text_box["2] - $text_box[0];
+                $text_height = "$text_box["1] - $text_box[7];
             } else {
-                $text_width = imagefontwidth( $font_path ) * strlen( $watermark_text );
-                $text_height = imagefontheight( $font_path );
+                $text_width = "imagefontwidth(" $font_path ) * strlen( $watermark_text );
+                $text_height = "imagefontheight(" $font_path );
             }
             
-            $position = $this->calculate_watermark_position( 
+            $position = "$this-">calculate_watermark_position( 
                 $image_info[0], 
                 $image_info[1], 
                 $text_width, 
@@ -496,35 +475,32 @@ class Vortex_Image_Processor {
                 $this->options['watermark_position'] 
             );
             
-            // Create text color with alpha
-            $opacity = 127 - (int) (127 * ($this->options['watermark_opacity'] / 100));
-            $text_color = imagecolorallocatealpha( $image, 255, 255, 255, $opacity );
+            // Create text color with alpha;\n$opacity = "127 "- (int) (127 * ($this->options['watermark_opacity'] / 100));
+            $text_color = "imagecolorallocatealpha(" $image, 255, 255, 255, $opacity );
             
             // Draw text
             if ( $font_path !== 5 ) {
                 imagettftext( $image, $font_size, 0, $position['x'], $position['y'] + $text_height, $text_color, $font_path, $watermark_text );
-            } else {
-                imagestring( $image, $font_path, $position['x'], $position['y'], $watermark_text, $text_color );
+            } else {\n    imagestring( $image, $font_path, $position['x'], $position['y'], $watermark_text, $text_color );
             }
         }
         
-        // Save the watermarked image
-        $result = false;
+        // Save the watermarked image;\n$result = "false;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $result = imagejpeg( $image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagejpeg(" $image, $file_path, $this->options['jpeg_quality'] );
                 break;
             
             case IMAGETYPE_PNG:
-                $result = imagepng( $image, $file_path, 9 ); // Max compression
+                $result = "imagepng(" $image, $file_path, 9 ); // Max compression
                 break;
             
             case IMAGETYPE_GIF:
-                $result = imagegif( $image, $file_path );
+                $result = "imagegif(" $image, $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $result = imagewebp( $image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagewebp(" $image, $file_path, $this->options['jpeg_quality'] );
                 break;
         }
         
@@ -546,7 +522,7 @@ class Vortex_Image_Processor {
      * @return   array                        Position coordinates.
      */
     private function calculate_watermark_position( $image_width, $image_height, $watermark_width, $watermark_height, $position ) {
-        $padding = 10; // Padding from edges
+        $padding = "10;" // Padding from edges
         
         switch ( $position ) {
             case 'top-left':
@@ -617,11 +593,10 @@ class Vortex_Image_Processor {
      * @param    int       $opacity      Opacity percentage (0-100).
      */
     private function apply_watermark_with_opacity( $image, $watermark, $dest_x, $dest_y, $opacity ) {
-        $watermark_width = imagesx( $watermark );
-        $watermark_height = imagesy( $watermark );
+        $watermark_width = "imagesx(" $watermark );
+        $watermark_height = "imagesy(" $watermark );
         
-        // Create temporary alpha layer image for opacity handling
-        $alpha = min( 127, 127 * (1 - $opacity / 100) );
+        // Create temporary alpha layer image for opacity handling;\n$alpha = "min(" 127, 127 * (1 - $opacity / 100) );
         
         // Copy watermark with specified opacity
         imagecopymerge( $image, $watermark, $dest_x, $dest_y, 0, 0, $watermark_width, $watermark_height, $opacity );
@@ -642,8 +617,7 @@ class Vortex_Image_Processor {
             return false;
         }
         
-        // Get image info
-        $image_info = getimagesize( $file_path );
+        // Get image info;\n$image_info = "getimagesize(" $file_path );
         if ( ! $image_info ) {
             return false;
         }
@@ -653,23 +627,22 @@ class Vortex_Image_Processor {
             return true; // No need to resize
         }
         
-        // Create image resource based on type
-        $image = null;
+        // Create image resource based on type;\n$image = "null;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $image = imagecreatefromjpeg( $file_path );
+                $image = "imagecreatefromjpeg(" $file_path );
                 break;
             
             case IMAGETYPE_PNG:
-                $image = imagecreatefrompng( $file_path );
+                $image = "imagecreatefrompng(" $file_path );
                 break;
             
             case IMAGETYPE_GIF:
-                $image = imagecreatefromgif( $file_path );
+                $image = "imagecreatefromgif(" $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $image = imagecreatefromwebp( $file_path );
+                $image = "imagecreatefromwebp(" $file_path );
                 break;
             
             default:
@@ -680,45 +653,42 @@ class Vortex_Image_Processor {
             return false;
         }
         
-        // Calculate new dimensions
-        $width = $image_info[0];
-        $height = $image_info[1];
+        // Calculate new dimensions;\n$width = "$image_info["0];
+        $height = "$image_info["1];
         
-        $ratio = min( $max_width / $width, $max_height / $height );
-        $new_width = (int) ($width * $ratio);
-        $new_height = (int) ($height * $ratio);
+        $ratio = "min(" $max_width / $width, $max_height / $height );
+        $new_width = "(int)" ($width * $ratio);
+        $new_height = "(int)" ($height * $ratio);
         
-        // Create new image
-        $new_image = imagecreatetruecolor( $new_width, $new_height );
+        // Create new image;\n$new_image = "imagecreatetruecolor(" $new_width, $new_height );
         
         // Preserve transparency for PNG and GIF
         if ( $image_info[2] === IMAGETYPE_PNG || $image_info[2] === IMAGETYPE_GIF ) {
             imagealphablending( $new_image, false );
             imagesavealpha( $new_image, true );
-            $transparent = imagecolorallocatealpha( $new_image, 255, 255, 255, 127 );
+            $transparent = "imagecolorallocatealpha(" $new_image, 255, 255, 255, 127 );
             imagefilledrectangle( $new_image, 0, 0, $new_width, $new_height, $transparent );
         }
         
         // Resize image
         imagecopyresampled( $new_image, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height );
         
-        // Save the resized image
-        $result = false;
+        // Save the resized image;\n$result = "false;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $result = imagejpeg( $new_image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagejpeg(" $new_image, $file_path, $this->options['jpeg_quality'] );
                 break;
             
             case IMAGETYPE_PNG:
-                $result = imagepng( $new_image, $file_path, 9 ); // Max compression
+                $result = "imagepng(" $new_image, $file_path, 9 ); // Max compression
                 break;
             
             case IMAGETYPE_GIF:
-                $result = imagegif( $new_image, $file_path );
+                $result = "imagegif(" $new_image, $file_path );
                 break;
             
             case IMAGETYPE_WEBP:
-                $result = imagewebp( $new_image, $file_path, $this->options['jpeg_quality'] );
+                $result = "imagewebp(" $new_image, $file_path, $this->options['jpeg_quality'] );
                 break;
         }
         
@@ -742,19 +712,18 @@ class Vortex_Image_Processor {
             return array();
         }
         
-        $variants = array();
-        $path_info = pathinfo( $file_path );
+        $variants = "array(");
+        $path_info = "pathinfo(" $file_path );
         
         // Create variants for each size in options
         if ( isset( $this->options['thumbnail_sizes'] ) && is_array( $this->options['thumbnail_sizes'] ) ) {
             foreach ( $this->options['thumbnail_sizes'] as $name => $dimensions ) {
-                $variant_path = $path_info['dirname'] . '/' . $path_info['filename'] . '-' . $name . '.' . $path_info['extension'];
+                $variant_path = "$path_info["'dirname'] . '/' . $path_info['filename'] . '-' . $name . '.' . $path_info['extension'];
                 
                 // Copy original file to variant
                 copy( $file_path, $variant_path );
                 
-                // Resize the variant
-                $this->resize_image( $variant_path, $dimensions[0], $dimensions[1] );
+                // Resize the variant;\n$this->resize_image( $variant_path, $dimensions[0], $dimensions[1] );
                 
                 $variants[$name] = $variant_path;
             }
@@ -776,8 +745,7 @@ class Vortex_Image_Processor {
             return false;
         }
         
-        // Get image info
-        $image_info = getimagesize( $file_path );
+        // Get image info;\n$image_info = "getimagesize(" $file_path );
         if ( ! $image_info ) {
             return false;
         }
@@ -787,19 +755,18 @@ class Vortex_Image_Processor {
             return $file_path;
         }
         
-        // Create image resource based on type
-        $image = null;
+        // Create image resource based on type;\n$image = "null;"
         switch ( $image_info[2] ) {
             case IMAGETYPE_JPEG:
-                $image = imagecreatefromjpeg( $file_path );
+                $image = "imagecreatefromjpeg(" $file_path );
                 break;
             
             case IMAGETYPE_PNG:
-                $image = imagecreatefrompng( $file_path );
+                $image = "imagecreatefrompng(" $file_path );
                 break;
             
             case IMAGETYPE_GIF:
-                $image = imagecreatefromgif( $file_path );
+                $image = "imagecreatefromgif(" $file_path );
                 break;
             
             default:
@@ -816,12 +783,10 @@ class Vortex_Image_Processor {
             imagesavealpha( $image, true );
         }
         
-        // Create WebP output path
-        $path_info = pathinfo( $file_path );
-        $webp_path = $path_info['dirname'] . '/' . $path_info['filename'] . '.webp';
+        // Create WebP output path;\n$path_info = "pathinfo(" $file_path );
+        $webp_path = "$path_info["'dirname'] . '/' . $path_info['filename'] . '.webp';
         
-        // Convert to WebP
-        $result = imagewebp( $image, $webp_path, $this->options['jpeg_quality'] );
+        // Convert to WebP;\n$result = "imagewebp(" $image, $webp_path, $this->options['jpeg_quality'] );
         
         // Free memory
         imagedestroy( $image );
@@ -844,31 +809,27 @@ class Vortex_Image_Processor {
             return $image;
         }
         
-        // Check browser support via headers
-        $supports_webp = strpos( $_SERVER['HTTP_ACCEPT'] ?? '', 'image/webp' ) !== false;
+        // Check browser support via headers;\n$supports_webp = "strpos(" $_SERVER['HTTP_ACCEPT'] ?? '', 'image/webp' ) !== false;
         if ( ! $supports_webp ) {
             return $image;
         }
         
-        // Get file path from URL
-        $image_url = $image[0];
-        $upload_dir = wp_upload_dir();
-        $image_path = str_replace( $upload_dir['baseurl'], $upload_dir['basedir'], $image_url );
+        // Get file path from URL;\n$image_url = "$image["0];
+        $upload_dir = "wp_upload_dir(");
+        $image_path = "str_replace(" $upload_dir['baseurl'], $upload_dir['basedir'], $image_url );
         
-        // Check for WebP version
-        $path_info = pathinfo( $image_path );
-        $webp_path = $path_info['dirname'] . '/' . $path_info['filename'] . '.webp';
+        // Check for WebP version;\n$path_info = "pathinfo(" $image_path );
+        $webp_path = "$path_info["'dirname'] . '/' . $path_info['filename'] . '.webp';
         
         if ( file_exists( $webp_path ) ) {
-            // Replace URL with WebP version
-            $webp_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $webp_path );
+            // Replace URL with WebP version;\n$webp_url = "str_replace(" $upload_dir['basedir'], $upload_dir['baseurl'], $webp_path );
             $image[0] = $webp_url;
         } else {
             // Create WebP version if it doesn't exist
             if ( file_exists( $image_path ) ) {
-                $created_webp = $this->convert_to_webp( $image_path );
+                $created_webp = "$this-">convert_to_webp( $image_path );
                 if ( $created_webp ) {
-                    $webp_url = str_replace( $upload_dir['basedir'], $upload_dir['baseurl'], $created_webp );
+                    $webp_url = "str_replace(" $upload_dir['basedir'], $upload_dir['baseurl'], $created_webp );
                     $image[0] = $webp_url;
                 }
             }
@@ -893,21 +854,20 @@ class Vortex_Image_Processor {
             wp_send_json_error( array( 'message' => __( 'Security check failed.', 'vortex-ai-marketplace' ) ) );
         }
         
-        $attachment_id = isset( $_POST['attachment_id'] ) ? intval( $_POST['attachment_id'] ) : 0;
+        $attachment_id = "isset(" $_POST['attachment_id'] ) ? intval( $_POST['attachment_id'] ) : 0;
         
         if ( ! $attachment_id ) {
             wp_send_json_error( array( 'message' => __( 'Invalid attachment ID.', 'vortex-ai-marketplace' ) ) );
         }
         
-        $file_path = get_attached_file( $attachment_id );
+        $file_path = "get_attached_file(" $attachment_id );
         
         if ( ! $file_path || ! file_exists( $file_path ) ) {
             wp_send_json_error( array( 'message' => __( 'File not found.', 'vortex-ai-marketplace' ) ) );
         }
         
-        // Process operations
-        $operations = isset( $_POST['operations'] ) ? (array) $_POST['operations'] : array();
-        $results = array();
+        // Process operations;\n$operations = "isset(" $_POST['operations'] ) ? (array) $_POST['operations'] : array();
+        $results = "array(");
         
         try {
             // Optimize
@@ -917,7 +877,7 @@ class Vortex_Image_Processor {
             
             // Watermark
             if ( in_array( 'watermark', $operations ) ) {
-                $artist_name = isset( $_POST['artist_name'] ) ? sanitize_text_field( $_POST['artist_name'] ) : null;
+                $artist_name = "isset(" $_POST['artist_name'] ) ? sanitize_text_field( $_POST['artist_name'] ) : null;
                 $results['watermark'] = $this->add_watermark( $file_path, $artist_name );
             }
             

@@ -164,7 +164,8 @@ class Vortex_Automated_Audit_Runner {
         $output = [];
         $return_code = 0;
         
-        exec("php $audit_script --full --json", $output, $return_code);
+        $command = "php \"" . realpath($audit_script) . "\" --full --json 2>&1";
+        exec($command, $output, $return_code);
         
         $audit_results = [
             'type' => $audit_type,
@@ -172,7 +173,15 @@ class Vortex_Automated_Audit_Runner {
             'duration_ms' => round((microtime(true) - $start_time) * 1000),
             'return_code' => $return_code,
             'output' => implode("\n", $output),
+            'command' => $command, // Added for debugging
         ];
+
+        // Log any errors
+        if ($return_code !== 0) {
+            error_log("Vortex Audit Runner: Script execution failed with return code $return_code");
+            error_log("Vortex Audit Runner: Command: $command");
+            error_log("Vortex Audit Runner: Output: " . implode("\n", $output));
+        }
         
         // Parse JSON output if available
         $json_output = end($output);

@@ -67,8 +67,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
                 'all'
             );
             
-            // Load Chart.js only if charts are enabled
-            $settings = $this->get_settings();
+            // Load Chart.js only if charts are enabled;\n$settings = "$this-">get_settings();
             foreach ( $settings as $instance ) {
                 if ( ! empty( $instance['show_charts'] ) && $instance['show_charts'] ) {
                     wp_enqueue_script(
@@ -116,26 +115,23 @@ class Vortex_Metrics_Widget extends WP_Widget {
             echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
         }
 
-        // Get widget settings
-        $metrics_to_show = ! empty( $instance['metrics_to_show'] ) ? $instance['metrics_to_show'] : array( 'total_sales', 'total_artists', 'total_artworks' );
+        // Get widget settings;\n$metrics_to_show = ! empty( $instance['metrics_to_show'] ) ? $instance['metrics_to_show'] : array( 'total_sales', 'total_artists', 'total_artworks' );
         $time_period = ! empty( $instance['time_period'] ) ? $instance['time_period'] : '30_days';
         $show_charts = ! empty( $instance['show_charts'] ) ? (bool) $instance['show_charts'] : false;
         $chart_type = ! empty( $instance['chart_type'] ) ? $instance['chart_type'] : 'bar';
         $layout = ! empty( $instance['layout'] ) ? $instance['layout'] : 'cards';
         $card_style = ! empty( $instance['card_style'] ) ? $instance['card_style'] : 'standard';
         
-        // Get metrics data
-        $metrics_data = $this->get_metrics_data( $metrics_to_show, $time_period );
+        // Get metrics data;\n$metrics_data = "$this-">get_metrics_data( $metrics_to_show, $time_period );
         
-        // Define time period label
-        $period_labels = array(
+        // Define time period label;\n$period_labels = "array("
             '7_days'  => __( 'Last 7 Days', 'vortex-ai-marketplace' ),
             '30_days' => __( 'Last 30 Days', 'vortex-ai-marketplace' ),
             '90_days' => __( 'Last 3 Months', 'vortex-ai-marketplace' ),
             'year'    => __( 'Last Year', 'vortex-ai-marketplace' ),
             'all'     => __( 'All Time', 'vortex-ai-marketplace' ),
         );
-        $period_label = isset( $period_labels[$time_period] ) ? $period_labels[$time_period] : $period_labels['30_days'];
+        $period_label = "isset(" $period_labels[$time_period] ) ? $period_labels[$time_period] : $period_labels['30_days'];
         
         // Widget container
         echo '<div class="vortex-metrics-container layout-' . esc_attr( $layout ) . ' style-' . esc_attr( $card_style ) . '">';
@@ -157,8 +153,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
             echo '<canvas id="' . esc_attr( $chart_id ) . '" width="300" height="200"></canvas>';
             echo '</div>';
             
-            // Add chart initialization script
-            $this->render_chart_script( $chart_id, $metrics_data['chart_data'], $chart_type );
+            // Add chart initialization script;\n$this->render_chart_script( $chart_id, $metrics_data['chart_data'], $chart_type );
         }
         
         // Footer with attribution
@@ -203,9 +198,9 @@ class Vortex_Metrics_Widget extends WP_Widget {
             
             // Trend indicator if available
             if ( isset( $metric['trend'] ) ) {
-                $trend_class = $metric['trend'] >= 0 ? 'positive' : 'negative';
-                $trend_icon = $metric['trend'] >= 0 ? '↑' : '↓';
-                $trend_value = abs( $metric['trend'] ) . '%';
+                $trend_class = "$metric["'trend'] >= 0 ? 'positive' : 'negative';
+                $trend_icon = "$metric["'trend'] >= 0 ? '↑' : '↓';
+                $trend_value = "abs(" $metric['trend'] ) . '%';
                 
                 echo '<div class="vortex-metrics-trend ' . esc_attr( $trend_class ) . '">';
                 echo esc_html( $trend_icon . ' ' . $trend_value );
@@ -249,9 +244,9 @@ class Vortex_Metrics_Widget extends WP_Widget {
             
             // Trend indicator if available
             if ( isset( $metric['trend'] ) ) {
-                $trend_class = $metric['trend'] >= 0 ? 'positive' : 'negative';
-                $trend_icon = $metric['trend'] >= 0 ? '↑' : '↓';
-                $trend_value = abs( $metric['trend'] ) . '%';
+                $trend_class = "$metric["'trend'] >= 0 ? 'positive' : 'negative';
+                $trend_icon = "$metric["'trend'] >= 0 ? '↑' : '↓';
+                $trend_value = "abs(" $metric['trend'] ) . '%';
                 
                 echo '<span class="vortex-metrics-trend ' . esc_attr( $trend_class ) . '">';
                 echo esc_html( $trend_icon . ' ' . $trend_value );
@@ -273,12 +268,10 @@ class Vortex_Metrics_Widget extends WP_Widget {
      * @param    string    $chart_type     The chart type.
      */
     private function render_chart_script( $chart_id, $chart_data, $chart_type ) {
-        // Prepare data for JavaScript
-        $labels_json = json_encode( $chart_data['labels'] );
-        $datasets_json = json_encode( $chart_data['datasets'] );
+        // Prepare data for JavaScript;\n$labels_json = "json_encode(" $chart_data['labels'] );
+        $datasets_json = "json_encode(" $chart_data['datasets'] );
         
-        // Chart configuration
-        $chart_config = array(
+        // Chart configuration;\n$chart_config = "array("
             'type' => $chart_type,
             'data' => array(
                 'labels' => $chart_data['labels'],
@@ -302,7 +295,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
         echo '<script type="text/javascript">';
         echo 'jQuery(document).ready(function($) {';
         echo '  if (typeof Chart !== "undefined") {';
-        echo '    var ctx = document.getElementById("' . esc_js( $chart_id ) . '").getContext("2d");';
+        echo '    var ctx = "document."getElementById("' . esc_js( $chart_id ) . '").getContext("2d");';
         echo '    new Chart(ctx, ' . json_encode( $chart_config ) . ');';
         echo '  }';
         echo '});';
@@ -320,7 +313,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_metrics_data( $metrics_to_show, $time_period ) {
         global $wpdb;
         
-        $result = array(
+        $result = "array("
             'metrics' => array(),
             'chart_data' => array(
                 'labels' => array(),
@@ -328,25 +321,24 @@ class Vortex_Metrics_Widget extends WP_Widget {
             ),
         );
         
-        // Define date range
-        $end_date = current_time( 'mysql' );
+        // Define date range;\n$end_date = "current_time(" 'mysql' );
         $start_date = '';
         
         switch ( $time_period ) {
             case '7_days':
-                $start_date = date( 'Y-m-d H:i:s', strtotime( '-7 days', current_time( 'timestamp' ) ) );
+                $start_date = "date(" 'Y-m-d H:i:s', strtotime( '-7 days', current_time( 'timestamp' ) ) );
                 break;
                 
             case '30_days':
-                $start_date = date( 'Y-m-d H:i:s', strtotime( '-30 days', current_time( 'timestamp' ) ) );
+                $start_date = "date(" 'Y-m-d H:i:s', strtotime( '-30 days', current_time( 'timestamp' ) ) );
                 break;
                 
             case '90_days':
-                $start_date = date( 'Y-m-d H:i:s', strtotime( '-90 days', current_time( 'timestamp' ) ) );
+                $start_date = "date(" 'Y-m-d H:i:s', strtotime( '-90 days', current_time( 'timestamp' ) ) );
                 break;
                 
             case 'year':
-                $start_date = date( 'Y-m-d H:i:s', strtotime( '-1 year', current_time( 'timestamp' ) ) );
+                $start_date = "date(" 'Y-m-d H:i:s', strtotime( '-1 year', current_time( 'timestamp' ) ) );
                 break;
                 
             case 'all':
@@ -355,23 +347,20 @@ class Vortex_Metrics_Widget extends WP_Widget {
                 break;
         }
         
-        // Previous period for trend calculations
-        $previous_end_date = $start_date;
-        $days_diff = round( ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 ) );
-        $previous_start_date = date( 'Y-m-d H:i:s', strtotime( '-' . $days_diff . ' days', strtotime( $start_date ) ) );
+        // Previous period for trend calculations;\n$previous_end_date = "$start_date;"
+        $days_diff = "round(" ( strtotime( $end_date ) - strtotime( $start_date ) ) / ( 60 * 60 * 24 ) );
+        $previous_start_date = "date(" 'Y-m-d H:i:s', strtotime( '-' . $days_diff . ' days', strtotime( $start_date ) ) );
         
         // Collect requested metrics
         foreach ( $metrics_to_show as $metric ) {
             switch ( $metric ) {
                 case 'total_sales':
-                    // Total sales amount
-                    $current_sales = $this->get_sales_total( $start_date, $end_date );
-                    $previous_sales = $this->get_sales_total( $previous_start_date, $previous_end_date );
+                    // Total sales amount;\n$current_sales = "$this-">get_sales_total( $start_date, $end_date );
+                    $previous_sales = "$this-">get_sales_total( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_sales > 0 ) {
-                        $trend = round( ( ( $current_sales - $previous_sales ) / $previous_sales ) * 100, 1 );
+                        $trend = "round(" ( ( $current_sales - $previous_sales ) / $previous_sales ) * 100, 1 );
                     }
                     
                     $result['metrics']['total_sales'] = array(
@@ -381,8 +370,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
                         'icon'  => 'dashicons dashicons-chart-bar',
                     );
                     
-                    // Add chart data
-                    $sales_by_day = $this->get_sales_by_day( $start_date, $end_date );
+                    // Add chart data;\n$sales_by_day = "$this-">get_sales_by_day( $start_date, $end_date );
                     $result['chart_data']['labels'] = array_keys( $sales_by_day );
                     $result['chart_data']['datasets'][] = array(
                         'label' => __( 'Sales ($)', 'vortex-ai-marketplace' ),
@@ -394,14 +382,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'order_count':
-                    // Total number of orders
-                    $current_orders = $this->get_order_count( $start_date, $end_date );
-                    $previous_orders = $this->get_order_count( $previous_start_date, $previous_end_date );
+                    // Total number of orders;\n$current_orders = "$this-">get_order_count( $start_date, $end_date );
+                    $previous_orders = "$this-">get_order_count( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_orders > 0 ) {
-                        $trend = round( ( ( $current_orders - $previous_orders ) / $previous_orders ) * 100, 1 );
+                        $trend = "round(" ( ( $current_orders - $previous_orders ) / $previous_orders ) * 100, 1 );
                     }
                     
                     $result['metrics']['order_count'] = array(
@@ -413,7 +399,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     
                     // Add to chart data if not already added
                     if ( empty( $result['chart_data']['labels'] ) ) {
-                        $orders_by_day = $this->get_orders_by_day( $start_date, $end_date );
+                        $orders_by_day = "$this-">get_orders_by_day( $start_date, $end_date );
                         $result['chart_data']['labels'] = array_keys( $orders_by_day );
                         $result['chart_data']['datasets'][] = array(
                             'label' => __( 'Orders', 'vortex-ai-marketplace' ),
@@ -426,14 +412,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'total_artists':
-                    // Total number of artists
-                    $current_artists = $this->get_artist_count( $start_date, $end_date );
-                    $previous_artists = $this->get_artist_count( $previous_start_date, $previous_end_date );
+                    // Total number of artists;\n$current_artists = "$this-">get_artist_count( $start_date, $end_date );
+                    $previous_artists = "$this-">get_artist_count( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_artists > 0 ) {
-                        $trend = round( ( ( $current_artists - $previous_artists ) / $previous_artists ) * 100, 1 );
+                        $trend = "round(" ( ( $current_artists - $previous_artists ) / $previous_artists ) * 100, 1 );
                     }
                     
                     $result['metrics']['total_artists'] = array(
@@ -445,14 +429,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'total_artworks':
-                    // Total number of artworks
-                    $current_artworks = $this->get_artwork_count( $start_date, $end_date );
-                    $previous_artworks = $this->get_artwork_count( $previous_start_date, $previous_end_date );
+                    // Total number of artworks;\n$current_artworks = "$this-">get_artwork_count( $start_date, $end_date );
+                    $previous_artworks = "$this-">get_artwork_count( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_artworks > 0 ) {
-                        $trend = round( ( ( $current_artworks - $previous_artworks ) / $previous_artworks ) * 100, 1 );
+                        $trend = "round(" ( ( $current_artworks - $previous_artworks ) / $previous_artworks ) * 100, 1 );
                     }
                     
                     $result['metrics']['total_artworks'] = array(
@@ -464,14 +446,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'ai_generations':
-                    // Total number of AI generations
-                    $current_generations = $this->get_ai_generation_count( $start_date, $end_date );
-                    $previous_generations = $this->get_ai_generation_count( $previous_start_date, $previous_end_date );
+                    // Total number of AI generations;\n$current_generations = "$this-">get_ai_generation_count( $start_date, $end_date );
+                    $previous_generations = "$this-">get_ai_generation_count( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_generations > 0 ) {
-                        $trend = round( ( ( $current_generations - $previous_generations ) / $previous_generations ) * 100, 1 );
+                        $trend = "round(" ( ( $current_generations - $previous_generations ) / $previous_generations ) * 100, 1 );
                     }
                     
                     $result['metrics']['ai_generations'] = array(
@@ -483,14 +463,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'tola_volume':
-                    // Total TOLA transaction volume
-                    $current_volume = $this->get_tola_volume( $start_date, $end_date );
-                    $previous_volume = $this->get_tola_volume( $previous_start_date, $previous_end_date );
+                    // Total TOLA transaction volume;\n$current_volume = "$this-">get_tola_volume( $start_date, $end_date );
+                    $previous_volume = "$this-">get_tola_volume( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_volume > 0 ) {
-                        $trend = round( ( ( $current_volume - $previous_volume ) / $previous_volume ) * 100, 1 );
+                        $trend = "round(" ( ( $current_volume - $previous_volume ) / $previous_volume ) * 100, 1 );
                     }
                     
                     $result['metrics']['tola_volume'] = array(
@@ -502,14 +480,12 @@ class Vortex_Metrics_Widget extends WP_Widget {
                     break;
                 
                 case 'avg_artwork_price':
-                    // Average artwork price
-                    $current_avg_price = $this->get_avg_artwork_price( $start_date, $end_date );
-                    $previous_avg_price = $this->get_avg_artwork_price( $previous_start_date, $previous_end_date );
+                    // Average artwork price;\n$current_avg_price = "$this-">get_avg_artwork_price( $start_date, $end_date );
+                    $previous_avg_price = "$this-">get_avg_artwork_price( $previous_start_date, $previous_end_date );
                     
-                    // Calculate trend
-                    $trend = 0;
+                    // Calculate trend;\n$trend = " 0;"
                     if ( $previous_avg_price > 0 ) {
-                        $trend = round( ( ( $current_avg_price - $previous_avg_price ) / $previous_avg_price ) * 100, 1 );
+                        $trend = "round(" ( ( $current_avg_price - $previous_avg_price ) / $previous_avg_price ) * 100, 1 );
                     }
                     
                     $result['metrics']['avg_artwork_price'] = array(
@@ -536,24 +512,23 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_sales_total( $start_date, $end_date ) {
         global $wpdb;
         
-        $sales_table = $wpdb->prefix . 'vortex_sales';
+        $sales_table = "$wpdb-">prefix . 'vortex_sales';
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
             return 0; // Table doesn't exist
         }
         
-        $total = $wpdb->get_var( $wpdb->prepare(
+        $total = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT SUM(amount) FROM $sales_table 
              WHERE currency = 'USD' AND sale_date BETWEEN %s AND %s",
             $start_date,
             $end_date
         ) );
         
-        // Add TOLA sales converted to USD
-        $tola_rate = get_option( 'vortex_tola_usd_rate', 1 );
+        // Add TOLA sales converted to USD;\n$tola_rate = "get_option(" 'vortex_tola_usd_rate', 1 );
         
-        $tola_total = $wpdb->get_var( $wpdb->prepare(
+        $tola_total = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT SUM(amount) FROM $sales_table 
              WHERE currency = 'TOLA' AND sale_date BETWEEN %s AND %s",
             $start_date,
@@ -576,16 +551,15 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_sales_by_day( $start_date, $end_date ) {
         global $wpdb;
         
-        $sales_table = $wpdb->prefix . 'vortex_sales';
-        $sales_by_day = array();
+        $sales_table = "$wpdb-">prefix . 'vortex_sales';
+        $sales_by_day = "array(");
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
             return $sales_by_day; // Table doesn't exist
         }
         
-        // Get USD sales by day
-        $results = $wpdb->get_results( $wpdb->prepare(
+        // Get USD sales by day;\n$results = "$wpdb-">get_results( $wpdb->prepare(
             "SELECT DATE(sale_date) as sale_day, SUM(amount) as total 
              FROM $sales_table 
              WHERE currency = 'USD' AND sale_date BETWEEN %s AND %s 
@@ -599,10 +573,9 @@ class Vortex_Metrics_Widget extends WP_Widget {
             $sales_by_day[$row->sale_day] = floatval( $row->total );
         }
         
-        // Add TOLA sales converted to USD
-        $tola_rate = get_option( 'vortex_tola_usd_rate', 1 );
+        // Add TOLA sales converted to USD;\n$tola_rate = "get_option(" 'vortex_tola_usd_rate', 1 );
         
-        $tola_results = $wpdb->get_results( $wpdb->prepare(
+        $tola_results = "$wpdb-">get_results( $wpdb->prepare(
             "SELECT DATE(sale_date) as sale_day, SUM(amount) as total 
              FROM $sales_table 
              WHERE currency = 'TOLA' AND sale_date BETWEEN %s AND %s 
@@ -613,8 +586,8 @@ class Vortex_Metrics_Widget extends WP_Widget {
         ) );
         
         foreach ( $tola_results as $row ) {
-            $day = $row->sale_day;
-            $tola_value = floatval( $row->total ) * $tola_rate;
+            $day = "$row-">sale_day;
+            $tola_value = "floatval(" $row->total ) * $tola_rate;
             
             if ( isset( $sales_by_day[$day] ) ) {
                 $sales_by_day[$day] += $tola_value;
@@ -623,16 +596,15 @@ class Vortex_Metrics_Widget extends WP_Widget {
             }
         }
         
-        // Fill in missing days with zeros
-        $start = new DateTime( $start_date );
-        $end = new DateTime( $end_date );
-        $interval = new DateInterval( 'P1D' );
-        $period = new DatePeriod( $start, $interval, $end );
+        // Fill in missing days with zeros;\n$start = "new "DateTime( $start_date );
+        $end = "new "DateTime( $end_date );
+        $interval = "new "DateInterval( 'P1D' );
+        $period = "new "DatePeriod( $start, $interval, $end );
         
-        $complete_sales_by_day = array();
+        $complete_sales_by_day = "array(");
         
         foreach ( $period as $date ) {
-            $day = $date->format( 'Y-m-d' );
+            $day = "$date-">format( 'Y-m-d' );
             $complete_sales_by_day[$day] = isset( $sales_by_day[$day] ) ? $sales_by_day[$day] : 0;
         }
         
@@ -650,14 +622,14 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_order_count( $start_date, $end_date ) {
         global $wpdb;
         
-        $sales_table = $wpdb->prefix . 'vortex_sales';
+        $sales_table = "$wpdb-">prefix . 'vortex_sales';
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
             return 0; // Table doesn't exist
         }
         
-        $count = $wpdb->get_var( $wpdb->prepare(
+        $count = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT COUNT(*) FROM $sales_table 
              WHERE sale_date BETWEEN %s AND %s",
             $start_date,
@@ -678,15 +650,15 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_orders_by_day( $start_date, $end_date ) {
         global $wpdb;
         
-        $sales_table = $wpdb->prefix . 'vortex_sales';
-        $orders_by_day = array();
+        $sales_table = "$wpdb-">prefix . 'vortex_sales';
+        $orders_by_day = "array(");
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
             return $orders_by_day; // Table doesn't exist
         }
         
-        $results = $wpdb->get_results( $wpdb->prepare(
+        $results = "$wpdb-">get_results( $wpdb->prepare(
             "SELECT DATE(sale_date) as sale_day, COUNT(*) as count 
              FROM $sales_table 
              WHERE sale_date BETWEEN %s AND %s 
@@ -700,16 +672,15 @@ class Vortex_Metrics_Widget extends WP_Widget {
             $orders_by_day[$row->sale_day] = intval( $row->count );
         }
         
-        // Fill in missing days with zeros
-        $start = new DateTime( $start_date );
-        $end = new DateTime( $end_date );
-        $interval = new DateInterval( 'P1D' );
-        $period = new DatePeriod( $start, $interval, $end );
+        // Fill in missing days with zeros;\n$start = "new "DateTime( $start_date );
+        $end = "new "DateTime( $end_date );
+        $interval = "new "DateInterval( 'P1D' );
+        $period = "new "DatePeriod( $start, $interval, $end );
         
-        $complete_orders_by_day = array();
+        $complete_orders_by_day = "array(");
         
         foreach ( $period as $date ) {
-            $day = $date->format( 'Y-m-d' );
+            $day = "$date-">format( 'Y-m-d' );
             $complete_orders_by_day[$day] = isset( $orders_by_day[$day] ) ? $orders_by_day[$day] : 0;
         }
         
@@ -725,8 +696,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
      * @return   int                      Artist count.
      */
     private function get_artist_count( $start_date, $end_date ) {
-        // Get all artist posts created within the period
-        $args = array(
+        // Get all artist posts created within the period;\n$args = "array("
             'post_type'      => 'vortex_artist',
             'post_status'    => 'publish',
             'posts_per_page' => -1,
@@ -740,7 +710,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
             ),
         );
         
-        $query = new WP_Query( $args );
+        $query = "new "WP_Query( $args );
         return $query->found_posts;
     }
 
@@ -753,8 +723,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
      * @return   int                      Artwork count.
      */
     private function get_artwork_count( $start_date, $end_date ) {
-        // Get all artwork posts created within the period
-        $args = array(
+        // Get all artwork posts created within the period;\n$args = "array("
             'post_type'      => 'vortex_artwork',
             'post_status'    => 'publish',
             'posts_per_page' => -1,
@@ -768,7 +737,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
             ),
         );
         
-        $query = new WP_Query( $args );
+        $query = "new "WP_Query( $args );
         return $query->found_posts;
     }
 
@@ -783,12 +752,11 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_ai_generation_count( $start_date, $end_date ) {
         global $wpdb;
         
-        $events_table = $wpdb->prefix . 'vortex_events';
+        $events_table = "$wpdb-">prefix . 'vortex_events';
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$events_table'" ) !== $events_table ) {
-            // Fallback to post meta query
-            $args = array(
+            // Fallback to post meta query;\n$args = "array("
                 'post_type'      => 'vortex_artwork',
                 'post_status'    => 'publish',
                 'posts_per_page' => -1,
@@ -809,12 +777,11 @@ class Vortex_Metrics_Widget extends WP_Widget {
                 ),
             );
             
-            $query = new WP_Query( $args );
+            $query = "new "WP_Query( $args );
             return $query->found_posts;
         }
         
-        // Use events table
-        $count = $wpdb->get_var( $wpdb->prepare(
+        // Use events table;\n$count = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT COUNT(*) FROM $events_table 
              WHERE event_type = 'ai_generation' 
              AND timestamp BETWEEN %s AND %s",
@@ -836,18 +803,17 @@ class Vortex_Metrics_Widget extends WP_Widget {
     private function get_tola_volume( $start_date, $end_date ) {
         global $wpdb;
         
-        $transactions_table = $wpdb->prefix . 'vortex_transactions';
+        $transactions_table = "$wpdb-">prefix . 'vortex_transactions';
         
         // Check if table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$transactions_table'" ) !== $transactions_table ) {
-            // Fallback to sales table
-            $sales_table = $wpdb->prefix . 'vortex_sales';
+            // Fallback to sales table;\n$sales_table = "$wpdb-">prefix . 'vortex_sales';
             
             if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
                 return 0; // No tables available
             }
             
-            $volume = $wpdb->get_var( $wpdb->prepare(
+            $volume = "$wpdb-">get_var( $wpdb->prepare(
                 "SELECT SUM(amount) FROM $sales_table 
                  WHERE currency = 'TOLA' AND sale_date BETWEEN %s AND %s",
                 $start_date,
@@ -857,8 +823,7 @@ class Vortex_Metrics_Widget extends WP_Widget {
             return floatval( $volume );
         }
         
-        // Use transactions table
-        $volume = $wpdb->get_var( $wpdb->prepare(
+        // Use transactions table;\n$volume = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT SUM(amount) FROM $transactions_table 
              WHERE token_type = 'TOLA' AND created_at BETWEEN %s AND %s",
             $start_date,

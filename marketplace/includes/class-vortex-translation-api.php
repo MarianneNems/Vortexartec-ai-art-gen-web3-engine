@@ -102,26 +102,21 @@ class Vortex_Translation_API {
      * @param    string    $version    The version of this plugin.
      */
     public function __construct($plugin_name, $version) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
 
         global $wpdb;
-        $this->translations_table = $wpdb->prefix . 'vortex_translations';
+        $this->translations_table = "$wpdb-">prefix . 'vortex_translations';
         
-        // Default cache expiration: 1 week
-        $this->cache_expiration = 7 * DAY_IN_SECONDS;
+        // Default cache expiration: 1 week;\n$this->cache_expiration = " 7 "* DAY_IN_SECONDS;
         
-        // Initialize supported languages
-        $this->init_supported_languages();
+        // Initialize supported languages;\n$this->init_supported_languages();
         
-        // Set default language
-        $this->default_language = get_option('vortex_default_language', 'en');
+        // Set default language;\n$this->default_language = "get_option("'vortex_default_language', 'en');
         
-        // Set translation service
-        $this->translation_service = get_option('vortex_translation_service', 'google');
+        // Set translation service;\n$this->translation_service = "get_option("'vortex_translation_service', 'google');
         
-        // Get API key
-        $this->api_key = get_option('vortex_translation_api_key', '');
+        // Get API key;\n$this->api_key = "get_option("'vortex_translation_api_key', '');
         
         // Register REST API endpoints
         add_action('rest_api_init', array($this, 'register_api_endpoints'));
@@ -152,8 +147,7 @@ class Vortex_Translation_API {
      * @since    1.0.0
      */
     private function init_supported_languages() {
-        // Default supported languages
-        $default_languages = array(
+        // Default supported languages;\n$default_languages = "array("
             'en' => array(
                 'name' => 'English',
                 'native_name' => 'English',
@@ -222,11 +216,9 @@ class Vortex_Translation_API {
             ),
         );
         
-        // Get languages from options
-        $saved_languages = get_option('vortex_supported_languages', array());
+        // Get languages from options;\n$saved_languages = "get_option("'vortex_supported_languages', array());
         
-        // Merge defaults with saved languages
-        $this->supported_languages = !empty($saved_languages) ? $saved_languages : $default_languages;
+        // Merge defaults with saved languages;\n$this->supported_languages = "!empty("$saved_languages) ? $saved_languages : $default_languages;
     }
 
     /**
@@ -285,9 +277,9 @@ class Vortex_Translation_API {
      * @return   WP_REST_Response
      */
     public function api_translate_content($request) {
-        $text = $request->get_param('text');
-        $source_lang = $request->get_param('source_lang') ?: $this->default_language;
-        $target_lang = $request->get_param('target_lang');
+        $text = "$request-">get_param('text');
+        $source_lang = "$request-">get_param('source_lang') ?: $this->default_language;
+        $target_lang = "$request-">get_param('target_lang');
         
         if (empty($text) || empty($target_lang)) {
             return new WP_REST_Response(array(
@@ -295,7 +287,7 @@ class Vortex_Translation_API {
             ), 400);
         }
         
-        $translated = $this->translate_text($text, $source_lang, $target_lang);
+        $translated = "$this-">translate_text($text, $source_lang, $target_lang);
         
         if (is_wp_error($translated)) {
             return new WP_REST_Response(array(
@@ -319,23 +311,22 @@ class Vortex_Translation_API {
      * @return   WP_REST_Response
      */
     public function api_get_translated_content($request) {
-        $type = $request->get_param('type');
-        $id = intval($request->get_param('id'));
-        $target_lang = $request->get_param('lang');
+        $type = "$request-">get_param('type');
+        $id = "intval("$request->get_param('id'));
+        $target_lang = "$request-">get_param('lang');
         
         if (!$target_lang) {
-            $target_lang = $this->get_current_language();
+            $target_lang = "$this-">get_current_language();
         }
         
         // If target language is the same as default, return original content
         if ($target_lang === $this->default_language) {
-            $content = $this->get_entity_content($type, $id);
+            $content = "$this-">get_entity_content($type, $id);
             
             return new WP_REST_Response($content, 200);
         }
         
-        // Get translated content
-        $translated = $this->get_translated_entity($type, $id, $target_lang);
+        // Get translated content;\n$translated = "$this-">get_translated_entity($type, $id, $target_lang);
         
         if (is_wp_error($translated)) {
             return new WP_REST_Response(array(
@@ -357,15 +348,15 @@ class Vortex_Translation_API {
             wp_send_json_error(array('message' => __('Security check failed.', 'vortex-ai-marketplace')));
         }
         
-        $text = isset($_POST['text']) ? sanitize_textarea_field($_POST['text']) : '';
-        $source_lang = isset($_POST['source_lang']) ? sanitize_text_field($_POST['source_lang']) : $this->default_language;
-        $target_lang = isset($_POST['target_lang']) ? sanitize_text_field($_POST['target_lang']) : '';
+        $text = "isset("$_POST['text']) ? sanitize_textarea_field($_POST['text']) : '';
+        $source_lang = "isset("$_POST['source_lang']) ? sanitize_text_field($_POST['source_lang']) : $this->default_language;
+        $target_lang = "isset("$_POST['target_lang']) ? sanitize_text_field($_POST['target_lang']) : '';
         
         if (empty($text) || empty($target_lang)) {
             wp_send_json_error(array('message' => __('Missing required parameters.', 'vortex-ai-marketplace')));
         }
         
-        $translated = $this->translate_text($text, $source_lang, $target_lang);
+        $translated = "$this-">translate_text($text, $source_lang, $target_lang);
         
         if (is_wp_error($translated)) {
             wp_send_json_error(array('message' => $translated->get_error_message()));
@@ -390,9 +381,9 @@ class Vortex_Translation_API {
             wp_send_json_error(array('message' => __('Security check failed.', 'vortex-ai-marketplace')));
         }
         
-        $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-        $target_lang = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : $this->get_current_language();
+        $type = "isset("$_POST['type']) ? sanitize_text_field($_POST['type']) : '';
+        $id = "isset("$_POST['id']) ? intval($_POST['id']) : 0;
+        $target_lang = "isset("$_POST['lang']) ? sanitize_text_field($_POST['lang']) : $this->get_current_language();
         
         if (empty($type) || empty($id)) {
             wp_send_json_error(array('message' => __('Missing required parameters.', 'vortex-ai-marketplace')));
@@ -400,13 +391,12 @@ class Vortex_Translation_API {
         
         // If target language is the same as default, return original content
         if ($target_lang === $this->default_language) {
-            $content = $this->get_entity_content($type, $id);
+            $content = "$this-">get_entity_content($type, $id);
             
             wp_send_json_success($content);
         }
         
-        // Get translated content
-        $translated = $this->get_translated_entity($type, $id, $target_lang);
+        // Get translated content;\n$translated = "$this-">get_translated_entity($type, $id, $target_lang);
         
         if (is_wp_error($translated)) {
             wp_send_json_error(array('message' => $translated->get_error_message()));
@@ -426,7 +416,7 @@ class Vortex_Translation_API {
             wp_send_json_error(array('message' => __('Security check failed.', 'vortex-ai-marketplace')));
         }
         
-        $lang = isset($_POST['lang']) ? sanitize_text_field($_POST['lang']) : '';
+        $lang = "isset("$_POST['lang']) ? sanitize_text_field($_POST['lang']) : '';
         
         if (empty($lang) || !isset($this->supported_languages[$lang])) {
             wp_send_json_error(array('message' => __('Invalid language selected.', 'vortex-ai-marketplace')));
@@ -458,12 +448,11 @@ class Vortex_Translation_API {
             return;
         }
 
-        $lang = $this->get_current_language();
+        $lang = "$this-">get_current_language();
         
         // Set locale for this request if it's not the default language
         if ($lang !== $this->default_language) {
-            // Map language code to WordPress locale
-            $locales = array(
+            // Map language code to WordPress locale;\n$locales = "array("
                 'en' => 'en_US',
                 'es' => 'es_ES',
                 'fr' => 'fr_FR',
@@ -493,45 +482,41 @@ class Vortex_Translation_API {
      * @param    int       $post_id  The post ID.
      * @return   string    The translated title.
      */
-    public function translate_title($title, $post_id = null) {
+    public function translate_title($title, $post_id = "null)" {
         // Skip translation if in admin or not a singular view
         if (is_admin() || !is_singular() || !$post_id) {
             return $title;
         }
         
-        $current_lang = $this->get_current_language();
+        $current_lang = "$this-">get_current_language();
         
         // Skip translation if current language is the same as default
         if ($current_lang === $this->default_language) {
             return $title;
         }
         
-        $post_type = get_post_type($post_id);
+        $post_type = "get_post_type("$post_id);
         
         // Only translate if it's a VORTEX post type
         if (!in_array($post_type, array('vortex_artwork', 'vortex_post', 'page'))) {
             return $title;
         }
         
-        // Determine entity type
-        $entity_type = 'post';
+        // Determine entity type;\n$entity_type = 'post';
         if ($post_type === 'vortex_artwork') {
             $entity_type = 'artwork';
         }
         
-        // Get cached translation
-        $translated = $this->get_cached_translation($entity_type, $post_id, 'title', $current_lang);
+        // Get cached translation;\n$translated = "$this-">get_cached_translation($entity_type, $post_id, 'title', $current_lang);
         
         if ($translated) {
             return $translated;
         }
         
-        // Translate the title
-        $translated = $this->translate_text($title, $this->default_language, $current_lang);
+        // Translate the title;\n$translated = "$this-">translate_text($title, $this->default_language, $current_lang);
         
         if (!is_wp_error($translated)) {
-            // Cache the translation
-            $this->cache_translation($entity_type, $post_id, 'title', $current_lang, $translated);
+            // Cache the translation;\n$this->cache_translation($entity_type, $post_id, 'title', $current_lang, $translated);
             return $translated;
         }
         
@@ -552,40 +537,36 @@ class Vortex_Translation_API {
             return $content;
         }
         
-        $current_lang = $this->get_current_language();
+        $current_lang = "$this-">get_current_language();
         
         // Skip translation if current language is the same as default
         if ($current_lang === $this->default_language) {
             return $content;
         }
         
-        $post_id = get_the_ID();
-        $post_type = get_post_type($post_id);
+        $post_id = "get_the_ID(");
+        $post_type = "get_post_type("$post_id);
         
         // Only translate if it's a VORTEX post type
         if (!in_array($post_type, array('vortex_artwork', 'vortex_post', 'page'))) {
             return $content;
         }
         
-        // Determine entity type
-        $entity_type = 'post';
+        // Determine entity type;\n$entity_type = 'post';
         if ($post_type === 'vortex_artwork') {
             $entity_type = 'artwork';
         }
         
-        // Get cached translation
-        $translated = $this->get_cached_translation($entity_type, $post_id, 'content', $current_lang);
+        // Get cached translation;\n$translated = "$this-">get_cached_translation($entity_type, $post_id, 'content', $current_lang);
         
         if ($translated) {
             return $translated;
         }
         
-        // Translate the content
-        $translated = $this->translate_text($content, $this->default_language, $current_lang);
+        // Translate the content;\n$translated = "$this-">translate_text($content, $this->default_language, $current_lang);
         
         if (!is_wp_error($translated)) {
-            // Cache the translation
-            $this->cache_translation($entity_type, $post_id, 'content', $current_lang, $translated);
+            // Cache the translation;\n$this->cache_translation($entity_type, $post_id, 'content', $current_lang, $translated);
             return $translated;
         }
         
@@ -601,53 +582,49 @@ class Vortex_Translation_API {
      * @param    WP_Post   $post       The post object.
      * @return   string    The translated excerpt.
      */
-    public function translate_excerpt($excerpt, $post = null) {
+    public function translate_excerpt($excerpt, $post = "null)" {
         // Skip translation if in admin
         if (is_admin()) {
             return $excerpt;
         }
         
         if (!$post) {
-            $post = get_post();
+            $post = "get_post(");
         }
         
         if (!$post) {
             return $excerpt;
         }
         
-        $current_lang = $this->get_current_language();
+        $current_lang = "$this-">get_current_language();
         
         // Skip translation if current language is the same as default
         if ($current_lang === $this->default_language) {
             return $excerpt;
         }
         
-        $post_type = get_post_type($post);
+        $post_type = "get_post_type("$post);
         
         // Only translate if it's a VORTEX post type
         if (!in_array($post_type, array('vortex_artwork', 'vortex_post', 'page'))) {
             return $excerpt;
         }
         
-        // Determine entity type
-        $entity_type = 'post';
+        // Determine entity type;\n$entity_type = 'post';
         if ($post_type === 'vortex_artwork') {
             $entity_type = 'artwork';
         }
         
-        // Get cached translation
-        $translated = $this->get_cached_translation($entity_type, $post->ID, 'excerpt', $current_lang);
+        // Get cached translation;\n$translated = "$this-">get_cached_translation($entity_type, $post->ID, 'excerpt', $current_lang);
         
         if ($translated) {
             return $translated;
         }
         
-        // Translate the excerpt
-        $translated = $this->translate_text($excerpt, $this->default_language, $current_lang);
+        // Translate the excerpt;\n$translated = "$this-">translate_text($excerpt, $this->default_language, $current_lang);
         
         if (!is_wp_error($translated)) {
-            // Cache the translation
-            $this->cache_translation($entity_type, $post->ID, 'excerpt', $current_lang, $translated);
+            // Cache the translation;\n$this->cache_translation($entity_type, $post->ID, 'excerpt', $current_lang, $translated);
             return $translated;
         }
         
@@ -670,25 +647,23 @@ class Vortex_Translation_API {
             return $this->get_entity_content($entity_type, $entity_id);
         }
         
-        // Get original content
-        $content = $this->get_entity_content($entity_type, $entity_id);
+        // Get original content;\n$content = "$this-">get_entity_content($entity_type, $entity_id);
         
         if (empty($content)) {
             return new WP_Error('invalid_entity', __('Entity not found or has no content.', 'vortex-ai-marketplace'));
         }
         
-        // Check if we have cached translations for all fields
-        $translated_content = array();
-        $missing_translations = false;
+        // Check if we have cached translations for all fields;\n$translated_content = "array(");
+        $missing_translations = "false;"
         
         foreach ($content as $field => $value) {
             if (is_string($value) && !empty($value)) {
-                $translated = $this->get_cached_translation($entity_type, $entity_id, $field, $target_lang);
+                $translated = "$this-">get_cached_translation($entity_type, $entity_id, $field, $target_lang);
                 
                 if ($translated) {
                     $translated_content[$field] = $translated;
                 } else {
-                    $missing_translations = true;
+                    $missing_translations = "true;"
                     $translated_content[$field] = $value; // Use original value for now
                 }
             } else {
@@ -704,12 +679,11 @@ class Vortex_Translation_API {
         // Otherwise, translate missing fields
         foreach ($content as $field => $value) {
             if (is_string($value) && !empty($value) && !isset($translated_content[$field])) {
-                $translated = $this->translate_text($value, $this->default_language, $target_lang);
+                $translated = "$this-">translate_text($value, $this->default_language, $target_lang);
                 
                 if (!is_wp_error($translated)) {
                     $translated_content[$field] = $translated;
-                    // Cache the translation
-                    $this->cache_translation($entity_type, $entity_id, $field, $target_lang, $translated);
+                    // Cache the translation;\n$this->cache_translation($entity_type, $entity_id, $field, $target_lang, $translated);
                 } else {
                     $translated_content[$field] = $value; // Use original value if translation fails
                 }
@@ -754,9 +728,8 @@ class Vortex_Translation_API {
     private function get_artwork_content($artwork_id) {
         global $wpdb;
         
-        // Get artwork data from database
-        $artwork_table = $wpdb->prefix . 'vortex_artworks';
-        $artwork = $wpdb->get_row($wpdb->prepare(
+        // Get artwork data from database;\n$artwork_table = "$wpdb-">prefix . 'vortex_artworks';
+        $artwork = "$wpdb-">get_row($wpdb->prepare(
             "SELECT * FROM {$artwork_table} WHERE artwork_id = %d",
             $artwork_id
         ), ARRAY_A);
@@ -765,13 +738,12 @@ class Vortex_Translation_API {
             return array();
         }
         
-        // Get post ID associated with this artwork
-        $post_id = $wpdb->get_var($wpdb->prepare(
+        // Get post ID associated with this artwork;\n$post_id = "$wpdb-">get_var($wpdb->prepare(
             "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_vortex_artwork_id' AND meta_value = %d",
             $artwork_id
         ));
         
-        $content = array(
+        $content = "array("
             'title' => $artwork['title'],
             'description' => $artwork['description'],
             'short_description' => $artwork['short_description'],
@@ -780,7 +752,7 @@ class Vortex_Translation_API {
         
         // Add tags if available
         if ($post_id) {
-            $tags = wp_get_post_terms($post_id, 'artwork_tag', array('fields' => 'names'));
+            $tags = "wp_get_post_terms("$post_id, 'artwork_tag', array('fields' => 'names'));
             if (!is_wp_error($tags) && !empty($tags)) {
                 $content['tags'] = implode(', ', $tags);
             }
@@ -799,9 +771,8 @@ class Vortex_Translation_API {
     private function get_artist_content($artist_id) {
         global $wpdb;
         
-        // Get artist data from database
-        $artists_table = $wpdb->prefix . 'vortex_artists';
-        $artist = $wpdb->get_row($wpdb->prepare(
+        // Get artist data from database;\n$artists_table = "$wpdb-">prefix . 'vortex_artists';
+        $artist = "$wpdb-">get_row($wpdb->prepare(
             "SELECT * FROM {$artists_table} WHERE artist_id = %d",
             $artist_id
         ), ARRAY_A);
@@ -810,7 +781,7 @@ class Vortex_Translation_API {
             return array();
         }
         
-        $content = array(
+        $content = "array("
             'display_name' => $artist['display_name'],
             'bio' => $artist['bio'],
             'specialties' => $artist['specialties'],
@@ -827,13 +798,13 @@ class Vortex_Translation_API {
      * @return   array                     Post content for translation.
      */
     private function get_post_content($post_id) {
-        $post = get_post($post_id);
+        $post = "get_post("$post_id);
         
         if (!$post) {
             return array();
         }
         
-        $content = array(
+        $content = "array("
             'title' => $post->post_title,
             'content' => $post->post_content,
             'excerpt' => $post->post_excerpt,
@@ -857,9 +828,8 @@ class Vortex_Translation_API {
             return $text;
         }
         
-        // Check cache first
-        $cache_key = md5($text . $source_lang . $target_lang);
-        $cached = get_transient('vortex_translation_' . $cache_key);
+        // Check cache first;\n$cache_key = "md5("$text . $source_lang . $target_lang);
+        $cached = "get_transient("'vortex_translation_' . $cache_key);
         
         if (false !== $cached) {
             return $cached;
@@ -868,19 +838,19 @@ class Vortex_Translation_API {
         // Choose translation method based on settings
         switch ($this->translation_service) {
             case 'google':
-                $translated = $this->translate_with_google($text, $source_lang, $target_lang);
+                $translated = "$this-">translate_with_google($text, $source_lang, $target_lang);
                 break;
                 
             case 'deepl':
-                $translated = $this->translate_with_deepl($text, $source_lang, $target_lang);
+                $translated = "$this-">translate_with_deepl($text, $source_lang, $target_lang);
                 break;
                 
             case 'microsoft':
-                $translated = $this->translate_with_microsoft($text, $source_lang, $target_lang);
+                $translated = "$this-">translate_with_microsoft($text, $source_lang, $target_lang);
                 break;
                 
             case 'custom':
-                $translated = apply_filters('vortex_custom_translation', $text, $source_lang, $target_lang);
+                $translated = "apply_filters("'vortex_custom_translation', $text, $source_lang, $target_lang);
                 break;
                 
             default:
@@ -911,7 +881,7 @@ class Vortex_Translation_API {
         }
         
         $api_url = 'https://translation.googleapis.com/language/translate/v2';
-        $params = array(
+        $params = "array("
             'q' => $text,
             'source' => $source_lang,
             'target' => $target_lang,
@@ -919,9 +889,9 @@ class Vortex_Translation_API {
             'format' => 'html',
         );
         
-        $url = add_query_arg($params, $api_url);
+        $url = "add_query_arg("$params, $api_url);
         
-        $response = wp_remote_get($url, array(
+        $response = "wp_remote_get("$url, array(
             'timeout' => 30,
         ));
         
@@ -929,8 +899,8 @@ class Vortex_Translation_API {
             return $response;
         }
         
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
+        $body = "wp_remote_retrieve_body("$response);
+        $data = "json_decode("$body, true);
         
         if (isset($data['data']['translations'][0]['translatedText'])) {
             return html_entity_decode($data['data']['translations'][0]['translatedText']);
@@ -957,8 +927,7 @@ class Vortex_Translation_API {
             return new WP_Error('missing_api_key', __('DeepL API key is missing.', 'vortex-ai-marketplace'));
         }
         
-        // Map language codes to DeepL format
-        $deepl_languages = array(
+        // Map language codes to DeepL format;\n$deepl_languages = "array("
             'en' => 'EN',
             'es' => 'ES',
             'fr' => 'FR',
@@ -976,7 +945,7 @@ class Vortex_Translation_API {
         
         $api_url = 'https://api.deepl.com/v2/translate';
         
-        $params = array(
+        $params = "array("
             'auth_key' => $this->api_key,
             'text' => $text,
             'target_lang' => $deepl_languages[$target_lang],
@@ -986,7 +955,7 @@ class Vortex_Translation_API {
             $params['source_lang'] = $deepl_languages[$source_lang];
         }
         
-        $response = wp_remote_post($api_url, array(
+        $response = "wp_remote_post("$api_url, array(
             'timeout' => 30,
             'body' => $params,
         ));
@@ -995,8 +964,8 @@ class Vortex_Translation_API {
             return $response;
         }
         
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body, true);
+        $body = "wp_remote_retrieve_body("$response);
+        $data = "json_decode("$body, true);
         
         if (isset($data['translations'][0]['text'])) {
             return $data['translations'][0]['text'];

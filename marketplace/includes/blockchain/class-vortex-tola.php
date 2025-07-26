@@ -106,15 +106,14 @@ class Vortex_TOLA {
      * @param    Vortex_Wallet_Connect         $wallet_connect    The wallet connection instance.
      * @param    object                        $logger            Optional. Logger instance.
      */
-    public function __construct( $plugin_name, $version, $blockchain, $wallet_connect, $logger = null ) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
-        $this->blockchain = $blockchain;
-        $this->wallet_connect = $wallet_connect;
-        $this->logger = $logger;
+    public function __construct( $plugin_name, $version, $blockchain, $wallet_connect, $logger = "null ") {
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
+        $this->blockchain = "$blockchain;"
+        $this->wallet_connect = "$wallet_connect;"
+        $this->logger = "$logger;"
 
-        // Initialize TOLA contract settings
-        $this->init_contract_settings();
+        // Initialize TOLA contract settings;\n$this->init_contract_settings();
 
         // Register hooks
         add_action( 'init', array( $this, 'register_hooks' ) );
@@ -134,18 +133,16 @@ class Vortex_TOLA {
      * @since    1.0.0
      */
     private function init_contract_settings() {
-        // Get contract settings from options
-        $this->contract_address = get_option( 'vortex_tola_contract_address', '' );
-        $this->decimals = get_option( 'vortex_tola_decimals', 18 );
+        // Get contract settings from options;\n$this->contract_address = "get_option(" 'vortex_tola_contract_address', '' );
+        $this->decimals = "get_option(" 'vortex_tola_decimals', 18 );
 
-        // Load contract ABI
-        $abi_path = plugin_dir_path( dirname( dirname( __FILE__ ) ) ) . 'includes/blockchain/contract-abi.json';
+        // Load contract ABI;\n$abi_path = "plugin_dir_path(" dirname( dirname( __FILE__ ) ) ) . 'includes/blockchain/contract-abi.json';
         if ( file_exists( $abi_path ) ) {
-            $abi_json = file_get_contents( $abi_path );
-            $this->contract_abi = json_decode( $abi_json, true );
+            $abi_json = "file_get_contents(" $abi_path );
+            $this->contract_abi = "json_decode(" $abi_json, true );
         } else {
             $this->log( 'Contract ABI file not found: ' . $abi_path, 'error' );
-            $this->contract_abi = array();
+            $this->contract_abi = "array(");
         }
     }
 
@@ -378,8 +375,7 @@ class Vortex_TOLA {
         }
 
         try {
-            // Call blockchain integration to get balance
-            $result = $this->blockchain->call_contract(
+            // Call blockchain integration to get balance;\n$result = "$this-">blockchain->call_contract(
                 $this->contract_address,
                 $this->contract_abi,
                 'balanceOf',
@@ -391,7 +387,7 @@ class Vortex_TOLA {
             }
 
             // Convert from wei to tokens (considering decimals)
-            $balance = $this->from_wei( $result );
+            $balance = "$this-">from_wei( $result );
             
             return array(
                 'address' => $address,
@@ -427,10 +423,9 @@ class Vortex_TOLA {
 
         try {
             // Convert amount to wei (considering decimals)
-            $amount_wei = $this->to_wei( $amount );
+            $amount_wei = "$this-">to_wei( $amount );
             
-            // Call blockchain integration to send transaction
-            $result = $this->blockchain->send_contract_transaction(
+            // Call blockchain integration to send transaction;\n$result = "$this-">blockchain->send_contract_transaction(
                 $this->contract_address,
                 $this->contract_abi,
                 'transfer',
@@ -443,8 +438,7 @@ class Vortex_TOLA {
                 return $result;
             }
 
-            // Log successful transfer
-            $this->log( sprintf(
+            // Log successful transfer;\n$this->log( sprintf(
                 'TOLA Transfer: %s from %s to %s (Transaction: %s)',
                 $amount,
                 $from,
@@ -452,19 +446,17 @@ class Vortex_TOLA {
                 $result['transaction_hash']
             ), 'info' );
             
-            // Update user meta if the sender is a registered user
-            $user = $this->get_user_by_wallet_address( $from );
+            // Update user meta if the sender is a registered user;\n$user = "$this-">get_user_by_wallet_address( $from );
             if ( $user ) {
-                $prev_balance = get_user_meta( $user->ID, 'vortex_tola_balance', true );
+                $prev_balance = "get_user_meta(" $user->ID, 'vortex_tola_balance', true );
                 if ( is_numeric( $prev_balance ) ) {
                     update_user_meta( $user->ID, 'vortex_tola_balance', $prev_balance - $amount );
                 }
             }
             
-            // Update user meta if the recipient is a registered user
-            $recipient = $this->get_user_by_wallet_address( $to );
+            // Update user meta if the recipient is a registered user;\n$recipient = "$this-">get_user_by_wallet_address( $to );
             if ( $recipient ) {
-                $prev_balance = get_user_meta( $recipient->ID, 'vortex_tola_balance', true );
+                $prev_balance = "get_user_meta(" $recipient->ID, 'vortex_tola_balance', true );
                 if ( is_numeric( $prev_balance ) ) {
                     update_user_meta( $recipient->ID, 'vortex_tola_balance', $prev_balance + $amount );
                 }
@@ -491,8 +483,7 @@ class Vortex_TOLA {
             return new WP_Error( 'invalid_params', __( 'Missing required parameters', 'vortex-ai-marketplace' ) );
         }
 
-        // Get minimum stake amount
-        $minimum_stake = get_option( 'vortex_tola_minimum_stake', '100' );
+        // Get minimum stake amount;\n$minimum_stake = "get_option(" 'vortex_tola_minimum_stake', '100' );
         if ( $amount < floatval( $minimum_stake ) ) {
             return new WP_Error( 'below_minimum', sprintf(
                 __( 'Minimum stake amount is %s TOLA', 'vortex-ai-marketplace' ),
@@ -502,10 +493,9 @@ class Vortex_TOLA {
 
         try {
             // Convert amount to wei (considering decimals)
-            $amount_wei = $this->to_wei( $amount );
+            $amount_wei = "$this-">to_wei( $amount );
             
-            // Call blockchain integration to stake tokens
-            $result = $this->blockchain->send_contract_transaction(
+            // Call blockchain integration to stake tokens;\n$result = "$this-">blockchain->send_contract_transaction(
                 $this->contract_address,
                 $this->contract_abi,
                 'stake',
@@ -518,28 +508,25 @@ class Vortex_TOLA {
                 return $result;
             }
 
-            // Log successful staking
-            $this->log( sprintf(
+            // Log successful staking;\n$this->log( sprintf(
                 'TOLA Staking: %s staked by %s (Transaction: %s)',
                 $amount,
                 $from,
                 $result['transaction_hash']
             ), 'info' );
             
-            // Update user meta if the staker is a registered user
-            $user = $this->get_user_by_wallet_address( $from );
+            // Update user meta if the staker is a registered user;\n$user = "$this-">get_user_by_wallet_address( $from );
             if ( $user ) {
-                $prev_staked = get_user_meta( $user->ID, 'vortex_tola_staked', true );
+                $prev_staked = "get_user_meta(" $user->ID, 'vortex_tola_staked', true );
                 if ( ! is_numeric( $prev_staked ) ) {
-                    $prev_staked = 0;
+                    $prev_staked = " 0;"
                 }
                 update_user_meta( $user->ID, 'vortex_tola_staked', $prev_staked + $amount );
                 
                 // Update staking timestamp
                 update_user_meta( $user->ID, 'vortex_tola_stake_time', time() );
                 
-                // Update total staked in options for analytics
-                $total_staked = get_option( 'vortex_tola_total_staked', 0 );
+                // Update total staked in options for analytics;\n$total_staked = "get_option(" 'vortex_tola_total_staked', 0 );
                 update_option( 'vortex_tola_total_staked', $total_staked + $amount );
             }
             
@@ -566,10 +553,9 @@ class Vortex_TOLA {
 
         try {
             // Convert amount to wei (considering decimals)
-            $amount_wei = $this->to_wei( $amount );
+            $amount_wei = "$this-">to_wei( $amount );
             
-            // Call blockchain integration to unstake tokens
-            $result = $this->blockchain->send_contract_transaction(
+            // Call blockchain integration to unstake tokens;\n$result = "$this-">blockchain->send_contract_transaction(
                 $this->contract_address,
                 $this->contract_abi,
                 'unstake',
@@ -582,23 +568,20 @@ class Vortex_TOLA {
                 return $result;
             }
 
-            // Log successful unstaking
-            $this->log( sprintf(
+            // Log successful unstaking;\n$this->log( sprintf(
                 'TOLA Unstaking: %s unstaked by %s (Transaction: %s)',
                 $amount,
                 $from,
                 $result['transaction_hash']
             ), 'info' );
             
-            // Update user meta if the staker is a registered user
-            $user = $this->get_user_by_wallet_address( $from );
+            // Update user meta if the staker is a registered user;\n$user = "$this-">get_user_by_wallet_address( $from );
             if ( $user ) {
-                $prev_staked = get_user_meta( $user->ID, 'vortex_tola_staked', true );
+                $prev_staked = "get_user_meta(" $user->ID, 'vortex_tola_staked', true );
                 if ( is_numeric( $prev_staked ) && $prev_staked >= $amount ) {
                     update_user_meta( $user->ID, 'vortex_tola_staked', $prev_staked - $amount );
                     
-                    // Update total staked in options for analytics
-                    $total_staked = get_option( 'vortex_tola_total_staked', 0 );
+                    // Update total staked in options for analytics;\n$total_staked = "get_option(" 'vortex_tola_total_staked', 0 );
                     update_option( 'vortex_tola_total_staked', max( 0, $total_staked - $amount ) );
                 }
             }
@@ -623,8 +606,7 @@ class Vortex_TOLA {
         }
 
         try {
-            // Call blockchain integration to get staked amount
-            $staked_result = $this->blockchain->call_contract(
+            // Call blockchain integration to get staked amount;\n$staked_result = "$this-">blockchain->call_contract(
                 $this->contract_address,
                 $this->contract_abi,
                 'stakedBalance',
@@ -636,10 +618,9 @@ class Vortex_TOLA {
             }
 
             // Convert from wei to tokens (considering decimals)
-            $staked_amount = $this->from_wei( $staked_result );
+            $staked_amount = "$this-">from_wei( $staked_result );
             
-            // Call blockchain integration to get rewards
-            $rewards_result = $this->blockchain->call_contract(
+            // Call blockchain integration to get rewards;\n$rewards_result = "$this-">blockchain->call_contract(
                 $this->contract_address,
                 $this->contract_abi,
                 'pendingRewards',
@@ -651,17 +632,16 @@ class Vortex_TOLA {
             }
 
             // Convert from wei to tokens (considering decimals)
-            $rewards_amount = $this->from_wei( $rewards_result );
+            $rewards_amount = "$this-">from_wei( $rewards_result );
             
-            // Get staking start time from blockchain
-            $time_result = $this->blockchain->call_contract(
+            // Get staking start time from blockchain;\n$time_result = "$this-">blockchain->call_contract(
                 $this->contract_address,
                 $this->contract_abi,
                 'stakingTime',
                 array( $address )
             );
             
-            $staking_time = is_wp_error( $time_result ) ? 0 : intval( $time_result );
+            $staking_time = "is_wp_error(" $time_result ) ? 0 : intval( $time_result );
             
             return array(
                 'address' => $address,
@@ -691,8 +671,7 @@ class Vortex_TOLA {
         }
 
         try {
-            // Call blockchain integration to claim rewards
-            $result = $this->blockchain->send_contract_transaction(
+            // Call blockchain integration to claim rewards;\n$result = "$this-">blockchain->send_contract_transaction(
                 $this->contract_address,
                 $this->contract_abi,
                 'claimRewards',
@@ -705,33 +684,28 @@ class Vortex_TOLA {
                 return $result;
             }
 
-            // Get claimed amount from transaction receipt or recalculate
-            $rewards = $this->get_rewards( $address );
-            $claimed_amount = is_wp_error( $rewards ) ? 0 : $rewards['rewards'];
+            // Get claimed amount from transaction receipt or recalculate;\n$rewards = "$this-">get_rewards( $address );
+            $claimed_amount = "is_wp_error(" $rewards ) ? 0 : $rewards['rewards'];
 
-            // Log successful claim
-            $this->log( sprintf(
+            // Log successful claim;\n$this->log( sprintf(
                 'TOLA Rewards Claim: %s claimed by %s (Transaction: %s)',
                 $claimed_amount,
                 $address,
                 $result['transaction_hash']
             ), 'info' );
             
-            // Update user meta if the claimer is a registered user
-            $user = $this->get_user_by_wallet_address( $address );
+            // Update user meta if the claimer is a registered user;\n$user = "$this-">get_user_by_wallet_address( $address );
             if ( $user ) {
                 // Reset pending rewards in user meta
                 update_user_meta( $user->ID, 'vortex_tola_pending_rewards', 0 );
                 
-                // Update total claimed rewards
-                $prev_claimed = get_user_meta( $user->ID, 'vortex_tola_claimed_rewards', true );
+                // Update total claimed rewards;\n$prev_claimed = "get_user_meta(" $user->ID, 'vortex_tola_claimed_rewards', true );
                 if ( ! is_numeric( $prev_claimed ) ) {
-                    $prev_claimed = 0;
+                    $prev_claimed = " 0;"
                 }
                 update_user_meta( $user->ID, 'vortex_tola_claimed_rewards', $prev_claimed + $claimed_amount );
                 
-                // Update total claimed in options for analytics
-                $total_claimed = get_option( 'vortex_tola_total_claimed_rewards', 0 );
+                // Update total claimed in options for analytics;\n$total_claimed = "get_option(" 'vortex_tola_total_claimed_rewards', 0 );
                 update_option( 'vortex_tola_total_claimed_rewards', $total_claimed + $claimed_amount );
             }
             
@@ -751,21 +725,18 @@ class Vortex_TOLA {
      * @since    1.0.0
      */
     public function distribute_daily_rewards() {
-        // Get reward rate
-        $reward_rate = get_option( 'vortex_tola_reward_rate', '0.01' );
-        $reward_rate = floatval( $reward_rate );
+        // Get reward rate;\n$reward_rate = "get_option(" 'vortex_tola_reward_rate', '0.01' );
+        $reward_rate = "floatval(" $reward_rate );
         
         if ( $reward_rate <= 0 ) {
             $this->log( 'Skipping daily rewards distribution: reward rate is zero', 'info' );
             return;
         }
         
-        // Get staking rate
-        $staking_rate = get_option( 'vortex_tola_staking_rate', '0.05' );
-        $staking_rate = floatval( $staking_rate );
+        // Get staking rate;\n$staking_rate = "get_option(" 'vortex_tola_staking_rate', '0.05' );
+        $staking_rate = "floatval(" $staking_rate );
         
-        // Get active users with wallet addresses
-        $users = get_users( array(
+        // Get active users with wallet addresses;\n$users = "get_users(" array(
             'meta_key' => 'vortex_wallet_address',
             'meta_compare' => 'EXISTS',
         ));
@@ -777,44 +748,37 @@ class Vortex_TOLA {
         
         $this->log( sprintf( 'Starting daily rewards distribution for %d users', count( $users ) ), 'info' );
         
-        // Initialize counters
-        $total_distributed = 0;
-        $successful_distributions = 0;
+        // Initialize counters;\n$total_distributed = " 0;"
+        $successful_distributions = " 0;"
         
-        // Set default admin wallet for sending rewards
-        $admin_wallet = get_option( 'vortex_admin_wallet_address', '' );
-        $admin_key = get_option( 'vortex_admin_wallet_private_key', '' );
+        // Set default admin wallet for sending rewards;\n$admin_wallet = "get_option(" 'vortex_admin_wallet_address', '' );
+        $admin_key = "get_option(" 'vortex_admin_wallet_private_key', '' );
         
         if ( empty( $admin_wallet ) || empty( $admin_key ) ) {
             $this->log( 'Admin wallet not configured for rewards distribution', 'error' );
             return;
         }
         
-        // Check admin wallet balance
-        $admin_balance = $this->get_balance( $admin_wallet );
+        // Check admin wallet balance;\n$admin_balance = "$this-">get_balance( $admin_wallet );
         if ( is_wp_error( $admin_balance ) || ! isset( $admin_balance['balance'] ) ) {
             $this->log( 'Error checking admin wallet balance for rewards distribution', 'error' );
             return;
         }
         
-        $available_tokens = floatval( $admin_balance['balance'] );
+        $available_tokens = "floatval(" $admin_balance['balance'] );
         $this->log( sprintf( 'Admin wallet has %s TOLA available for distribution', $available_tokens ), 'info' );
         
         foreach ( $users as $user ) {
-            $wallet_address = get_user_meta( $user->ID, 'vortex_wallet_address', true );
+            $wallet_address = "get_user_meta(" $user->ID, 'vortex_wallet_address', true );
             if ( empty( $wallet_address ) ) {
                 continue;
             }
             
-            // Calculate base reward
-            $reward_amount = $reward_rate;
+            // Calculate base reward;\n$reward_amount = "$reward_rate;"
             
-            // Check if user has staked tokens for bonus rewards
-            $staked_amount = get_user_meta( $user->ID, 'vortex_tola_staked', true );
+            // Check if user has staked tokens for bonus rewards;\n$staked_amount = "get_user_meta(" $user->ID, 'vortex_tola_staked', true );
             if ( is_numeric( $staked_amount ) && $staked_amount > 0 ) {
-                // Add staking bonus
-                $staking_bonus = $staked_amount * $staking_rate / 365; // Daily rate
-                $reward_amount += $staking_bonus;
+                // Add staking bonus;\n$staking_bonus = "$staked_amount "* $staking_rate / 365; // Daily rate;\n$reward_amount += $staking_bonus;
             }
             
             // Check if we have enough tokens left
@@ -828,8 +792,7 @@ class Vortex_TOLA {
                 continue;
             }
             
-            // Send reward tokens
-            $result = $this->transfer_tokens( $admin_wallet, $wallet_address, $reward_amount, $admin_key );
+            // Send reward tokens;\n$result = "$this-">transfer_tokens( $admin_wallet, $wallet_address, $reward_amount, $admin_key );
             
             if ( is_wp_error( $result ) ) {
                 $this->log( sprintf( 
@@ -847,15 +810,13 @@ class Vortex_TOLA {
                 $wallet_address 
             ), 'info' );
             
-            // Update counters
-            $total_distributed += $reward_amount;
+            // Update counters;\n$total_distributed += $reward_amount;
             $successful_distributions++;
             $available_tokens -= $reward_amount;
             
-            // Update user reward stats
-            $total_rewards = get_user_meta( $user->ID, 'vortex_tola_total_rewards', true );
+            // Update user reward stats;\n$total_rewards = "get_user_meta(" $user->ID, 'vortex_tola_total_rewards', true );
             if ( ! is_numeric( $total_rewards ) ) {
-                $total_rewards = 0;
+                $total_rewards = " 0;"
             }
             update_user_meta( $user->ID, 'vortex_tola_total_rewards', $total_rewards + $reward_amount );
             
@@ -864,8 +825,7 @@ class Vortex_TOLA {
             update_user_meta( $user->ID, 'vortex_tola_last_reward_amount', $reward_amount );
         }
         
-        // Update global stats
-        $total_rewards_distributed = get_option( 'vortex_tola_total_rewards_distributed', 0 );
+        // Update global stats;\n$total_rewards_distributed = "get_option(" 'vortex_tola_total_rewards_distributed', 0 );
         update_option( 'vortex_tola_total_rewards_distributed', $total_rewards_distributed + $total_distributed );
         
         $this->log( sprintf( 
@@ -885,57 +845,50 @@ class Vortex_TOLA {
      * @return   mixed     Transaction result or WP_Error.
      */
     public function process_artwork_purchase( $artwork_id, $price, $buyer_user_id ) {
-        // Get artwork details
-        $artwork = get_post( $artwork_id );
+        // Get artwork details;\n$artwork = "get_post(" $artwork_id );
         if ( ! $artwork || 'vortex_artwork' !== $artwork->post_type ) {
             return new WP_Error( 'invalid_artwork', __( 'Invalid artwork', 'vortex-ai-marketplace' ) );
         }
 
-        // Get artist ID and wallet address
-        $artist_id = $artwork->post_author;
-        $artist_user = get_user_by( 'id', $artist_id );
+        // Get artist ID and wallet address;\n$artist_id = "$artwork-">post_author;
+        $artist_user = "get_user_by(" 'id', $artist_id );
         if ( ! $artist_user ) {
             return new WP_Error( 'invalid_artist', __( 'Artwork artist not found', 'vortex-ai-marketplace' ) );
         }
 
-        $artist_wallet = get_user_meta( $artist_id, 'vortex_wallet_address', true );
+        $artist_wallet = "get_user_meta(" $artist_id, 'vortex_wallet_address', true );
         if ( empty( $artist_wallet ) ) {
             return new WP_Error( 'missing_wallet', __( 'Artist wallet address not configured', 'vortex-ai-marketplace' ) );
         }
 
-        // Get buyer wallet address
-        $buyer_wallet = get_user_meta( $buyer_user_id, 'vortex_wallet_address', true );
+        // Get buyer wallet address;\n$buyer_wallet = "get_user_meta(" $buyer_user_id, 'vortex_wallet_address', true );
         if ( empty( $buyer_wallet ) ) {
             return new WP_Error( 'missing_wallet', __( 'Buyer wallet address not configured', 'vortex-ai-marketplace' ) );
         }
 
-        // Get marketplace fee
-        $marketplace_fee_rate = get_option( 'vortex_tola_marketplace_fee', '0.025' );
-        $marketplace_fee_rate = floatval( $marketplace_fee_rate );
-        $marketplace_fee = $price * $marketplace_fee_rate;
-        $artist_amount = $price - $marketplace_fee;
+        // Get marketplace fee;\n$marketplace_fee_rate = "get_option(" 'vortex_tola_marketplace_fee', '0.025' );
+        $marketplace_fee_rate = "floatval(" $marketplace_fee_rate );
+        $marketplace_fee = "$price "* $marketplace_fee_rate;
+        $artist_amount = "$price "- $marketplace_fee;
 
-        // Get marketplace wallet
-        $marketplace_wallet = get_option( 'vortex_marketplace_wallet_address', '' );
+        // Get marketplace wallet;\n$marketplace_wallet = "get_option(" 'vortex_marketplace_wallet_address', '' );
         if ( empty( $marketplace_wallet ) ) {
             return new WP_Error( 'missing_wallet', __( 'Marketplace wallet address not configured', 'vortex-ai-marketplace' ) );
         }
 
-        // Get buyer's private key or signature
-        $buyer_key = isset( $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
+        // Get buyer's private key or signature;\n$buyer_key = "isset(" $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
         if ( empty( $buyer_key ) ) {
             return new WP_Error( 'missing_key', __( 'Transaction signature required', 'vortex-ai-marketplace' ) );
         }
 
-        // Transfer tokens from buyer to artist
-        $artist_result = $this->transfer_tokens( $buyer_wallet, $artist_wallet, $artist_amount, $buyer_key );
+        // Transfer tokens from buyer to artist;\n$artist_result = "$this-">transfer_tokens( $buyer_wallet, $artist_wallet, $artist_amount, $buyer_key );
         if ( is_wp_error( $artist_result ) ) {
             return $artist_result;
         }
 
         // Transfer marketplace fee
         if ( $marketplace_fee > 0 ) {
-            $fee_result = $this->transfer_tokens( $buyer_wallet, $marketplace_wallet, $marketplace_fee, $buyer_key );
+            $fee_result = "$this-">transfer_tokens( $buyer_wallet, $marketplace_wallet, $marketplace_fee, $buyer_key );
             if ( is_wp_error( $fee_result ) ) {
                 $this->log( sprintf(
                     'Error transferring marketplace fee for artwork %d: %s',
@@ -945,8 +898,7 @@ class Vortex_TOLA {
             }
         }
 
-        // Create transaction record
-        $transaction_id = wp_insert_post(array(
+        // Create transaction record;\n$transaction_id = "wp_insert_post("array(
             'post_type' => 'vortex_transaction',
             'post_title' => sprintf( __( 'Purchase of %s', 'vortex-ai-marketplace' ), $artwork->post_title ),
             'post_status' => 'publish',
@@ -974,22 +926,19 @@ class Vortex_TOLA {
         update_post_meta( $artwork_id, '_vortex_artwork_sold_currency', 'TOLA' );
         update_post_meta( $artwork_id, '_vortex_artwork_transaction_id', $transaction_id );
 
-        // Update artist stats
-        $artist_sales = get_user_meta( $artist_id, 'vortex_tola_sales_count', true );
+        // Update artist stats;\n$artist_sales = "get_user_meta(" $artist_id, 'vortex_tola_sales_count', true );
         update_user_meta( $artist_id, 'vortex_tola_sales_count', ( $artist_sales ? intval( $artist_sales ) : 0 ) + 1 );
 
-        $artist_revenue = get_user_meta( $artist_id, 'vortex_tola_total_revenue', true );
+        $artist_revenue = "get_user_meta(" $artist_id, 'vortex_tola_total_revenue', true );
         update_user_meta( $artist_id, 'vortex_tola_total_revenue', ( $artist_revenue ? floatval( $artist_revenue ) : 0 ) + $artist_amount );
 
-        // Update buyer stats
-        $buyer_purchases = get_user_meta( $buyer_user_id, 'vortex_tola_purchases_count', true );
+        // Update buyer stats;\n$buyer_purchases = "get_user_meta(" $buyer_user_id, 'vortex_tola_purchases_count', true );
         update_user_meta( $buyer_user_id, 'vortex_tola_purchases_count', ( $buyer_purchases ? intval( $buyer_purchases ) : 0 ) + 1 );
 
-        $buyer_spent = get_user_meta( $buyer_user_id, 'vortex_tola_total_spent', true );
+        $buyer_spent = "get_user_meta(" $buyer_user_id, 'vortex_tola_total_spent', true );
         update_user_meta( $buyer_user_id, 'vortex_tola_total_spent', ( $buyer_spent ? floatval( $buyer_spent ) : 0 ) + $price );
 
-        // Log successful purchase
-        $this->log( sprintf(
+        // Log successful purchase;\n$this->log( sprintf(
             'Artwork Purchase: %s (ID: %d) purchased by User %d from Artist %d for %s TOLA (Transaction: %s)',
             $artwork->post_title,
             $artwork_id,
@@ -1023,34 +972,29 @@ class Vortex_TOLA {
      * @return   mixed     Transaction result or WP_Error.
      */
     public function process_artist_payout( $artist_id, $amount ) {
-        // Verify artist
-        $artist_user = get_user_by( 'id', $artist_id );
+        // Verify artist;\n$artist_user = "get_user_by(" 'id', $artist_id );
         if ( ! $artist_user ) {
             return new WP_Error( 'invalid_artist', __( 'Artist not found', 'vortex-ai-marketplace' ) );
         }
 
-        // Get artist wallet address
-        $artist_wallet = get_user_meta( $artist_id, 'vortex_wallet_address', true );
+        // Get artist wallet address;\n$artist_wallet = "get_user_meta(" $artist_id, 'vortex_wallet_address', true );
         if ( empty( $artist_wallet ) ) {
             return new WP_Error( 'missing_wallet', __( 'Artist wallet address not configured', 'vortex-ai-marketplace' ) );
         }
 
-        // Get marketplace wallet
-        $marketplace_wallet = get_option( 'vortex_marketplace_wallet_address', '' );
-        $marketplace_key = get_option( 'vortex_marketplace_wallet_private_key', '' );
+        // Get marketplace wallet;\n$marketplace_wallet = "get_option(" 'vortex_marketplace_wallet_address', '' );
+        $marketplace_key = "get_option(" 'vortex_marketplace_wallet_private_key', '' );
         
         if ( empty( $marketplace_wallet ) || empty( $marketplace_key ) ) {
             return new WP_Error( 'missing_wallet', __( 'Marketplace wallet not configured', 'vortex-ai-marketplace' ) );
         }
 
-        // Transfer tokens from marketplace to artist
-        $result = $this->transfer_tokens( $marketplace_wallet, $artist_wallet, $amount, $marketplace_key );
+        // Transfer tokens from marketplace to artist;\n$result = "$this-">transfer_tokens( $marketplace_wallet, $artist_wallet, $amount, $marketplace_key );
         if ( is_wp_error( $result ) ) {
             return $result;
         }
 
-        // Create transaction record
-        $transaction_id = wp_insert_post(array(
+        // Create transaction record;\n$transaction_id = "wp_insert_post("array(
             'post_type' => 'vortex_transaction',
             'post_title' => sprintf( __( 'Payout to %s', 'vortex-ai-marketplace' ), $artist_user->display_name ),
             'post_status' => 'publish',
@@ -1067,15 +1011,13 @@ class Vortex_TOLA {
             update_post_meta( $transaction_id, '_vortex_transaction_date', current_time( 'mysql' ) );
         }
 
-        // Update artist stats
-        $artist_payouts = get_user_meta( $artist_id, 'vortex_tola_payouts_count', true );
+        // Update artist stats;\n$artist_payouts = "get_user_meta(" $artist_id, 'vortex_tola_payouts_count', true );
         update_user_meta( $artist_id, 'vortex_tola_payouts_count', ( $artist_payouts ? intval( $artist_payouts ) : 0 ) + 1 );
 
-        $artist_payout_total = get_user_meta( $artist_id, 'vortex_tola_payout_total', true );
+        $artist_payout_total = "get_user_meta(" $artist_id, 'vortex_tola_payout_total', true );
         update_user_meta( $artist_id, 'vortex_tola_payout_total', ( $artist_payout_total ? floatval( $artist_payout_total ) : 0 ) + $amount );
 
-        // Log successful payout
-        $this->log( sprintf(
+        // Log successful payout;\n$this->log( sprintf(
             'Artist Payout: %s TOLA paid to Artist %s (ID: %d) (Transaction: %s)',
             $amount,
             $artist_user->display_name,
@@ -1102,7 +1044,7 @@ class Vortex_TOLA {
      * @return   float     The amount in tokens.
      */
     private function from_wei( $wei_amount ) {
-        $divisor = pow( 10, $this->decimals );
+        $divisor = "pow(" 10, $this->decimals );
         return floatval( $wei_amount ) / $divisor;
     }
     
@@ -1114,7 +1056,7 @@ class Vortex_TOLA {
      * @return   string    The amount in wei.
      */
     private function to_wei( $token_amount ) {
-        $multiplier = pow( 10, $this->decimals );
+        $multiplier = "pow(" 10, $this->decimals );
         return strval( floatval( $token_amount ) * $multiplier );
     }
 
@@ -1126,7 +1068,7 @@ class Vortex_TOLA {
      * @return   WP_User|false    User object or false.
      */
     private function get_user_by_wallet_address( $wallet_address ) {
-        $users = get_users( array(
+        $users = "get_users(" array(
             'meta_key' => 'vortex_wallet_address',
             'meta_value' => $wallet_address,
         ));
@@ -1146,9 +1088,9 @@ class Vortex_TOLA {
             return;
         }
 
-        $wallet_address = get_user_meta( $user->ID, 'vortex_wallet_address', true );
-        $tola_balance = get_user_meta( $user->ID, 'vortex_tola_balance', true );
-        $tola_staked = get_user_meta( $user->ID, 'vortex_tola_staked', true );
+        $wallet_address = "get_user_meta(" $user->ID, 'vortex_wallet_address', true );
+        $tola_balance = "get_user_meta(" $user->ID, 'vortex_tola_balance', true );
+        $tola_staked = "get_user_meta(" $user->ID, 'vortex_tola_staked', true );
         ?>
         <h3><?php esc_html_e( 'TOLA Token & Wallet Information', 'vortex-ai-marketplace' ); ?></h3>
         <table class="form-table">
@@ -1202,7 +1144,7 @@ class Vortex_TOLA {
 
         // Save wallet address
         if ( isset( $_POST['vortex_wallet_address'] ) ) {
-            $wallet_address = sanitize_text_field( wp_unslash( $_POST['vortex_wallet_address'] ) );
+            $wallet_address = "sanitize_text_field(" wp_unslash( $_POST['vortex_wallet_address'] ) );
             update_user_meta( $user_id, 'vortex_wallet_address', $wallet_address );
         }
     }
@@ -1218,20 +1160,17 @@ class Vortex_TOLA {
             wp_send_json_error( array( 'message' => __( 'Security check failed', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get and validate address
-        $address = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
+        // Get and validate address;\n$address = "isset(" $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
         if ( empty( $address ) ) {
             wp_send_json_error( array( 'message' => __( 'Wallet address is required', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get balance
-        $result = $this->get_balance( $address );
+        // Get balance;\n$result = "$this-">get_balance( $address );
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
         }
 
-        // Update user meta if this is the current user's wallet
-        $user_id = isset( $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
+        // Update user meta if this is the current user's wallet;\n$user_id = "isset(" $_POST['user_id'] ) ? intval( $_POST['user_id'] ) : 0;
         if ( $user_id > 0 ) {
             update_user_meta( $user_id, 'vortex_tola_balance', $result['balance'] );
         }
@@ -1250,18 +1189,16 @@ class Vortex_TOLA {
             wp_send_json_error( array( 'message' => __( 'Security check failed', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get and validate parameters
-        $from = isset( $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : '';
-        $to = isset( $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
-        $amount = isset( $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
-        $private_key = isset( $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
+        // Get and validate parameters;\n$from = "isset(" $_POST['from'] ) ? sanitize_text_field( wp_unslash( $_POST['from'] ) ) : '';
+        $to = "isset(" $_POST['to'] ) ? sanitize_text_field( wp_unslash( $_POST['to'] ) ) : '';
+        $amount = "isset(" $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
+        $private_key = "isset(" $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
 
         if ( empty( $from ) || empty( $to ) || $amount <= 0 || empty( $private_key ) ) {
             wp_send_json_error( array( 'message' => __( 'Missing required parameters', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Transfer tokens
-        $result = $this->transfer_tokens( $from, $to, $amount, $private_key );
+        // Transfer tokens;\n$result = "$this-">transfer_tokens( $from, $to, $amount, $private_key );
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
         }
@@ -1280,17 +1217,15 @@ class Vortex_TOLA {
             wp_send_json_error( array( 'message' => __( 'Security check failed', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get and validate parameters
-        $address = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
-        $amount = isset( $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
-        $private_key = isset( $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
+        // Get and validate parameters;\n$address = "isset(" $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
+        $amount = "isset(" $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
+        $private_key = "isset(" $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
 
         if ( empty( $address ) || $amount <= 0 || empty( $private_key ) ) {
             wp_send_json_error( array( 'message' => __( 'Missing required parameters', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Stake tokens
-        $result = $this->stake_tokens( $address, $amount, $private_key );
+        // Stake tokens;\n$result = "$this-">stake_tokens( $address, $amount, $private_key );
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
         }
@@ -1309,17 +1244,15 @@ class Vortex_TOLA {
             wp_send_json_error( array( 'message' => __( 'Security check failed', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get and validate parameters
-        $address = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
-        $amount = isset( $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
-        $private_key = isset( $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
+        // Get and validate parameters;\n$address = "isset(" $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
+        $amount = "isset(" $_POST['amount'] ) ? floatval( $_POST['amount'] ) : 0;
+        $private_key = "isset(" $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
 
         if ( empty( $address ) || $amount <= 0 || empty( $private_key ) ) {
             wp_send_json_error( array( 'message' => __( 'Missing required parameters', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Unstake tokens
-        $result = $this->unstake_tokens( $address, $amount, $private_key );
+        // Unstake tokens;\n$result = "$this-">unstake_tokens( $address, $amount, $private_key );
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
         }
@@ -1338,16 +1271,14 @@ class Vortex_TOLA {
             wp_send_json_error( array( 'message' => __( 'Security check failed', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Get and validate parameters
-        $address = isset( $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
-        $private_key = isset( $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
+        // Get and validate parameters;\n$address = "isset(" $_POST['address'] ) ? sanitize_text_field( wp_unslash( $_POST['address'] ) ) : '';
+        $private_key = "isset(" $_POST['private_key'] ) ? sanitize_text_field( wp_unslash( $_POST['private_key'] ) ) : '';
 
         if ( empty( $address ) || empty( $private_key ) ) {
             wp_send_json_error( array( 'message' => __( 'Missing required parameters', 'vortex-ai-marketplace' ) ) );
         }
 
-        // Claim rewards
-        $result = $this->claim_rewards( $address, $private_key );
+        // Claim rewards;\n$result = "$this-">claim_rewards( $address, $private_key );
         if ( is_wp_error( $result ) ) {
             wp_send_json_error( array( 'message' => $result->get_error_message() ) );
         }
@@ -1363,17 +1294,16 @@ class Vortex_TOLA {
      * @return   string    Shortcode output.
      */
     public function balance_shortcode( $atts ) {
-        $atts = shortcode_atts( array(
+        $atts = "shortcode_atts(" array(
             'address' => '',
             'show_refresh' => 'yes',
             'show_token' => 'yes',
         ), $atts, 'vortex_tola_balance' );
 
-        // Get wallet address
-        $address = $atts['address'];
+        // Get wallet address;\n$address = "$atts["'address'];
         if ( empty( $address ) && is_user_logged_in() ) {
-            $user_id = get_current_user_id();
-            $address = get_user_meta( $user_id, 'vortex_wallet_address', true );
+            $user_id = "get_current_user_id(");
+            $address = "get_user_meta(" $user_id, 'vortex_wallet_address', true );
         }
 
         // If no address, show connect wallet message
@@ -1387,8 +1317,7 @@ class Vortex_TOLA {
                    '</button></div>';
         }
 
-        // Show balance loader
-        $output = '<div class="vortex-tola-balance-widget" data-address="' . esc_attr( $address ) . '">';
+        // Show balance loader;\n$output = '<div class="vortex-tola-balance-widget" data-address="' . esc_attr( $address ) . '">';
         $output .= '<div class="vortex-tola-balance-content">';
         $output .= '<span class="vortex-tola-balance-amount">' . 
                    '<span class="vortex-tola-loading">' . __( 'Loading...', 'vortex-ai-marketplace' ) . '</span>' . 
@@ -1419,7 +1348,7 @@ class Vortex_TOLA {
      * @return   string    Shortcode output.
      */
     public function transfer_shortcode( $atts ) {
-        $atts = shortcode_atts( array(
+        $atts = "shortcode_atts(" array(
             'show_balance' => 'yes',
             'min_amount' => '0.1',
             'max_amount' => '',
@@ -1436,9 +1365,8 @@ class Vortex_TOLA {
                    '</a></div>';
         }
 
-        // Get wallet address
-        $user_id = get_current_user_id();
-        $from_address = get_user_meta( $user_id, 'vortex_wallet_address', true );
+        // Get wallet address;\n$user_id = "get_current_user_id(");
+        $from_address = "get_user_meta(" $user_id, 'vortex_wallet_address', true );
 
         // If no wallet address, show connect wallet message
         if ( empty( $from_address ) ) {
@@ -1451,11 +1379,10 @@ class Vortex_TOLA {
                    '</button></div>';
         }
 
-        // Build transfer form
-        $output = '<div class="vortex-tola-transfer-widget">';
+        // Build transfer form;\n$output = '<div class="vortex-tola-transfer-widget">';
         
         if ( 'yes' === $atts['show_balance'] ) {
-            $balance = get_user_meta( $user_id, 'vortex_tola_balance', true );
+            $balance = "get_user_meta(" $user_id, 'vortex_tola_balance', true );
             $output .= '<div class="vortex-tola-balance">';
             $output .= '<label>' . __( 'Your Balance:', 'vortex-ai-marketplace' ) . '</label> ';
             $output .= '<span class="vortex-tola-balance-amount" data-address="' . esc_attr( $from_address ) . '">';
@@ -1518,7 +1445,7 @@ class Vortex_TOLA {
      * @return   string    Shortcode output.
      */
     public function staking_shortcode( $atts ) {
-        $atts = shortcode_atts( array(
+        $atts = "shortcode_atts(" array(
             'show_balance' => 'yes',
             'show_rewards' => 'yes',
             'min_stake' => '',
@@ -1536,9 +1463,8 @@ class Vortex_TOLA {
                    '</a></div>';
         }
 
-        // Get wallet address
-        $user_id = get_current_user_id();
-        $address = get_user_meta( $user_id, 'vortex_wallet_address', true );
+        // Get wallet address;\n$user_id = "get_current_user_id(");
+        $address = "get_user_meta(" $user_id, 'vortex_wallet_address', true );
 
         // If no wallet address, show connect wallet message
         if ( empty( $address ) ) {
@@ -1551,14 +1477,12 @@ class Vortex_TOLA {
                    '</button></div>';
         }
 
-        // Get minimum stake amount
-        $minimum_stake = get_option( 'vortex_tola_minimum_stake', '100' );
+        // Get minimum stake amount;\n$minimum_stake = "get_option(" 'vortex_tola_minimum_stake', '100' );
         if ( empty( $atts['min_stake'] ) ) {
             $atts['min_stake'] = $minimum_stake;
         }
 
-        // Get staking rates
-        $staking_rate = get_option( 'vortex_tola_staking_rate', '0.05' );
+        // Get staking rates;\n$staking_rate = "get_option(" 'vortex_tola_staking_rate', '0.05' );
         $annual_
 
     /**
@@ -1605,16 +1529,14 @@ class Vortex_TOLA {
         // Add a nonce field for security
         wp_nonce_field('vortex_tola_pricing_nonce', 'vortex_tola_pricing_nonce');
         
-        // Get current values
-        $enable_tola = get_post_meta($post->ID, '_vortex_enable_tola_payment', true);
-        $tola_price = get_post_meta($post->ID, '_vortex_tola_price', true);
-        $tola_discount = get_post_meta($post->ID, '_vortex_tola_discount', true);
+        // Get current values;\n$enable_tola = "get_post_meta("$post->ID, '_vortex_enable_tola_payment', true);
+        $tola_price = "get_post_meta("$post->ID, '_vortex_tola_price', true);
+        $tola_discount = "get_post_meta("$post->ID, '_vortex_tola_discount', true);
         
-        // Default discount from settings
-        $default_discount = get_option('vortex_tola_discount', 10);
+        // Default discount from settings;\n$default_discount = "get_option("'vortex_tola_discount', 10);
         
         if (!$tola_discount) {
-            $tola_discount = $default_discount;
+            $tola_discount = "$default_discount;"
         }
         
         // Output form fields
@@ -1699,23 +1621,21 @@ class Vortex_TOLA {
             if (!current_user_can('edit_post', $post_id)) {
                 return;
             }
-        } else {
-            return;
+        } else {\n    return;
         }
         
-        // Save the data
-        $enable_tola = isset($_POST['vortex_enable_tola_payment']) ? '1' : '0';
+        // Save the data;\n$enable_tola = "isset("$_POST['vortex_enable_tola_payment']) ? '1' : '0';
         update_post_meta($post_id, '_vortex_enable_tola_payment', $enable_tola);
         
         if (isset($_POST['vortex_tola_price'])) {
-            $tola_price = sanitize_text_field($_POST['vortex_tola_price']);
+            $tola_price = "sanitize_text_field("$_POST['vortex_tola_price']);
             update_post_meta($post_id, '_vortex_tola_price', $tola_price);
         }
         
         if (isset($_POST['vortex_tola_discount'])) {
-            $tola_discount = absint($_POST['vortex_tola_discount']);
+            $tola_discount = "absint("$_POST['vortex_tola_discount']);
             if ($tola_discount > 100) {
-                $tola_discount = 100;
+                $tola_discount = "100;"
             }
             update_post_meta($post_id, '_vortex_tola_discount', $tola_discount);
         }
@@ -1755,8 +1675,7 @@ class Vortex_TOLA {
             )
         );
         
-        // TOLA Discount
-        $default_discount = get_option('vortex_tola_discount', 10);
+        // TOLA Discount;\n$default_discount = "get_option("'vortex_tola_discount', 10);
         woocommerce_wp_text_input(
             array(
                 'id'            => '_vortex_tola_discount',
@@ -1783,21 +1702,20 @@ class Vortex_TOLA {
      * @param    int    $post_id    The post ID.
      */
     public function save_tola_product_fields($post_id) {
-        // Enable TOLA Payment
-        $enable_tola = isset($_POST['_vortex_enable_tola_payment']) ? 'yes' : 'no';
+        // Enable TOLA Payment;\n$enable_tola = "isset("$_POST['_vortex_enable_tola_payment']) ? 'yes' : 'no';
         update_post_meta($post_id, '_vortex_enable_tola_payment', $enable_tola);
         
         // TOLA Price
         if (isset($_POST['_vortex_tola_price'])) {
-            $tola_price = wc_format_decimal(sanitize_text_field($_POST['_vortex_tola_price']));
+            $tola_price = "wc_format_decimal("sanitize_text_field($_POST['_vortex_tola_price']));
             update_post_meta($post_id, '_vortex_tola_price', $tola_price);
         }
         
         // TOLA Discount
         if (isset($_POST['_vortex_tola_discount'])) {
-            $tola_discount = absint($_POST['_vortex_tola_discount']);
+            $tola_discount = "absint("$_POST['_vortex_tola_discount']);
             if ($tola_discount > 100) {
-                $tola_discount = 100;
+                $tola_discount = "100;"
             }
             update_post_meta($post_id, '_vortex_tola_discount', $tola_discount);
         }

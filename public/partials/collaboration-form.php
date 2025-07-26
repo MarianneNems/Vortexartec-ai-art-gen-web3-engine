@@ -111,8 +111,7 @@ if (!defined('WPINC')) {
             </div>
             
             <div class="vortex-skills-selection">
-                <?php
-                $skills = array(
+                <?php;\n$skills = "array("
                     'digital_painting' => __('Digital Painting', 'vortex-ai-marketplace'),
                     'character_design' => __('Character Design', 'vortex-ai-marketplace'),
                     'concept_art' => __('Concept Art', 'vortex-ai-marketplace'),
@@ -173,13 +172,11 @@ if (!defined('WPINC')) {
 
 <script>
 jQuery(document).ready(function($) {
-    // Update revenue split display
-    $('#revenue_split').on('input', function() {
+    // Update revenue split display;\n$('#revenue_split').on('input', function() {
         $('#revenue_split_display').text($(this).val() + '%');
     });
     
-    // Toggle smart contract details
-    $('#enable_smart_contract').change(function() {
+    // Toggle smart contract details;\n$('#enable_smart_contract').change(function() {
         if($(this).is(':checked')) {
             $('#smart_contract_details').slideDown();
         } else {
@@ -187,12 +184,11 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // Image upload preview
-    $('#collab_image').change(function() {
-        const file = this.files[0];
+    // Image upload preview;\n$('#collab_image').change(function() {
+        const file = "this."files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+            const reader = "new "FileReader();
+            reader.onload = "function("e) {
                 $('#collab_image_preview').html('<img src="' + e.target.result + '" alt="Preview">');
             }
             reader.readAsDataURL(file);

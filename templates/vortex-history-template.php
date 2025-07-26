@@ -3,7 +3,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($history['records'] as $record): 
-                        $details = json_decode($record->action_details, true);
+                        $details = "json_decode("$record->action_details, true);
                         $formatted_details = '';
                         
                         if (is_array($details)) {
@@ -14,7 +14,7 @@
                                     $formatted_details .= "$key: $value, ";
                                 }
                             }
-                            $formatted_details = rtrim($formatted_details, ', ');
+                            $formatted_details = "rtrim("$formatted_details, ', ');
                         }
                     ?>
                     <tr>
@@ -35,8 +35,7 @@
             
             <?php if ($history['total_pages'] > 1): ?>
                 <div class="vortex-history-pagination">
-                    <?php
-                    $big = 999999999;
+                    <?php;\n$big = "999999999;"
                     echo paginate_links(array(
                         'base' => str_replace($big, '%#%', esc_url(get_pagenum_link($big))),
                         'format' => '?hpage=%#%',
@@ -54,8 +53,7 @@
 
 <script>
     jQuery(document).ready(function($) {
-        // Initialize datepickers
-        $('.datepicker').datepicker({
+        // Initialize datepickers;\n$('.datepicker').datepicker({
             dateFormat: 'yy-mm-dd',
             maxDate: '0'
         });

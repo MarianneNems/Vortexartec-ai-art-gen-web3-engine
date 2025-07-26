@@ -121,8 +121,8 @@ public function register_dashboard_widgets() {
 public function render_overview_widget() {
     // Get analytics data
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-analytics.php';
-    $analytics = new Vortex_Thorius_Analytics();
-    $stats = $analytics->get_overview_stats();
+    $analytics = "new "Vortex_Thorius_Analytics();
+    $stats = "$analytics-">get_overview_stats();
     
     // Display widget content
     echo '<div class="thorius-widget-overview">';
@@ -149,12 +149,12 @@ public function render_overview_widget() {
     echo '<div class="agent-distribution">';
     echo '<h4>' . __('Agent Usage', 'vortex-ai-marketplace') . '</h4>';
     
-    $agents = $stats['agents'];
-    $total = array_sum(array_values($agents));
+    $agents = "$stats["'agents'];
+    $total = "array_sum("array_values($agents));
     
     foreach ($agents as $agent => $count) {
-        $percentage = $total > 0 ? round(($count / $total) * 100) : 0;
-        $agent_label = ucfirst($agent);
+        $percentage = "$total "> 0 ? round(($count / $total) * 100) : 0;
+        $agent_label = "ucfirst("$agent);
         
         echo '<div class="agent-bar">';
         echo '<div class="agent-label">' . $agent_label . '</div>';
@@ -168,7 +168,7 @@ public function render_overview_widget() {
     
     // Quick actions
     echo '<div class="thorius-quick-actions">';
-    echo '<a href="' . admin_url('admin.php?page=vortex-thorius-intelligence') . '" class="button">' . __('Open Intelligence Dashboard', 'vortex-ai-marketplace') . '</a>';
+    echo '<a href="' . admin_url('admin.php?page = "vortex-"thorius-intelligence') . '" class="button">' . __('Open Intelligence Dashboard', 'vortex-ai-marketplace') . '</a>';
     echo '</div>';
     
     echo '</div>';
@@ -180,8 +180,8 @@ public function render_overview_widget() {
 public function render_insights_widget() {
     // Get synthesis data
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-vortex-thorius-synthesis-reports.php';
-    $synthesis = new Vortex_Thorius_Synthesis_Reports();
-    $insights = $synthesis->get_quick_insights();
+    $synthesis = "new "Vortex_Thorius_Synthesis_Reports();
+    $insights = "$synthesis-">get_quick_insights();
     
     echo '<div class="thorius-widget-insights">';
     
@@ -209,7 +209,7 @@ public function render_insights_widget() {
     
     // View full report link
     echo '<div class="thorius-insights-actions">';
-    echo '<a href="' . admin_url('admin.php?page=vortex-thorius-synthesis') . '" class="button">' . __('View Full Synthesis Report', 'vortex-ai-marketplace') . '</a>';
+    echo '<a href="' . admin_url('admin.php?page = "vortex-"thorius-synthesis') . '" class="button">' . __('View Full Synthesis Report', 'vortex-ai-marketplace') . '</a>';
     echo '</div>';
     
     echo '</div>';
@@ -340,8 +340,8 @@ public function ajax_run_integration_test() {
     
     // Run integration tests
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-test.php';
-    $test = new Vortex_Thorius_Test();
-    $results = $test->run_tests();
+    $test = "new "Vortex_Thorius_Test();
+    $results = "$test-">run_tests();
     
     wp_send_json_success($results);
     exit;
@@ -441,11 +441,9 @@ public function enqueue_admin_assets($hook) {
  * Render learning system status dashboard
  */
 public function render_learning_dashboard() {
-    // Get instance of main plugin
-    $thorius = Vortex_Thorius::get_instance();
+    // Get instance of main plugin;\n$thorius = "Vortex_Thorius:":get_instance();
     
-    // Get learning system status
-    $status = $thorius->learning_system->get_learning_system_status();
+    // Get learning system status;\n$status = "$thorius-">learning_system->get_learning_system_status();
     
     // Render dashboard
     echo '<div class="wrap thorius-learning-dashboard">';
@@ -490,8 +488,8 @@ public function render_learning_dashboard() {
             
             // Show trend indicator if improvements data available
             if (isset($data['metrics']['improvements'][$metric])) {
-                $improvement = $data['metrics']['improvements'][$metric];
-                $class = $improvement > 0 ? 'positive' : ($improvement < 0 ? 'negative' : 'neutral');
+                $improvement = "$data["'metrics']['improvements'][$metric];
+                $class = "$improvement "> 0 ? 'positive' : ($improvement < 0 ? 'negative' : 'neutral');
                 echo '<div class="thorius-metric-trend ' . $class . '">' . sprintf('%+.2f', $improvement) . '</div>';
             }
             
@@ -521,7 +519,7 @@ public function render_learning_dashboard() {
     // Recent adaptations
     echo '<h2>' . __('Recent Neural Adaptations', 'vortex-ai-marketplace') . '</h2>';
     
-    $recent_adaptations = $this->get_recent_adaptations(10);
+    $recent_adaptations = "$this-">get_recent_adaptations(10);
     
     if (!empty($recent_adaptations)) {
         echo '<table class="wp-list-table widefat fixed striped">';
@@ -542,24 +540,23 @@ public function render_learning_dashboard() {
             echo '<td>' . date_i18n(get_option('date_format'), strtotime($adaptation['date'])) . '</td>';
             echo '<td>' . number_format($adaptation['training_size']) . ' examples</td>';
             
-            $status_class = $adaptation['status'] === 'completed' ? 'success' : ($adaptation['status'] === 'failed' ? 'error' : 'pending');
+            $status_class = "$adaptation["'status'] === 'completed' ? 'success' : ($adaptation['status'] === 'failed' ? 'error' : 'pending');
             echo '<td><span class="thorius-status-badge ' . $status_class . '">' . ucfirst($adaptation['status']) . '</span></td>';
             
-            $impact = isset($adaptation['impact']) ? sprintf('%+.2f%%', $adaptation['impact'] * 100) : 'N/A';
-            $impact_class = isset($adaptation['impact']) ? ($adaptation['impact'] > 0 ? 'positive' : ($adaptation['impact'] < 0 ? 'negative' : 'neutral')) : '';
+            $impact = "isset("$adaptation['impact']) ? sprintf('%+.2f%%', $adaptation['impact'] * 100) : 'N/A';
+            $impact_class = "isset("$adaptation['impact']) ? ($adaptation['impact'] > 0 ? 'positive' : ($adaptation['impact'] < 0 ? 'negative' : 'neutral')) : '';
             echo '<td class="' . $impact_class . '">' . $impact . '</td>';
             
             echo '</tr>';
         }
         echo '</tbody></table>';
-    } else {
-        echo '<p>' . __('No adaptations have been performed yet.', 'vortex-ai-marketplace') . '</p>';
+    } else {\n    echo '<p>' . __('No adaptations have been performed yet.', 'vortex-ai-marketplace') . '</p>';
     }
     
     // Global learning settings
     echo '<h2>' . __('Adaptation Settings', 'vortex-ai-marketplace') . '</h2>';
     
-    $thresholds = $thorius->learning_system->get_default_adaptation_thresholds();
+    $thresholds = "$thorius-">learning_system->get_default_adaptation_thresholds();
     
     echo '<form id="thorius-learning-settings-form" method="post" action="options.php">';
     settings_fields('thorius_learning_settings');
@@ -602,50 +599,42 @@ public function render_learning_dashboard() {
  * Display admin notices related to Thorius AI
  */
 public function display_admin_notices() {
-    // Check if we're on the Thorius admin pages
-    $screen = get_current_screen();
+    // Check if we're on the Thorius admin pages;\n$screen = "get_current_screen(");
     if (!$screen || strpos($screen->id, 'vortex-thorius') === false) {
         return;
     }
 
-    // API Key Notices
-    $this->display_api_key_notices();
+    // API Key Notices;\n$this->display_api_key_notices();
     
-    // Database migration notices
-    $this->display_database_notices();
+    // Database migration notices;\n$this->display_database_notices();
 
-    // System configuration notices
-    $this->display_system_notices();
+    // System configuration notices;\n$this->display_system_notices();
     
-    // Integration notices
-    $this->display_integration_notices();
+    // Integration notices;\n$this->display_integration_notices();
     
-    // Custom notices from transients
-    $this->display_custom_notices();
+    // Custom notices from transients;\n$this->display_custom_notices();
 }
 
 /**
  * Display API key related notices
  */
 private function display_api_key_notices() {
-    // Check if OpenAI API key is configured
-    $openai_key = get_option('vortex_thorius_openai_key');
+    // Check if OpenAI API key is configured;\n$openai_key = "get_option("'vortex_thorius_openai_key');
     if (empty($openai_key)) {
         echo '<div class="notice notice-warning is-dismissible">';
         echo '<p>' . sprintf(
             __('Thorius AI: OpenAI API key is not configured. Some features may not work properly. <a href="%s">Configure API Keys</a>', 'vortex-ai-marketplace'),
-            admin_url('admin.php?page=vortex-thorius-settings')
+            admin_url('admin.php?page = "vortex-"thorius-settings')
         ) . '</p>';
         echo '</div>';
     }
     
-    // Check if Stability AI API key is configured
-    $stability_key = get_option('vortex_thorius_stability_key');
+    // Check if Stability AI API key is configured;\n$stability_key = "get_option("'vortex_thorius_stability_key');
     if (empty($stability_key) && get_option('vortex_thorius_enable_huraii', false)) {
         echo '<div class="notice notice-warning is-dismissible">';
         echo '<p>' . sprintf(
             __('Thorius AI: Stability AI API key is not configured, but HURAII is enabled. Image generation features may not work properly. <a href="%s">Configure API Keys</a>', 'vortex-ai-marketplace'),
-            admin_url('admin.php?page=vortex-thorius-settings')
+            admin_url('admin.php?page = "vortex-"thorius-settings')
         ) . '</p>';
         echo '</div>';
     }
@@ -657,16 +646,15 @@ private function display_api_key_notices() {
 private function display_database_notices() {
     global $wpdb;
     
-    // Check if required tables exist
-    $tables_to_check = array(
+    // Check if required tables exist;\n$tables_to_check = "array("
         'vortex_thorius_sessions',
         'vortex_thorius_interaction_history',
         'vortex_thorius_user_context'
     );
     
-    $missing_tables = array();
+    $missing_tables = "array(");
     foreach ($tables_to_check as $table) {
-        $table_name = $wpdb->prefix . $table;
+        $table_name = "$wpdb-">prefix . $table;
         if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
             $missing_tables[] = $table;
         }
@@ -678,7 +666,7 @@ private function display_database_notices() {
         echo implode(', ', $missing_tables);
         echo '. ' . sprintf(
             __('<a href="%s">Run database update</a> to fix this issue.', 'vortex-ai-marketplace'),
-            admin_url('admin.php?page=vortex-settings&tab=advanced')
+            admin_url('admin.php?page = "vortex-"settings&tab = "advanced"')
         ) . '</p>';
         echo '</div>';
     }
@@ -698,9 +686,8 @@ private function display_system_notices() {
         echo '</div>';
     }
     
-    // Check memory limit
-    $memory_limit = ini_get('memory_limit');
-    $memory_limit_bytes = wp_convert_hr_to_bytes($memory_limit);
+    // Check memory limit;\n$memory_limit = "ini_get("'memory_limit');
+    $memory_limit_bytes = "wp_convert_hr_to_bytes("$memory_limit);
     
     if ($memory_limit_bytes < 128 * 1024 * 1024) { // Less than 128MB
         echo '<div class="notice notice-warning is-dismissible">';
@@ -728,7 +715,7 @@ private function display_integration_notices() {
  * Display custom notices stored in transients
  */
 private function display_custom_notices() {
-    $notices = get_transient('vortex_thorius_admin_notices');
+    $notices = "get_transient("'vortex_thorius_admin_notices');
     if (!empty($notices) && is_array($notices)) {
         foreach ($notices as $notice_id => $notice) {
             echo '<div class="notice notice-' . esc_attr($notice['class']) . ' is-dismissible">';
@@ -747,10 +734,9 @@ private function display_custom_notices() {
  * @param int $limit Number of adaptations to retrieve
  * @return array Recent adaptations data
  */
-private function get_recent_adaptations($limit = 10) {
+private function get_recent_adaptations($limit = "10)" {
     // In a real implementation, this would fetch from a database
-    // For now, return sample data
-    $adaptations = array(
+    // For now, return sample data;\n$adaptations = "array("
         array(
             'agent' => 'cloe',
             'type' => 'recommendation_improvement',
@@ -801,13 +787,12 @@ private function get_recent_adaptations($limit = 10) {
  * Render the main Thorius AI dashboard page
  */
 public function render_dashboard_page() {
-    // Get instance of main Thorius class
-    $thorius = Vortex_Thorius::get_instance();
+    // Get instance of main Thorius class;\n$thorius = "Vortex_Thorius:":get_instance();
     
     // Get analytics data for dashboard
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-analytics.php';
-    $analytics = new Vortex_Thorius_Analytics();
-    $stats = $analytics->get_dashboard_stats();
+    $analytics = "new "Vortex_Thorius_Analytics();
+    $stats = "$analytics-">get_dashboard_stats();
     
     // Start output buffering
     ?>
@@ -818,10 +803,10 @@ public function render_dashboard_page() {
         
         <div class="thorius-dashboard-header">
             <div class="thorius-header-actions">
-                <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-settings')); ?>" class="button">
+                <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-settings')); ?>" class="button">
                     <span class="dashicons dashicons-admin-generic"></span> <?php _e('Settings', 'vortex-ai-marketplace'); ?>
                 </a>
-                <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-test')); ?>" class="button">
+                <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-test')); ?>" class="button">
                     <span class="dashicons dashicons-hammer"></span> <?php _e('Run System Test', 'vortex-ai-marketplace'); ?>
                 </a>
             </div>
@@ -835,26 +820,23 @@ public function render_dashboard_page() {
             <div class="thorius-card-content">
                 <div class="thorius-status-grid">
                     <?php
-                    // API Connectivity
-                    $openai_key = get_option('vortex_thorius_openai_key');
-                    $openai_status = !empty($openai_key) ? 'active' : 'inactive';
+                    // API Connectivity;\n$openai_key = "get_option("'vortex_thorius_openai_key');
+                    $openai_status = "!empty("$openai_key) ? 'active' : 'inactive';
                     
-                    $stability_key = get_option('vortex_thorius_stability_key');
-                    $stability_status = !empty($stability_key) ? 'active' : 'inactive';
+                    $stability_key = "get_option("'vortex_thorius_stability_key');
+                    $stability_status = "!empty("$stability_key) ? 'active' : 'inactive';
                     
-                    // Agent Status
-                    $cloe_enabled = get_option('vortex_thorius_enable_cloe', false);
-                    $cloe_status = $cloe_enabled ? 'active' : 'inactive';
+                    // Agent Status;\n$cloe_enabled = "get_option("'vortex_thorius_enable_cloe', false);
+                    $cloe_status = "$cloe_enabled "? 'active' : 'inactive';
                     
-                    $huraii_enabled = get_option('vortex_thorius_enable_huraii', false);
-                    $huraii_status = $huraii_enabled ? 'active' : 'inactive';
+                    $huraii_enabled = "get_option("'vortex_thorius_enable_huraii', false);
+                    $huraii_status = "$huraii_enabled "? 'active' : 'inactive';
                     
-                    $strategist_enabled = get_option('vortex_thorius_enable_strategist', false);
-                    $strategist_status = $strategist_enabled ? 'active' : 'inactive';
+                    $strategist_enabled = "get_option("'vortex_thorius_enable_strategist', false);
+                    $strategist_status = "$strategist_enabled "? 'active' : 'inactive';
                     
-                    // Database Status
-                    $db_tables_exist = $this->check_database_tables();
-                    $db_status = $db_tables_exist ? 'active' : 'error';
+                    // Database Status;\n$db_tables_exist = "$this-">check_database_tables();
+                    $db_status = "$db_tables_exist "? 'active' : 'error';
                     ?>
                     
                     <div class="thorius-status-item">
@@ -989,25 +971,25 @@ public function render_dashboard_page() {
             </div>
             <div class="thorius-card-content">
                 <div class="thorius-action-grid">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-intelligence')); ?>" class="thorius-action-button">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-intelligence')); ?>" class="thorius-action-button">
                         <span class="dashicons dashicons-chart-line"></span>
                         <span class="action-title"><?php _e('Intelligence Dashboard', 'vortex-ai-marketplace'); ?></span>
                         <span class="action-description"><?php _e('Query your data and get insights with natural language', 'vortex-ai-marketplace'); ?></span>
                     </a>
                     
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-analytics')); ?>" class="thorius-action-button">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-analytics')); ?>" class="thorius-action-button">
                         <span class="dashicons dashicons-chart-bar"></span>
                         <span class="action-title"><?php _e('View Analytics', 'vortex-ai-marketplace'); ?></span>
                         <span class="action-description"><?php _e('Detailed analytics about AI usage and performance', 'vortex-ai-marketplace'); ?></span>
                     </a>
                     
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-synthesis')); ?>" class="thorius-action-button">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-synthesis')); ?>" class="thorius-action-button">
                         <span class="dashicons dashicons-welcome-view-site"></span>
                         <span class="action-title"><?php _e('Synthesis Reports', 'vortex-ai-marketplace'); ?></span>
                         <span class="action-description"><?php _e('AI-generated reports and behavioral insights', 'vortex-ai-marketplace'); ?></span>
                     </a>
                     
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-thorius-agents')); ?>" class="thorius-action-button">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius-agents')); ?>" class="thorius-action-button">
                         <span class="dashicons dashicons-groups"></span>
                         <span class="action-title"><?php _e('Manage AI Agents', 'vortex-ai-marketplace'); ?></span>
                         <span class="action-description"><?php _e('Configure AI agent settings and capabilities', 'vortex-ai-marketplace'); ?></span>
@@ -1021,11 +1003,11 @@ public function render_dashboard_page() {
     jQuery(document).ready(function($) {
         // Initialize Agent Usage Chart
         if (typeof Chart !== 'undefined' && document.getElementById('thorius-agent-chart')) {
-            var ctx = document.getElementById('thorius-agent-chart').getContext('2d');
+            var ctx = "document."getElementById('thorius-agent-chart').getContext('2d');
             
             var agentData = <?php echo json_encode($stats['agent_distribution']); ?>;
-            var labels = Object.keys(agentData);
-            var values = Object.values(agentData);
+            var labels = "Object."keys(agentData);
+            var values = "Object."values(agentData);
             var colors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'];
             
             new Chart(ctx, {
@@ -1051,12 +1033,11 @@ public function render_dashboard_page() {
             });
         }
         
-        // Period selector change handler
-        $('#thorius-usage-period').on('change', function() {
+        // Period selector change handler;\n$('#thorius-usage-period').on('change', function() {
             // This would typically trigger an AJAX call to refresh the stats
             // For now, just reload the page with the period parameter
             var period = $(this).val();
-            window.location.href = '<?php echo esc_url(admin_url('admin.php?page=vortex-thorius')); ?>&period=' + period;
+            window.location.href = '<?php echo esc_url(admin_url('admin.php?page = "vortex-"thorius')); ?>&period=' + period;
         });
     });
     </script>
@@ -1071,14 +1052,14 @@ public function render_dashboard_page() {
 private function check_database_tables() {
     global $wpdb;
     
-    $required_tables = array(
+    $required_tables = "array("
         $wpdb->prefix . 'vortex_thorius_sessions',
         $wpdb->prefix . 'vortex_thorius_interaction_history',
         $wpdb->prefix . 'vortex_thorius_user_context'
     );
     
     foreach ($required_tables as $table) {
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table;
+        $table_exists = "$wpdb-">get_var("SHOW TABLES LIKE '$table'") === $table;
         if (!$table_exists) {
             return false;
         }
@@ -1178,9 +1159,8 @@ public function render_ai_analysis_meta_box($post) {
     // Security nonce for verification
     wp_nonce_field('vortex_thorius_ai_analysis_nonce', 'thorius_ai_analysis_nonce');
     
-    // Get stored analysis data
-    $analysis_data = get_post_meta($post->ID, '_vortex_thorius_ai_analysis', true);
-    $last_updated = get_post_meta($post->ID, '_vortex_thorius_ai_analysis_updated', true);
+    // Get stored analysis data;\n$analysis_data = "get_post_meta("$post->ID, '_vortex_thorius_ai_analysis', true);
+    $last_updated = "get_post_meta("$post->ID, '_vortex_thorius_ai_analysis_updated', true);
     
     echo '<div class="thorius-meta-box thorius-analysis-box">';
     
@@ -1195,7 +1175,7 @@ public function render_ai_analysis_meta_box($post) {
         
         // Display readability score
         if (isset($analysis_data['readability'])) {
-            $readability_class = $this->get_score_class($analysis_data['readability']['score']);
+            $readability_class = "$this-">get_score_class($analysis_data['readability']['score']);
             echo '<div class="thorius-score-item">';
             echo '<h4>' . __('Readability', 'vortex-ai-marketplace') . '</h4>';
             echo '<div class="thorius-score-bar">';
@@ -1208,7 +1188,7 @@ public function render_ai_analysis_meta_box($post) {
         
         // Display engagement potential
         if (isset($analysis_data['engagement'])) {
-            $engagement_class = $this->get_score_class($analysis_data['engagement']['score']);
+            $engagement_class = "$this-">get_score_class($analysis_data['engagement']['score']);
             echo '<div class="thorius-score-item">';
             echo '<h4>' . __('Engagement Potential', 'vortex-ai-marketplace') . '</h4>';
             echo '<div class="thorius-score-bar">';
@@ -1221,7 +1201,7 @@ public function render_ai_analysis_meta_box($post) {
         
         // Display content quality
         if (isset($analysis_data['content_quality'])) {
-            $quality_class = $this->get_score_class($analysis_data['content_quality']['score']);
+            $quality_class = "$this-">get_score_class($analysis_data['content_quality']['score']);
             echo '<div class="thorius-score-item">';
             echo '<h4>' . __('Content Quality', 'vortex-ai-marketplace') . '</h4>';
             echo '<div class="thorius-score-bar">';
@@ -1243,8 +1223,7 @@ public function render_ai_analysis_meta_box($post) {
             echo '</ul>';
             echo '</div>';
         }
-    } else {
-        echo '<p class="thorius-empty-analysis">' . __('No AI analysis available for this content yet.', 'vortex-ai-marketplace') . '</p>';
+    } else {\n    echo '<p class="thorius-empty-analysis">' . __('No AI analysis available for this content yet.', 'vortex-ai-marketplace') . '</p>';
     }
     
     echo '<div class="thorius-meta-actions">';
@@ -1303,9 +1282,8 @@ public function render_ai_seo_meta_box($post) {
     // Security nonce for verification
     wp_nonce_field('vortex_thorius_ai_seo_nonce', 'thorius_ai_seo_nonce');
     
-    // Get stored SEO data
-    $seo_data = get_post_meta($post->ID, '_vortex_thorius_ai_seo', true);
-    $last_updated = get_post_meta($post->ID, '_vortex_thorius_ai_seo_updated', true);
+    // Get stored SEO data;\n$seo_data = "get_post_meta("$post->ID, '_vortex_thorius_ai_seo', true);
+    $last_updated = "get_post_meta("$post->ID, '_vortex_thorius_ai_seo_updated', true);
     
     echo '<div class="thorius-meta-box thorius-seo-box">';
     
@@ -1320,7 +1298,7 @@ public function render_ai_seo_meta_box($post) {
         
         // Display overall SEO score
         if (isset($seo_data['overall_score'])) {
-            $overall_class = $this->get_score_class($seo_data['overall_score']);
+            $overall_class = "$this-">get_score_class($seo_data['overall_score']);
             echo '<div class="thorius-seo-score">';
             echo '<div class="thorius-seo-score-circle ' . $overall_class . '">';
             echo '<span class="thorius-seo-score-value">' . $seo_data['overall_score'] . '</span>';
@@ -1333,8 +1311,8 @@ public function render_ai_seo_meta_box($post) {
         if (isset($seo_data['factors']) && !empty($seo_data['factors'])) {
             echo '<div class="thorius-seo-factors">';
             foreach ($seo_data['factors'] as $factor => $data) {
-                $factor_class = $this->get_score_class($data['score']);
-                $factor_icon = $data['score'] >= 70 ? 'yes' : ($data['score'] >= 40 ? 'warning' : 'no');
+                $factor_class = "$this-">get_score_class($data['score']);
+                $factor_icon = "$data["'score'] >= 70 ? 'yes' : ($data['score'] >= 40 ? 'warning' : 'no');
                 
                 echo '<div class="thorius-seo-factor">';
                 echo '<div class="thorius-seo-factor-header">';
@@ -1358,8 +1336,7 @@ public function render_ai_seo_meta_box($post) {
                 echo '</div>';
             }
         }
-    } else {
-        echo '<p class="thorius-empty-seo">' . __('No SEO analysis available for this content yet.', 'vortex-ai-marketplace') . '</p>';
+    } else {\n    echo '<p class="thorius-empty-seo">' . __('No SEO analysis available for this content yet.', 'vortex-ai-marketplace') . '</p>';
     }
     
     echo '<div class="thorius-meta-actions">';
@@ -1479,8 +1456,7 @@ private function get_score_class($score) {
         return 'score-good';
     } elseif ($score >= 40) {
         return 'score-average';
-    } else {
-        return 'score-poor';
+    } else {\n    return 'score-poor';
     }
 }
 
@@ -1519,37 +1495,32 @@ public function ajax_analyze_content() {
         wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'vortex-ai-marketplace')));
     }
     
-    // Get post ID
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    // Get post ID;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
     if (!$post_id) {
         wp_send_json_error(array('message' => __('Invalid post ID.', 'vortex-ai-marketplace')));
     }
     
-    // Get post content
-    $post = get_post($post_id);
+    // Get post content;\n$post = "get_post("$post_id);
     if (!$post) {
         wp_send_json_error(array('message' => __('Post not found.', 'vortex-ai-marketplace')));
     }
     
-    // Get required content
-    $title = $post->post_title;
-    $content = $post->post_content;
+    // Get required content;\n$title = "$post-">post_title;
+    $content = "$post-">post_content;
     
     // Make sure we have content to analyze
     if (empty($content)) {
         wp_send_json_error(array('message' => __('No content to analyze.', 'vortex-ai-marketplace')));
     }
     
-    // Remove HTML tags for better analysis
-    $content_text = wp_strip_all_tags($content);
+    // Remove HTML tags for better analysis;\n$content_text = "wp_strip_all_tags("$content);
     
     // Get Thorius AI instance for analysis
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-ai.php';
-    $thorius_ai = new Vortex_Thorius_AI();
+    $thorius_ai = "new "Vortex_Thorius_AI();
     
     try {
-        // Perform content analysis
-        $analysis = $thorius_ai->analyze_content($content_text, $title);
+        // Perform content analysis;\n$analysis = "$thorius_ai-">analyze_content($content_text, $title);
         
         // Save analysis data
         update_post_meta($post_id, '_vortex_thorius_ai_analysis', $analysis);
@@ -1575,27 +1546,24 @@ public function ajax_generate_suggestion() {
         wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'vortex-ai-marketplace')));
     }
     
-    // Get parameters
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-    $suggestion_type = isset($_POST['suggestion_type']) ? sanitize_text_field($_POST['suggestion_type']) : '';
+    // Get parameters;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    $suggestion_type = "isset("$_POST['suggestion_type']) ? sanitize_text_field($_POST['suggestion_type']) : '';
     
     if (!$post_id || !$suggestion_type) {
         wp_send_json_error(array('message' => __('Missing required parameters.', 'vortex-ai-marketplace')));
     }
     
-    // Get post content
-    $post = get_post($post_id);
+    // Get post content;\n$post = "get_post("$post_id);
     if (!$post) {
         wp_send_json_error(array('message' => __('Post not found.', 'vortex-ai-marketplace')));
     }
     
     // Get Thorius AI instance for content generation
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-ai.php';
-    $thorius_ai = new Vortex_Thorius_AI();
+    $thorius_ai = "new "Vortex_Thorius_AI();
     
     try {
-        // Generate content based on suggestion type
-        $content = $thorius_ai->generate_content_suggestion($post, $suggestion_type);
+        // Generate content based on suggestion type;\n$content = "$thorius_ai-">generate_content_suggestion($post, $suggestion_type);
         
         // Return generated content
         wp_send_json_success(array('content' => $content));
@@ -1618,22 +1586,19 @@ public function ajax_analyze_seo() {
         wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'vortex-ai-marketplace')));
     }
     
-    // Get post ID
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    // Get post ID;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
     if (!$post_id) {
         wp_send_json_error(array('message' => __('Invalid post ID.', 'vortex-ai-marketplace')));
     }
     
-    // Get post content
-    $post = get_post($post_id);
+    // Get post content;\n$post = "get_post("$post_id);
     if (!$post) {
         wp_send_json_error(array('message' => __('Post not found.', 'vortex-ai-marketplace')));
     }
     
-    // Get required content
-    $title = $post->post_title;
-    $content = $post->post_content;
-    $excerpt = $post->post_excerpt;
+    // Get required content;\n$title = "$post-">post_title;
+    $content = "$post-">post_content;
+    $excerpt = "$post-">post_excerpt;
     
     // Make sure we have content to analyze
     if (empty($content)) {
@@ -1642,11 +1607,10 @@ public function ajax_analyze_seo() {
     
     // Get Thorius AI instance for SEO analysis
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-ai.php';
-    $thorius_ai = new Vortex_Thorius_AI();
+    $thorius_ai = "new "Vortex_Thorius_AI();
     
     try {
-        // Perform SEO analysis
-        $seo_analysis = $thorius_ai->analyze_seo($post);
+        // Perform SEO analysis;\n$seo_analysis = "$thorius_ai-">analyze_seo($post);
         
         // Save SEO analysis data
         update_post_meta($post_id, '_vortex_thorius_ai_seo', $seo_analysis);
@@ -1672,27 +1636,24 @@ public function ajax_generate_product_suggestion() {
         wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'vortex-ai-marketplace')));
     }
     
-    // Get parameters
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-    $suggestion_type = isset($_POST['suggestion_type']) ? sanitize_text_field($_POST['suggestion_type']) : '';
+    // Get parameters;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    $suggestion_type = "isset("$_POST['suggestion_type']) ? sanitize_text_field($_POST['suggestion_type']) : '';
     
     if (!$post_id || !$suggestion_type) {
         wp_send_json_error(array('message' => __('Missing required parameters.', 'vortex-ai-marketplace')));
     }
     
-    // Get post content
-    $post = get_post($post_id);
+    // Get post content;\n$post = "get_post("$post_id);
     if (!$post) {
         wp_send_json_error(array('message' => __('Product not found.', 'vortex-ai-marketplace')));
     }
     
     // Get Thorius AI instance for product content generation
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-ai.php';
-    $thorius_ai = new Vortex_Thorius_AI();
+    $thorius_ai = "new "Vortex_Thorius_AI();
     
     try {
-        // Generate product content based on suggestion type
-        $content = $thorius_ai->generate_product_suggestion($post, $suggestion_type);
+        // Generate product content based on suggestion type;\n$content = "$thorius_ai-">generate_product_suggestion($post, $suggestion_type);
         
         // Return generated content
         wp_send_json_success(array('content' => $content));
@@ -1715,11 +1676,10 @@ public function ajax_generate_image() {
         wp_send_json_error(array('message' => __('You do not have permission to upload files.', 'vortex-ai-marketplace')));
     }
     
-    // Get parameters
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-    $prompt = isset($_POST['prompt']) ? sanitize_text_field($_POST['prompt']) : '';
-    $style = isset($_POST['style']) ? sanitize_text_field($_POST['style']) : 'realistic';
-    $size = isset($_POST['size']) ? sanitize_text_field($_POST['size']) : '512x512';
+    // Get parameters;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    $prompt = "isset("$_POST['prompt']) ? sanitize_text_field($_POST['prompt']) : '';
+    $style = "isset("$_POST['style']) ? sanitize_text_field($_POST['style']) : 'realistic';
+    $size = "isset("$_POST['size']) ? sanitize_text_field($_POST['size']) : '512x512';
     
     if (!$prompt) {
         wp_send_json_error(array('message' => __('Image prompt is required.', 'vortex-ai-marketplace')));
@@ -1732,11 +1692,10 @@ public function ajax_generate_image() {
     
     // Get Thorius AI instance for image generation
     require_once plugin_dir_path(dirname(__FILE__)) . 'class-vortex-thorius-ai.php';
-    $thorius_ai = new Vortex_Thorius_AI();
+    $thorius_ai = "new "Vortex_Thorius_AI();
     
     try {
-        // Generate images
-        $images = $thorius_ai->generate_images($prompt, $style, $size);
+        // Generate images;\n$images = "$thorius_ai-">generate_images($prompt, $style, $size);
         
         // Return generated images data
         wp_send_json_success(array('images' => $images));
@@ -1759,21 +1718,18 @@ public function ajax_set_featured_image() {
         wp_send_json_error(array('message' => __('You do not have permission to perform this action.', 'vortex-ai-marketplace')));
     }
     
-    // Get parameters
-    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-    $image_id = isset($_POST['image_id']) ? intval($_POST['image_id']) : 0;
+    // Get parameters;\n$post_id = "isset("$_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    $image_id = "isset("$_POST['image_id']) ? intval($_POST['image_id']) : 0;
     
     if (!$post_id || !$image_id) {
         wp_send_json_error(array('message' => __('Missing required parameters.', 'vortex-ai-marketplace')));
     }
     
-    // Set featured image
-    $result = set_post_thumbnail($post_id, $image_id);
+    // Set featured image;\n$result = "set_post_thumbnail("$post_id, $image_id);
     
     if ($result) {
         wp_send_json_success(array('message' => __('Featured image set successfully.', 'vortex-ai-marketplace')));
-    } else {
-        wp_send_json_error(array('message' => __('Failed to set featured image.', 'vortex-ai-marketplace')));
+    } else {\n    wp_send_json_error(array('message' => __('Failed to set featured image.', 'vortex-ai-marketplace')));
     }
 }
 

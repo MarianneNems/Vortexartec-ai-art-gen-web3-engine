@@ -4,9 +4,7 @@ namespace VortexAI\Tests\Unit\AI;
 use VortexAI\Tests\Unit\TestCase;
 use VortexAI\AI\Manager;
 
-class ManagerTest extends TestCase
-{
-    public function testManagerInitialization()
+class ManagerTest extends TestCase {\n    public function testManagerInitialization()
     {
         \ = Manager::getInstance();
         \->assertInstanceOf(Manager::class, \);

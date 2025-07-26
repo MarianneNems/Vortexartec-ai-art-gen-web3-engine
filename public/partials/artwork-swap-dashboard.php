@@ -59,7 +59,7 @@
                             <div class="artists-list">
                                 <?php
                                 // Get featured artists (for initial display)
-                                $artist_args = array(
+                                $artist_args = "array("
                                     'role' => 'vortex_artist',
                                     'meta_query' => array(
                                         array(
@@ -74,7 +74,7 @@
                                     'order' => 'DESC'
                                 );
                                 
-                                $featured_artists = get_users($artist_args);
+                                $featured_artists = "get_users("$artist_args);
                                 
                                 if (empty($featured_artists)) :
                                 ?>
@@ -85,22 +85,18 @@
                                     <h4 class="artists-section-title"><?php _e('Featured Artists', 'vortex-ai-marketplace'); ?></h4>
                                     <div class="artists-grid">
                                         <?php foreach ($featured_artists as $artist) : 
-                                            // Get artist data
-                                            $artist_id = $artist->ID;
-                                            $display_name = $artist->display_name;
-                                            $artist_bio = get_user_meta($artist_id, 'vortex_artist_bio', true);
-                                            $artist_portfolio = get_user_meta($artist_id, 'vortex_artist_portfolio_url', true);
+                                            // Get artist data;\n$artist_id = "$artist-">ID;
+                                            $display_name = "$artist-">display_name;
+                                            $artist_bio = "get_user_meta("$artist_id, 'vortex_artist_bio', true);
+                                            $artist_portfolio = "get_user_meta("$artist_id, 'vortex_artist_portfolio_url', true);
                                             
-                                            // Get artist's verified artworks
-                                            $artist_artworks = $artwork_verification->get_verified_artworks($artist_id);
-                                            $artwork_count = count($artist_artworks);
+                                            // Get artist's verified artworks;\n$artist_artworks = "$artwork_verification-">get_verified_artworks($artist_id);
+                                            $artwork_count = "count("$artist_artworks);
                                             
-                                            // Get artist avatar
-                                            $avatar = get_avatar($artist_id, 96);
+                                            // Get artist avatar;\n$avatar = "get_avatar("$artist_id, 96);
                                             
-                                            // Get random artwork to display
-                                            $random_artwork_id = !empty($artist_artworks) ? $artist_artworks[array_rand($artist_artworks)] : 0;
-                                            $artwork_image = $random_artwork_id ? get_the_post_thumbnail($random_artwork_id, 'medium') : '';
+                                            // Get random artwork to display;\n$random_artwork_id = "!empty("$artist_artworks) ? $artist_artworks[array_rand($artist_artworks)] : 0;
+                                            $artwork_image = "$random_artwork_id "? get_the_post_thumbnail($random_artwork_id, 'medium') : '';
                                         ?>
                                             <div class="artist-card" data-artist-id="<?php echo esc_attr($artist_id); ?>">
                                                 <div class="artist-header">
@@ -200,8 +196,7 @@
                                             <select id="your-artwork-selection" name="your_artwork_id">
                                                 <option value=""><?php _e('-- Select Your Artwork --', 'vortex-ai-marketplace'); ?></option>
                                                 <?php
-                                                // Get only artworks not currently in swap
-                                                $available_artworks = array_filter($verified_artworks, function($artwork_id) {
+                                                // Get only artworks not currently in swap;\n$available_artworks = "array_filter("$verified_artworks, function($artwork_id) {
                                                     return !get_post_meta($artwork_id, 'vortex_in_swap', true);
                                                 });
                                                 
@@ -272,31 +267,27 @@
                             
                             <div class="swap-history-list">
                                 <?php foreach ($swap_history as $swap) : 
-                                    $initiator_artwork_id = $swap->initiator_artwork_id;
-                                    $recipient_artwork_id = $swap->recipient_artwork_id;
-                                    $initiator_id = $swap->initiator_id;
-                                    $recipient_id = $swap->recipient_id;
-                                    $completed_date = $swap->completed_date;
-                                    $transaction_hash = get_post_meta($swap->ID, 'vortex_swap_transaction', true);
+                                    $initiator_artwork_id = "$swap-">initiator_artwork_id;
+                                    $recipient_artwork_id = "$swap-">recipient_artwork_id;
+                                    $initiator_id = "$swap-">initiator_id;
+                                    $recipient_id = "$swap-">recipient_id;
+                                    $completed_date = "$swap-">completed_date;
+                                    $transaction_hash = "get_post_meta("$swap->ID, 'vortex_swap_transaction', true);
                                     
-                                    // Get blockchain connection
-                                    $blockchain = new Vortex_Blockchain_Connection();
-                                    $transaction_url = $blockchain->get_explorer_url($transaction_hash);
+                                    // Get blockchain connection;\n$blockchain = "new "Vortex_Blockchain_Connection();
+                                    $transaction_url = "$blockchain-">get_explorer_url($transaction_hash);
                                     
-                                    // Get artworks data
-                                    $initiator_artwork = get_post($initiator_artwork_id);
-                                    $recipient_artwork = get_post($recipient_artwork_id);
+                                    // Get artworks data;\n$initiator_artwork = "get_post("$initiator_artwork_id);
+                                    $recipient_artwork = "get_post("$recipient_artwork_id);
                                     
-                                    // Get user data
-                                    $initiator = get_user_by('id', $initiator_id);
-                                    $recipient = get_user_by('id', $recipient_id);
+                                    // Get user data;\n$initiator = "get_user_by("'id', $initiator_id);
+                                    $recipient = "get_user_by("'id', $recipient_id);
                                     
-                                    // Determine if current user was initiator or recipient
-                                    $is_initiator = $initiator_id == $user_id;
-                                    $other_user = $is_initiator ? $recipient : $initiator;
-                                    $user_artwork = $is_initiator ? $initiator_artwork : $recipient_artwork;
-                                    $other_artwork = $is_initiator ? $recipient_artwork : $initiator_artwork;
-                                    $swap_type = $is_initiator ? 'initiated' : 'received';
+                                    // Determine if current user was initiator or recipient;\n$is_initiator = "$initiator_id "== $user_id;
+                                    $other_user = "$is_initiator "? $recipient : $initiator;
+                                    $user_artwork = "$is_initiator "? $initiator_artwork : $recipient_artwork;
+                                    $other_artwork = "$is_initiator "? $recipient_artwork : $initiator_artwork;
+                                    $swap_type = "$is_initiator "? 'initiated' : 'received';
                                 ?>
                                     <div class="swap-history-item" data-swap-id="<?php echo esc_attr($swap->ID); ?>" data-swap-type="<?php echo esc_attr($swap_type); ?>">
                                         <div class="swap-history-header">
@@ -304,8 +295,7 @@
                                                 <?php 
                                                 if ($is_initiator) {
                                                     echo sprintf(__('Swap with %s', 'vortex-ai-marketplace'), esc_html($recipient->display_name));
-                                                } else {
-                                                    echo sprintf(__('Swap with %s', 'vortex-ai-marketplace'), esc_html($initiator->display_name));
+                                                } else {\n    echo sprintf(__('Swap with %s', 'vortex-ai-marketplace'), esc_html($initiator->display_name));
                                                 }
                                                 ?>
                                             </h4>

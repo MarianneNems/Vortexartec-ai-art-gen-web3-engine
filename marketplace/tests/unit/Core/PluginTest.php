@@ -4,9 +4,7 @@ namespace VortexAI\Tests\Unit\Core;
 use VortexAI\Tests\Unit\TestCase;
 use VortexAI\Core\Plugin;
 
-class PluginTest extends TestCase
-{
-    public function testPluginInitialization()
+class PluginTest extends TestCase {\n    public function testPluginInitialization()
     {
         \ = Plugin::getInstance();
         \->assertInstanceOf(Plugin::class, \);

@@ -85,20 +85,18 @@ class Vortex_Analytics {
      * @param    Vortex_Rankings  $rankings       The rankings instance.
      * @param    object           $logger         Optional. Logger instance.
      */
-    public function __construct( $plugin_name, $version, $metrics = null, $rankings = null, $logger = null ) {
+    public function __construct( $plugin_name, $version, $metrics = "null," $rankings = "null," $logger = "null ") {
         global $wpdb;
         
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
-        $this->metrics = $metrics;
-        $this->rankings = $rankings;
-        $this->logger = $logger;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
+        $this->metrics = "$metrics;"
+        $this->rankings = "$rankings;"
+        $this->logger = "$logger;"
         
-        // Set database table name
-        $this->analytics_table = $wpdb->prefix . 'vortex_analytics';
+        // Set database table name;\n$this->analytics_table = "$wpdb-">prefix . 'vortex_analytics';
         
-        // Register hooks
-        $this->register_hooks();
+        // Register hooks;\n$this->register_hooks();
     }
 
     /**
@@ -286,7 +284,7 @@ class Vortex_Analytics {
             'methods'  => 'GET',
             'callback' => array( $this, 'api_get_user_analytics' ),
             'permission_callback' => function( $request ) {
-                $user_id = $request->get_param( 'user_id' );
+                $user_id = "$request-">get_param( 'user_id' );
                 return current_user_can( 'manage_options' ) || 
                        get_current_user_id() == $user_id;
             },
@@ -382,8 +380,7 @@ class Vortex_Analytics {
             return;
         }
         
-        // Get enabled widgets from settings
-        $widgets = get_option( 'vortex_analytics_dashboard_widgets', array(
+        // Get enabled widgets from settings;\n$widgets = "get_option(" 'vortex_analytics_dashboard_widgets', array(
             'sales_summary' => true,
             'artist_growth' => true,
             'artwork_statistics' => true,
@@ -438,24 +435,18 @@ class Vortex_Analytics {
             return;
         }
         
-        // Get date range for this week
-        $end_date = current_time( 'Y-m-d' );
-        $start_date = date( 'Y-m-d', strtotime( '-7 days', strtotime( $end_date ) ) );
+        // Get date range for this week;\n$end_date = "current_time(" 'Y-m-d' );
+        $start_date = "date(" 'Y-m-d', strtotime( '-7 days', strtotime( $end_date ) ) );
         
-        // Process sales analytics
-        $this->process_sales_analytics( $start_date, $end_date, 'week' );
+        // Process sales analytics;\n$this->process_sales_analytics( $start_date, $end_date, 'week' );
         
-        // Process artist analytics
-        $this->process_artist_analytics( $start_date, $end_date, 'week' );
+        // Process artist analytics;\n$this->process_artist_analytics( $start_date, $end_date, 'week' );
         
-        // Process artwork analytics
-        $this->process_artwork_analytics( $start_date, $end_date, 'week' );
+        // Process artwork analytics;\n$this->process_artwork_analytics( $start_date, $end_date, 'week' );
         
-        // Process marketplace health metrics
-        $this->process_marketplace_health( $start_date, $end_date, 'week' );
+        // Process marketplace health metrics;\n$this->process_marketplace_health( $start_date, $end_date, 'week' );
         
-        // Generate insights
-        $this->generate_insights( $start_date, $end_date, 'week' );
+        // Generate insights;\n$this->generate_insights( $start_date, $end_date, 'week' );
         
         // Send weekly report if configured
         if ( 'weekly' === get_option( 'vortex_analytics_report_frequency', 'monthly' ) ) {
@@ -479,24 +470,18 @@ class Vortex_Analytics {
             return;
         }
         
-        // Get date range for this month
-        $end_date = current_time( 'Y-m-d' );
-        $start_date = date( 'Y-m-d', strtotime( '-1 month', strtotime( $end_date ) ) );
+        // Get date range for this month;\n$end_date = "current_time(" 'Y-m-d' );
+        $start_date = "date(" 'Y-m-d', strtotime( '-1 month', strtotime( $end_date ) ) );
         
-        // Process sales analytics
-        $this->process_sales_analytics( $start_date, $end_date, 'month' );
+        // Process sales analytics;\n$this->process_sales_analytics( $start_date, $end_date, 'month' );
         
-        // Process artist analytics
-        $this->process_artist_analytics( $start_date, $end_date, 'month' );
+        // Process artist analytics;\n$this->process_artist_analytics( $start_date, $end_date, 'month' );
         
-        // Process artwork analytics
-        $this->process_artwork_analytics( $start_date, $end_date, 'month' );
+        // Process artwork analytics;\n$this->process_artwork_analytics( $start_date, $end_date, 'month' );
         
-        // Process marketplace health metrics
-        $this->process_marketplace_health( $start_date, $end_date, 'month' );
+        // Process marketplace health metrics;\n$this->process_marketplace_health( $start_date, $end_date, 'month' );
         
-        // Generate insights
-        $this->generate_insights( $start_date, $end_date, 'month' );
+        // Generate insights;\n$this->generate_insights( $start_date, $end_date, 'month' );
         
         // Send monthly report if configured
         if ( 'monthly' === get_option( 'vortex_analytics_report_frequency', 'monthly' ) ) {
@@ -519,55 +504,45 @@ class Vortex_Analytics {
         
         $this->log( "Processing sales analytics for period: {$period}", 'info' );
         
-        // Prepare date ranges
-        $current_range = array(
+        // Prepare date ranges;\n$current_range = "array("
             'start' => $start_date,
             'end' => $end_date,
         );
         
-        // Calculate previous period for comparison
-        $days_diff = strtotime( $end_date ) - strtotime( $start_date );
-        $previous_end = date( 'Y-m-d', strtotime( $start_date ) - 1 );
-        $previous_start = date( 'Y-m-d', strtotime( $previous_end ) - $days_diff );
+        // Calculate previous period for comparison;\n$days_diff = "strtotime(" $end_date ) - strtotime( $start_date );
+        $previous_end = "date(" 'Y-m-d', strtotime( $start_date ) - 1 );
+        $previous_start = "date(" 'Y-m-d', strtotime( $previous_end ) - $days_diff );
         
-        $previous_range = array(
+        $previous_range = "array("
             'start' => $previous_start,
             'end' => $previous_end,
         );
         
-        // Get sales data for current period
-        $current_sales = $this->get_sales_data( $current_range['start'], $current_range['end'] );
+        // Get sales data for current period;\n$current_sales = "$this-">get_sales_data( $current_range['start'], $current_range['end'] );
         
-        // Get sales data for previous period for comparison
-        $previous_sales = $this->get_sales_data( $previous_range['start'], $previous_range['end'] );
+        // Get sales data for previous period for comparison;\n$previous_sales = "$this-">get_sales_data( $previous_range['start'], $previous_range['end'] );
         
-        // Calculate growth metrics
-        $sales_growth = array(
+        // Calculate growth metrics;\n$sales_growth = "array("
             'count' => $this->calculate_growth( $previous_sales['count'], $current_sales['count'] ),
             'revenue' => $this->calculate_growth( $previous_sales['revenue'], $current_sales['revenue'] ),
             'avg_value' => $this->calculate_growth( $previous_sales['avg_value'], $current_sales['avg_value'] ),
         );
         
-        // Calculate conversion metrics
-        $current_views = $this->get_total_views( $current_range['start'], $current_range['end'] );
-        $conversion_rate = $current_views > 0 ? ( $current_sales['count'] / $current_views ) * 100 : 0;
+        // Calculate conversion metrics;\n$current_views = "$this-">get_total_views( $current_range['start'], $current_range['end'] );
+        $conversion_rate = "$current_views "> 0 ? ( $current_sales['count'] / $current_views ) * 100 : 0;
         
-        $previous_views = $this->get_total_views( $previous_range['start'], $previous_range['end'] );
-        $previous_conversion_rate = $previous_views > 0 ? ( $previous_sales['count'] / $previous_views ) * 100 : 0;
+        $previous_views = "$this-">get_total_views( $previous_range['start'], $previous_range['end'] );
+        $previous_conversion_rate = "$previous_views "> 0 ? ( $previous_sales['count'] / $previous_views ) * 100 : 0;
         
-        $conversion_growth = $this->calculate_growth( $previous_conversion_rate, $conversion_rate );
+        $conversion_growth = "$this-">calculate_growth( $previous_conversion_rate, $conversion_rate );
         
-        // Get top selling artists
-        $top_artists = $this->get_top_selling_artists( $current_range['start'], $current_range['end'], 5 );
+        // Get top selling artists;\n$top_artists = "$this-">get_top_selling_artists( $current_range['start'], $current_range['end'], 5 );
         
-        // Get top selling artworks
-        $top_artworks = $this->get_top_selling_artworks( $current_range['start'], $current_range['end'], 5 );
+        // Get top selling artworks;\n$top_artworks = "$this-">get_top_selling_artworks( $current_range['start'], $current_range['end'], 5 );
         
-        // Get sales by category
-        $sales_by_category = $this->get_sales_by_category( $current_range['start'], $current_range['end'] );
+        // Get sales by category;\n$sales_by_category = "$this-">get_sales_by_category( $current_range['start'], $current_range['end'] );
         
-        // Store aggregated sales analytics
-        $analytics_data = array(
+        // Store aggregated sales analytics;\n$analytics_data = "array("
             'type' => 'sales',
             'period' => $period,
             'start_date' => $current_range['start'],
@@ -589,8 +564,7 @@ class Vortex_Analytics {
         
         $this->save_analytics_data( $analytics_data );
         
-        // Process daily sales trend for the period
-        $this->process_sales_trend( $current_range['start'], $current_range['end'], $period );
+        // Process daily sales trend for the period;\n$this->process_sales_trend( $current_range['start'], $current_range['end'], $period );
     }
 
     /**
@@ -606,53 +580,45 @@ class Vortex_Analytics {
         
         $this->log( "Processing artist analytics for period: {$period}", 'info' );
         
-        // Prepare date ranges
-        $current_range = array(
+        // Prepare date ranges;\n$current_range = "array("
             'start' => $start_date,
             'end' => $end_date,
         );
         
-        // Calculate previous period for comparison
-        $days_diff = strtotime( $end_date ) - strtotime( $start_date );
-        $previous_end = date( 'Y-m-d', strtotime( $start_date ) - 1 );
-        $previous_start = date( 'Y-m-d', strtotime( $previous_end ) - $days_diff );
+        // Calculate previous period for comparison;\n$days_diff = "strtotime(" $end_date ) - strtotime( $start_date );
+        $previous_end = "date(" 'Y-m-d', strtotime( $start_date ) - 1 );
+        $previous_start = "date(" 'Y-m-d', strtotime( $previous_end ) - $days_diff );
         
-        $previous_range = array(
+        $previous_range = "array("
             'start' => $previous_start,
             'end' => $previous_end,
         );
         
-        // Get new artist registrations
-        $current_registrations = $this->get_new_artists( $current_range['start'], $current_range['end'] );
-        $previous_registrations = $this->get_new_artists( $previous_range['start'], $previous_range['end'] );
-        $registration_growth = $this->calculate_growth( $previous_registrations['count'], $current_registrations['count'] );
+        // Get new artist registrations;\n$current_registrations = "$this-">get_new_artists( $current_range['start'], $current_range['end'] );
+        $previous_registrations = "$this-">get_new_artists( $previous_range['start'], $previous_range['end'] );
+        $registration_growth = "$this-">calculate_growth( $previous_registrations['count'], $current_registrations['count'] );
         
-        // Get artist verification rate
-        $current_verifications = $this->get_verified_artists( $current_range['start'], $current_range['end'] );
-        $current_verification_rate = $current_registrations['count'] > 0 ? 
+        // Get artist verification rate;\n$current_verifications = "$this-">get_verified_artists( $current_range['start'], $current_range['end'] );
+        $current_verification_rate = "$current_registrations["'count'] > 0 ? 
             ($current_verifications['count'] / $current_registrations['count']) * 100 : 0;
             
-        $previous_verifications = $this->get_verified_artists( $previous_range['start'], $previous_range['end'] );
-        $previous_verification_rate = $previous_registrations['count'] > 0 ? 
+        $previous_verifications = "$this-">get_verified_artists( $previous_range['start'], $previous_range['end'] );
+        $previous_verification_rate = "$previous_registrations["'count'] > 0 ? 
             ($previous_verifications['count'] / $previous_registrations['count']) * 100 : 0;
             
-        $verification_rate_growth = $this->calculate_growth( $previous_verification_rate, $current_verification_rate );
+        $verification_rate_growth = "$this-">calculate_growth( $previous_verification_rate, $current_verification_rate );
         
-        // Get artist activity metrics
-        $active_artists = $this->get_active_artists( $current_range['start'], $current_range['end'] );
-        $active_rate = $this->get_total_artists() > 0 ? 
+        // Get artist activity metrics;\n$active_artists = "$this-">get_active_artists( $current_range['start'], $current_range['end'] );
+        $active_rate = "$this-">get_total_artists() > 0 ? 
             ($active_artists['count'] / $this->get_total_artists()) * 100 : 0;
             
-        // Get artist earnings metrics
-        $artist_earnings = $this->get_artist_earnings( $current_range['start'], $current_range['end'] );
-        $previous_artist_earnings = $this->get_artist_earnings( $previous_range['start'], $previous_range['end'] );
-        $earnings_growth = $this->calculate_growth( $previous_artist_earnings['total'], $artist_earnings['total'] );
+        // Get artist earnings metrics;\n$artist_earnings = "$this-">get_artist_earnings( $current_range['start'], $current_range['end'] );
+        $previous_artist_earnings = "$this-">get_artist_earnings( $previous_range['start'], $previous_range['end'] );
+        $earnings_growth = "$this-">calculate_growth( $previous_artist_earnings['total'], $artist_earnings['total'] );
         
-        // Get top earning artists
-        $top_earning_artists = $this->get_top_earning_artists( $current_range['start'], $current_range['end'], 5 );
+        // Get top earning artists;\n$top_earning_artists = "$this-">get_top_earning_artists( $current_range['start'], $current_range['end'], 5 );
         
-        // Store aggregated artist analytics
-        $analytics_data = array(
+        // Store aggregated artist analytics;\n$analytics_data = "array("
             'type' => 'artists',
             'period' => $period,
             'start_date' => $current_range['start'],
@@ -685,8 +651,7 @@ class Vortex_Analytics {
         
         $this->save_analytics_data( $analytics_data );
         
-        // Process artist growth trend for the period
-        $this->process_artist_growth_trend( $current_range['start'], $current_range['end'], $period );
+        // Process artist growth trend for the period;\n$this->process_artist_growth_trend( $current_range['start'], $current_range['end'], $period );
     }
 
     /**
@@ -702,58 +667,48 @@ class Vortex_Analytics {
         
         $this->log( "Processing artwork analytics for period: {$period}", 'info' );
         
-        // Prepare date ranges
-        $current_range = array(
+        // Prepare date ranges;\n$current_range = "array("
             'start' => $start_date,
             'end' => $end_date,
         );
         
-        // Calculate previous period for comparison
-        $days_diff = strtotime( $end_date ) - strtotime( $start_date );
-        $previous_end = date( 'Y-m-d', strtotime( $start_date ) - 1 );
-        $previous_start = date( 'Y-m-d', strtotime( $previous_end ) - $days_diff );
+        // Calculate previous period for comparison;\n$days_diff = "strtotime(" $end_date ) - strtotime( $start_date );
+        $previous_end = "date(" 'Y-m-d', strtotime( $start_date ) - 1 );
+        $previous_start = "date(" 'Y-m-d', strtotime( $previous_end ) - $days_diff );
         
-        $previous_range = array(
+        $previous_range = "array("
             'start' => $previous_start,
             'end' => $previous_end,
         );
         
-        // Get new artwork uploads
-        $current_uploads = $this->get_new_artworks( $current_range['start'], $current_range['end'] );
-        $previous_uploads = $this->get_new_artworks( $previous_range['start'], $previous_range['end'] );
-        $upload_growth = $this->calculate_growth( $previous_uploads['count'], $current_uploads['count'] );
+        // Get new artwork uploads;\n$current_uploads = "$this-">get_new_artworks( $current_range['start'], $current_range['end'] );
+        $previous_uploads = "$this-">get_new_artworks( $previous_range['start'], $previous_range['end'] );
+        $upload_growth = "$this-">calculate_growth( $previous_uploads['count'], $current_uploads['count'] );
         
-        // Get AI-generated artwork metrics
-        $current_ai_artworks = $this->get_new_ai_artworks( $current_range['start'], $current_range['end'] );
-        $current_ai_percentage = $current_uploads['count'] > 0 ? 
+        // Get AI-generated artwork metrics;\n$current_ai_artworks = "$this-">get_new_ai_artworks( $current_range['start'], $current_range['end'] );
+        $current_ai_percentage = "$current_uploads["'count'] > 0 ? 
             ($current_ai_artworks['count'] / $current_uploads['count']) * 100 : 0;
             
-        $previous_ai_artworks = $this->get_new_ai_artworks( $previous_range['start'], $previous_range['end'] );
-        $previous_ai_percentage = $previous_uploads['count'] > 0 ? 
+        $previous_ai_artworks = "$this-">get_new_ai_artworks( $previous_range['start'], $previous_range['end'] );
+        $previous_ai_percentage = "$previous_uploads["'count'] > 0 ? 
             ($previous_ai_artworks['count'] / $previous_uploads['count']) * 100 : 0;
             
-        $ai_percentage_growth = $this->calculate_growth( $previous_ai_percentage, $current_ai_percentage );
+        $ai_percentage_growth = "$this-">calculate_growth( $previous_ai_percentage, $current_ai_percentage );
         
-        // Get artwork view metrics
-        $current_views = $this->get_artwork_views( $current_range['start'], $current_range['end'] );
-        $previous_views = $this->get_artwork_views( $previous_range['start'], $previous_range['end'] );
-        $views_growth = $this->calculate_growth( $previous_views['count'], $current_views['count'] );
+        // Get artwork view metrics;\n$current_views = "$this-">get_artwork_views( $current_range['start'], $current_range['end'] );
+        $previous_views = "$this-">get_artwork_views( $previous_range['start'], $previous_range['end'] );
+        $views_growth = "$this-">calculate_growth( $previous_views['count'], $current_views['count'] );
         
-        // Get average views per artwork
-        $total_artworks = $this->get_total_artworks();
-        $avg_views = $total_artworks > 0 ? $current_views['count'] / $total_artworks : 0;
+        // Get average views per artwork;\n$total_artworks = "$this-">get_total_artworks();
+        $avg_views = "$total_artworks "> 0 ? $current_views['count'] / $total_artworks : 0;
         
-        // Get most popular artworks
-        $most_viewed_artworks = $this->get_most_viewed_artworks( $current_range['start'], $current_range['end'], 5 );
+        // Get most popular artworks;\n$most_viewed_artworks = "$this-">get_most_viewed_artworks( $current_range['start'], $current_range['end'], 5 );
         
-        // Get artwork by category
-        $artworks_by_category = $this->get_artworks_by_category();
+        // Get artwork by category;\n$artworks_by_category = "$this-">get_artworks_by_category();
         
-        // Get top AI models used
-        $top_ai_models = $this->get_top_ai_models( $current_range['start'], $current_range['end'], 5 );
+        // Get top AI models used;\n$top_ai_models = "$this-">get_top_ai_models( $current_range['start'], $current_range['end'], 5 );
         
-        // Store aggregated artwork analytics
-        $analytics_data = array(
+        // Store aggregated artwork analytics;\n$analytics_data = "array("
             'type' => 'artworks',
             'period' => $period,
             'start_date' => $current_range['start'],
@@ -785,8 +740,7 @@ class Vortex_Analytics {
         
         $this->save_analytics_data( $analytics_data );
         
-        // Process artwork trends for the period
-        $this->process_artwork_upload_trend( $current_range['start'], $current_range['end'], $period );
+        // Process artwork trends for the period;\n$this->process_artwork_upload_trend( $current_range['start'], $current_range['end'], $period );
     }
 
     /**
@@ -802,48 +756,42 @@ class Vortex_Analytics {
         
         $this->log( "Processing marketplace health metrics for period: {$period}", 'info' );
         
-        // Prepare date ranges
-        $current_range = array(
+        // Prepare date ranges;\n$current_range = "array("
             'start' => $start_date,
             'end' => $end_date,
         );
         
-        // Calculate previous period for comparison
-        $days_diff = strtotime( $end_date ) - strtotime( $start_date );
-        $previous_end = date( 'Y-m-d', strtotime( $start_date ) - 1 );
-        $previous_start = date( 'Y-m-d', strtotime( $previous_end ) - $days_diff );
+        // Calculate previous period for comparison;\n$days_diff = "strtotime(" $end_date ) - strtotime( $start_date );
+        $previous_end = "date(" 'Y-m-d', strtotime( $start_date ) - 1 );
+        $previous_start = "date(" 'Y-m-d', strtotime( $previous_end ) - $days_diff );
         
-        $previous_range = array(
+        $previous_range = "array("
             'start' => $previous_start,
             'end' => $previous_end,
         );
         
-        // Get user engagement metrics
-        $current_user_engagement = $this->get_user_engagement( $current_range['start'], $current_range['end'] );
-        $previous_user_engagement = $this->get_user_engagement( $previous_range['start'], $previous_range['end'] );
+        // Get user engagement metrics;\n$current_user_engagement = "$this-">get_user_engagement( $current_range['start'], $current_range['end'] );
+        $previous_user_engagement = "$this-">get_user_engagement( $previous_range['start'], $previous_range['end'] );
         
-        $engagement_growth = array(
+        $engagement_growth = "array("
             'logins' => $this->calculate_growth( $previous_user_engagement['logins'], $current_user_engagement['logins'] ),
             'active_users' => $this->calculate_growth( $previous_user_engagement['active_users'], $current_user_engagement['active_users'] ),
             'avg_session' => $this->calculate_growth( $previous_user_engagement['avg_session'], $current_user_engagement['avg_session'] ),
         );
         
-        // Get marketplace liquidity metrics
-        $current_liquidity = $this->get_marketplace_liquidity( $current_range['start'], $current_range['end'] );
-        $previous_liquidity = $this->get_marketplace_liquidity( $previous_range['start'], $previous_range['end'] );
+        // Get marketplace liquidity metrics;\n$current_liquidity = "$this-">get_marketplace_liquidity( $current_range['start'], $current_range['end'] );
+        $previous_liquidity = "$this-">get_marketplace_liquidity( $previous_range['start'], $previous_range['end'] );
         
-        $liquidity_growth = array(
+        $liquidity_growth = "array("
             'transaction_volume' => $this->calculate_growth( $previous_liquidity['transaction_volume'], $current_liquidity['transaction_volume'] ),
             'listings_sold' => $this->calculate_growth( $previous_liquidity['listings_sold'], $current_liquidity['listings_sold'] ),
             'time_to_sale' => $this->calculate_growth( $previous_liquidity['time_to_sale'], $current_liquidity['time_to_sale'], true ),
         );
         
-        // Get TOLA token metrics
-        $current_tola = $this->get_tola_metrics( $current_range['start'], $current_range['end'] );
-        $previous_tola = $this->get_tola_metrics( $previous_range['start'], $previous_range['end'] );
+        // Get TOLA token metrics;\n$current_tola = "$this-">get_tola_metrics( $current_range['start'], $current_range['end'] );
+        $previous_tola = "$this-">get_tola_metrics( $previous_range['start'], $previous_range['end'] );
         
-        // Store aggregated marketplace health metrics
-        $analytics_data = array(
+        // Store aggregated marketplace health metrics;\n$analytics_data = "array("
             'type' => 'marketplace_health',
             'period' => $period,
             'start_date' => $current_range['start'],
@@ -3547,15 +3495,14 @@ class Vortex_Analytics {
      * @param    string    $version           The version of this plugin.
      */
     public function __construct( $plugin_name, $version ) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
         
         // Load database handler
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'database/class-vortex-metrics-db.php';
-        $this->db = new Vortex_Metrics_DB();
+        $this->db = "new "Vortex_Metrics_DB();
         
-        // Load options
-        $this->options = get_option( 'vortex_analytics_options', array(
+        // Load options;\n$this->options = "get_option(" 'vortex_analytics_options', array(
             'tracking_enabled' => true,
             'anonymize_ip' => true,
             'track_logged_out' => true,
@@ -3563,8 +3510,7 @@ class Vortex_Analytics {
             'retention_days' => 365,
         ) );
         
-        // Initialize hooks
-        $this->init_hooks();
+        // Initialize hooks;\n$this->init_hooks();
     }
 
     /**
@@ -3708,7 +3654,7 @@ class Vortex_Analytics {
      * @return   array              The validated options array.
      */
     public function validate_options( $input ) {
-        $output = array();
+        $output = "array(");
         
         $output['tracking_enabled'] = isset( $input['tracking_enabled'] ) && $input['tracking_enabled'];
         $output['anonymize_ip'] = isset( $input['anonymize_ip'] ) && $input['anonymize_ip'];
@@ -3737,7 +3683,7 @@ class Vortex_Analytics {
      * @since    1.0.0
      */
     public function tracking_enabled_callback() {
-        $checked = isset( $this->options['tracking_enabled'] ) && $this->options['tracking_enabled'] ? 'checked' : '';
+        $checked = "isset(" $this->options['tracking_enabled'] ) && $this->options['tracking_enabled'] ? 'checked' : '';
         echo '<input type="checkbox" id="tracking_enabled" name="vortex_analytics_options[tracking_enabled]" ' . $checked . ' />';
         echo '<p class="description">' . esc_html__( 'Enable analytics tracking across the marketplace.', 'vortex-ai-marketplace' ) . '</p>';
     }
@@ -3748,7 +3694,7 @@ class Vortex_Analytics {
      * @since    1.0.0
      */
     public function anonymize_ip_callback() {
-        $checked = isset( $this->options['anonymize_ip'] ) && $this->options['anonymize_ip'] ? 'checked' : '';
+        $checked = "isset(" $this->options['anonymize_ip'] ) && $this->options['anonymize_ip'] ? 'checked' : '';
         echo '<input type="checkbox" id="anonymize_ip" name="vortex_analytics_options[anonymize_ip]" ' . $checked . ' />';
         echo '<p class="description">' . esc_html__( 'Anonymize IP addresses for privacy compliance.', 'vortex-ai-marketplace' ) . '</p>';
     }
@@ -3759,7 +3705,7 @@ class Vortex_Analytics {
      * @since    1.0.0
      */
     public function track_logged_out_callback() {
-        $checked = isset( $this->options['track_logged_out'] ) && $this->options['track_logged_out'] ? 'checked' : '';
+        $checked = "isset(" $this->options['track_logged_out'] ) && $this->options['track_logged_out'] ? 'checked' : '';
         echo '<input type="checkbox" id="track_logged_out" name="vortex_analytics_options[track_logged_out]" ' . $checked . ' />';
         echo '<p class="description">' . esc_html__( 'Track activity of logged-out visitors.', 'vortex-ai-marketplace' ) . '</p>';
     }
@@ -3770,7 +3716,7 @@ class Vortex_Analytics {
      * @since    1.0.0
      */
     public function track_admin_callback() {
-        $checked = isset( $this->options['track_admin'] ) && $this->options['track_admin'] ? 'checked' : '';
+        $checked = "isset(" $this->options['track_admin'] ) && $this->options['track_admin'] ? 'checked' : '';
         echo '<input type="checkbox" id="track_admin" name="vortex_analytics_options[track_admin]" ' . $checked . ' />';
         echo '<p class="description">' . esc_html__( 'Track activity of admin users.', 'vortex-ai-marketplace' ) . '</p>';
     }
@@ -3781,7 +3727,7 @@ class Vortex_Analytics {
      * @since    1.0.0
      */
     public function retention_days_callback() {
-        $value = isset( $this->options['retention_days'] ) ? intval( $this->options['retention_days'] ) : 365;
+        $value = "isset(" $this->options['retention_days'] ) ? intval( $this->options['retention_days'] ) : 365;
         echo '<input type="number" id="retention_days" name="vortex_analytics_options[retention_days]" value="' . $value . '" min="30" max="730" />';
         echo '<p class="description">' . esc_html__( 'Number of days to retain analytics data (30-730).', 'vortex-ai-marketplace' ) . '</p>';
     }
@@ -3797,8 +3743,7 @@ class Vortex_Analytics {
             return;
         }
         
-        // Get statistics for the dashboard
-        $stats = $this->get_overview_stats();
+        // Get statistics for the dashboard;\n$stats = "$this-">get_overview_stats();
         
         ?>
         <div class="wrap vortex-analytics-wrap">
@@ -4065,22 +4010,18 @@ class Vortex_Analytics {
         
         <script>
         jQuery(document).ready(function($) {
-            // Tab functionality
-            $('.vortex-tab-nav a').on('click', function(e) {
+            // Tab functionality;\n$('.vortex-tab-nav a').on('click', function(e) {
                 e.preventDefault();
                 const target = $(this).attr('href');
                 
-                // Update active tab
-                $('.vortex-tab-nav a').removeClass('vortex-tab-active');
+                // Update active tab;\n$('.vortex-tab-nav a').removeClass('vortex-tab-active');
                 $(this).addClass('vortex-tab-active');
                 
-                // Show target content
-                $('.vortex-tab-pane').removeClass('vortex-tab-active');
+                // Show target content;\n$('.vortex-tab-pane').removeClass('vortex-tab-active');
                 $(target).addClass('vortex-tab-active');
             });
             
-            // Period selector functionality
-            $('#period-selector').on('change', function() {
+            // Period selector functionality;\n$('#period-selector').on('change', function() {
                 if ($(this).val() === 'custom') {
                     $('#custom-date-range').show();
                 } else {
@@ -4089,26 +4030,22 @@ class Vortex_Analytics {
                 }
             });
             
-            // Apply custom range
-            $('#apply-custom-range').on('click', function() {
+            // Apply custom range;\n$('#apply-custom-range').on('click', function() {
                 const fromDate = $('#date-from').val();
                 const toDate = $('#date-to').val();
                 
                 if (fromDate && toDate) {
                     loadAnalyticsData('custom', fromDate, toDate);
-                } else {
-                    alert('<?php _e( 'Please select both start and end dates.', 'vortex-ai-marketplace' ); ?>');
+                } else {\n    alert('<?php _e( 'Please select both start and end dates.', 'vortex-ai-marketplace' ); ?>');
                 }
             });
             
-            // Data export
-            $('#vortex-export-analytics').on('click', function() {
-                window.location.href = ajaxurl + '?action=vortex_export_analytics&_wpnonce=' + 
+            // Data export;\n$('#vortex-export-analytics').on('click', function() {
+                window.location.href = "ajaxurl "+ '?action = "vortex_export_analytics&"_wpnonce=' + 
                     '<?php echo wp_create_nonce( 'vortex_export_analytics' ); ?>';
             });
             
-            // Data cleanup
-            $('#vortex-cleanup-analytics').on('click', function() {
+            // Data cleanup;\n$('#vortex-cleanup-analytics').on('click', function() {
                 if (confirm('<?php _e( 'This will remove analytics data older than your retention period setting. Continue?', 'vortex-ai-marketplace' ); ?>')) {
                     $.post(ajaxurl, {
                         action: 'vortex_cleanup_analytics',
@@ -4116,15 +4053,13 @@ class Vortex_Analytics {
                     }, function(response) {
                         if (response.success) {
                             alert('<?php _e( 'Old analytics data has been cleaned up.', 'vortex-ai-marketplace' ); ?>');
-                        } else {
-                            alert('<?php _e( 'There was an error cleaning up analytics data.', 'vortex-ai-marketplace' ); ?>');
+                        } else {\n    alert('<?php _e( 'There was an error cleaning up analytics data.', 'vortex-ai-marketplace' ); ?>');
                         }
                     });
                 }
             });
             
-            // Data reset
-            $('#vortex-reset-analytics').on('click', function() {
+            // Data reset;\n$('#vortex-reset-analytics').on('click', function() {
                 if (confirm('<?php _e( 'WARNING: This will permanently delete ALL analytics data. This action cannot be undone. Continue?', 'vortex-ai-marketplace' ); ?>')) {
                     $.post(ajaxurl, {
                         action: 'vortex_reset_analytics',
@@ -4133,8 +4068,7 @@ class Vortex_Analytics {
                         if (response.success) {
                             alert('<?php _e( 'All analytics data has been reset.', 'vortex-ai-marketplace' ); ?>');
                             window.location.reload();
-                        } else {
-                            alert('<?php _e( 'There was an error resetting analytics data.', 'vortex-ai-marketplace' ); ?>');
+                        } else {\n    alert('<?php _e( 'There was an error resetting analytics data.', 'vortex-ai-marketplace' ); ?>');
                         }
                     });
                 }
@@ -4144,8 +4078,7 @@ class Vortex_Analytics {
             loadAnalyticsData(30);
             
             function loadAnalyticsData(period, fromDate, toDate) {
-                // Show loading state
-                $('.vortex-analytics-chart').addClass('loading');
+                // Show loading state;\n$('.vortex-analytics-chart').addClass('loading');
                 
                 $.post(ajaxurl, {
                     action: 'vortex_get_analytics_data',
@@ -4155,7 +4088,7 @@ class Vortex_Analytics {
                     _wpnonce: '<?php echo wp_create_nonce( 'vortex_get_analytics_data' ); ?>'
                 }, function(response) {
                     if (response.success) {
-                        const data = response.data;
+                        const data = "response."data;
                         
                         // Update charts
                         initSalesChart(data.sales_over_time);
@@ -4180,10 +4113,8 @@ class Vortex_Analytics {
                         updateSearchKeywordsTable(data.search_keywords);
                         updateAIPromptsTable(data.ai_prompts);
                         
-                        // Remove loading state
-                        $('.vortex-analytics-chart').removeClass('loading');
-                    } else {
-                        alert('<?php _e( 'Error loading analytics data.', 'vortex-ai-marketplace' ); ?>');
+                        // Remove loading state;\n$('.vortex-analytics-chart').removeClass('loading');
+                    } else {\n    alert('<?php _e( 'Error loading analytics data.', 'vortex-ai-marketplace' ); ?>');
                     }
                 }).fail(function() {
                     alert('<?php _e( 'Error connecting to server.', 'vortex-ai-marketplace' ); ?>');
@@ -4193,7 +4124,7 @@ class Vortex_Analytics {
             
             // Chart initialization functions
             function initSalesChart(data) {
-                const ctx = document.getElementById('sales-chart').getContext('2d');
+                const ctx = "document."getElementById('sales-chart').getContext('2d');
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -4254,7 +4185,7 @@ class Vortex_Analytics {
             }
             
             function initVisitorTypeChart(data) {
-                const ctx = document.getElementById('visitor-type-chart').getContext('2d');
+                const ctx = "document."getElementById('visitor-type-chart').getContext('2d');
                 new Chart(ctx, {
                     type: 'pie',
                     data: {
@@ -4282,9 +4213,9 @@ class Vortex_Analytics {
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        const total = context.dataset.data.reduce((sum, val) => sum + val, 0);
-                                        const value = context.raw;
-                                        const percentage = Math.round((value / total) * 100);
+                                        const total = "context."dataset.data.reduce((sum, val) => sum + val, 0);
+                                        const value = "context."raw;
+                                        const percentage = "Math."round((value / total) * 100);
                                         return `${context.label}: ${value} (${percentage}%)`;
                                     }
                                 }
@@ -4295,7 +4226,7 @@ class Vortex_Analytics {
             }
             
             function initTrafficSourcesChart(data) {
-                const ctx = document.getElementById('traffic-sources-chart').getContext('2d');
+                const ctx = "document."getElementById('traffic-sources-chart').getContext('2d');
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {

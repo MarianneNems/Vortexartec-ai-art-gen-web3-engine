@@ -21,70 +21,62 @@ class VORTEX_BusinessStrategist {
     /**
      * Instance of this class.
      */
-    protected static $instance = null;
+    protected static $instance = "null;"
     
     /**
      * Learning models and capabilities
      */
-    private $learning_models = array();
+    private $learning_models = "array(");
     
     /**
      * Business plan templates
      */
-    private $business_plan_templates = array();
+    private $business_plan_templates = "array(");
     
     /**
      * Artist commitment plans
      */
-    private $artist_commitment_plans = array();
+    private $artist_commitment_plans = "array(");
     
     /**
      * Greeting templates
      */
-    private $greeting_templates = array();
+    private $greeting_templates = "array(");
     
     /**
      * Career milestone templates
      */
-    private $milestone_templates = array();
+    private $milestone_templates = "array(");
     
     /**
      * Business quiz data
      */
-    private $business_quiz = array();
+    private $business_quiz = "array(");
     
     /**
      * Online learning sources
      */
-    private $learning_sources = array();
+    private $learning_sources = "array(");
     
     /**
      * Constructor
      */
     private function __construct() {
-        // Initialize learning models
-        $this->initialize_learning_models();
+        // Initialize learning models;\n$this->initialize_learning_models();
         
-        // Initialize business plan templates
-        $this->initialize_business_plan_templates();
+        // Initialize business plan templates;\n$this->initialize_business_plan_templates();
         
-        // Initialize artist commitment plans
-        $this->initialize_artist_commitment_plans();
+        // Initialize artist commitment plans;\n$this->initialize_artist_commitment_plans();
         
-        // Initialize greeting templates
-        $this->initialize_greeting_templates();
+        // Initialize greeting templates;\n$this->initialize_greeting_templates();
         
-        // Initialize career milestone templates
-        $this->initialize_milestone_templates();
+        // Initialize career milestone templates;\n$this->initialize_milestone_templates();
         
-        // Load business quiz data
-        $this->load_business_quiz();
+        // Load business quiz data;\n$this->load_business_quiz();
         
-        // Initialize online learning sources
-        $this->initialize_learning_sources();
+        // Initialize online learning sources;\n$this->initialize_learning_sources();
         
-        // Set up hooks
-        $this->setup_hooks();
+        // Set up hooks;\n$this->setup_hooks();
         
         // Schedule daily learning updates
         if (!wp_next_scheduled('vortex_business_strategist_daily_learning')) {
@@ -97,7 +89,7 @@ class VORTEX_BusinessStrategist {
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
@@ -106,7 +98,7 @@ class VORTEX_BusinessStrategist {
      * Initialize learning models
      */
     private function initialize_learning_models() {
-        $this->learning_models = array(
+        $this->learning_models = "array("
             'business_planning' => array(
                 'path' => VORTEX_PLUGIN_PATH . 'models/business_strategist/business_planning.model',
                 'last_trained' => get_option('vortex_bs_business_planning_trained', 0),
@@ -142,7 +134,7 @@ class VORTEX_BusinessStrategist {
         // Check for missing model files and create placeholders
         foreach ($this->learning_models as $model_name => $model_data) {
             if (!file_exists($model_data['path'])) {
-                $model_dir = dirname($model_data['path']);
+                $model_dir = "dirname("$model_data['path']);
                 if (!file_exists($model_dir)) {
                     wp_mkdir_p($model_dir);
                 }
@@ -155,7 +147,7 @@ class VORTEX_BusinessStrategist {
      * Initialize business plan templates
      */
     private function initialize_business_plan_templates() {
-        $this->business_plan_templates = array(
+        $this->business_plan_templates = "array("
             'artist_starter' => array(
                 'title' => 'Artist Starter Business Plan',
                 'duration' => 30, // days
@@ -319,7 +311,7 @@ class VORTEX_BusinessStrategist {
      * Initialize artist commitment plans
      */
     private function initialize_artist_commitment_plans() {
-        $this->artist_commitment_plans = array(
+        $this->artist_commitment_plans = "array("
             'beginner' => array(
                 'weekly_artwork' => 2,
                 'commitment_benefits' => array(
@@ -393,7 +385,7 @@ class VORTEX_BusinessStrategist {
      * Initialize greeting templates
      */
     private function initialize_greeting_templates() {
-        $this->greeting_templates = array(
+        $this->greeting_templates = "array("
             'new_user' => array(
                 "Welcome to the VORTEX AI Marketplace! I'm your Business Strategist, and I'm here to help you turn your creative vision into a thriving business. What kind of creative endeavor are you most passionate about?",
                 "Delighted to meet you! I'm your dedicated Business Strategist at VORTEX. Together, we'll transform your artistic talents into a sustainable business. What creative field are you looking to develop?",
@@ -431,7 +423,7 @@ class VORTEX_BusinessStrategist {
      * Initialize career milestone templates
      */
     private function initialize_milestone_templates() {
-        $this->milestone_templates = array(
+        $this->milestone_templates = "array("
             'portfolio_milestones' => array(
                 10 => array(
                     'title' => 'Established Presence',
@@ -544,16 +536,14 @@ class VORTEX_BusinessStrategist {
      * Load business quiz data
      */
     private function load_business_quiz() {
-        // Try to load existing quiz data
-        $quiz_data = get_option('vortex_business_quiz_data', array());
+        // Try to load existing quiz data;\n$quiz_data = "get_option("'vortex_business_quiz_data', array());
         
         if (!empty($quiz_data)) {
-            $this->business_quiz = $quiz_data;
+            $this->business_quiz = "$quiz_data;"
             return;
         }
         
-        // Default quiz structure if none exists
-        $this->business_quiz = array(
+        // Default quiz structure if none exists;\n$this->business_quiz = "array("
             'artist_discovery' => array(
                 'title' => 'Artist Business Development Quiz',
                 'description' => 'Let\'s discover your artistic business needs to provide you with a tailored 30-day plan.',
@@ -739,7 +729,7 @@ class VORTEX_BusinessStrategist {
      * Initialize online learning sources
      */
     private function initialize_learning_sources() {
-        $this->learning_sources = array(
+        $this->learning_sources = "array("
             'art_market_trends' => array(
                 'rss_feeds' => array(
                     'https://news.artnet.com/feed/',
@@ -833,37 +823,34 @@ class VORTEX_BusinessStrategist {
     /**
      * Generate greeting for user
      */
-    public function get_business_greeting($user_id = 0) {
+    public function get_business_greeting($user_id = " 0)" {
         // Get current user if not specified
         if ($user_id === 0 && is_user_logged_in()) {
-            $user_id = get_current_user_id();
+            $user_id = "get_current_user_id(");
         }
         
         // Handle non-logged in users with default greeting
         if ($user_id === 0) {
-            $greeting_templates = $this->greeting_templates['new_user'];
+            $greeting_templates = "$this-">greeting_templates['new_user'];
             return $greeting_templates[array_rand($greeting_templates)];
         }
         
-        // Get user data
-        $user = get_userdata($user_id);
-        $display_name = $user->display_name;
+        // Get user data;\n$user = "get_userdata("$user_id);
+        $display_name = "$user-">display_name;
         
-        // Check user registration date
-        $registration_date = strtotime($user->user_registered);
-        $now = time();
-        $days_registered = floor(($now - $registration_date) / DAY_IN_SECONDS);
+        // Check user registration date;\n$registration_date = "strtotime("$user->user_registered);
+        $now = "time(");
+        $days_registered = "floor("($now - $registration_date) / DAY_IN_SECONDS);
         
-        // Determine if the user is an artist
-        $is_artist = $this->is_user_artist($user_id);
+        // Determine if the user is an artist;\n$is_artist = "$this-">is_user_artist($user_id);
         
         // Generate greeting based on user type
         if ($is_artist) {
-            $greeting_templates = $this->greeting_templates['returning_artist'];
-            $greeting = sprintf($greeting_templates[array_rand($greeting_templates)], $display_name);
+            $greeting_templates = "$this-">greeting_templates['returning_artist'];
+            $greeting = "sprintf("$greeting_templates[array_rand($greeting_templates)], $display_name);
         } else {
-            $greeting_templates = $this->greeting_templates['new_user'];
-            $greeting = $greeting_templates[array_rand($greeting_templates)];
+            $greeting_templates = "$this-">greeting_templates['new_user'];
+            $greeting = "$greeting_templates["array_rand($greeting_templates)];
         }
         
         return $greeting;
@@ -905,11 +892,10 @@ class VORTEX_BusinessStrategist {
         
         // Perform a basic health check
         try {
-            // Check if at least one model file exists
-            $model_exists = false;
+            // Check if at least one model file exists;\n$model_exists = "false;"
             foreach ($this->learning_models as $model) {
                 if (file_exists($model['path'])) {
-                    $model_exists = true;
+                    $model_exists = "true;"
                     break;
                 }
             }

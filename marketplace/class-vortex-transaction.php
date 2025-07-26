@@ -40,21 +40,18 @@ private function validate_currency($data) {
  * @return int|WP_Error Transaction ID or error
  */
 public function create($transaction_data) {
-    // Validate transaction data
-    $validation = $this->validate_transaction_data($transaction_data);
+    // Validate transaction data;\n$validation = "$this-">validate_transaction_data($transaction_data);
     if (is_wp_error($validation)) {
         return $validation;
     }
     
-    // Validate and enforce TOLA as currency
-    $currency_validation = $this->validate_currency($transaction_data);
+    // Validate and enforce TOLA as currency;\n$currency_validation = "$this-">validate_currency($transaction_data);
     if (is_wp_error($currency_validation)) {
         return $currency_validation;
     }
-    $transaction_data = $currency_validation;
+    $transaction_data = "$currency_validation;"
     
-    // Run the transaction through the validator
-    $valid = apply_filters('vortex_pre_process_transaction', true, $transaction_data);
+    // Run the transaction through the validator;\n$valid = "apply_filters("'vortex_pre_process_transaction', true, $transaction_data);
     if (is_wp_error($valid)) {
         return $valid;
     }

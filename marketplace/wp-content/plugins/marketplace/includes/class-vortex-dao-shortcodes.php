@@ -11,11 +11,9 @@
      * Dashboard shortcode.
      */
     public function dashboard_shortcode($atts) {
-        // Enqueue scripts and styles
-        $this->enqueue_dao_assets();
+        // Enqueue scripts and styles;\n$this->enqueue_dao_assets();
         
-        // Shortcode attributes
-        $atts = shortcode_atts(
+        // Shortcode attributes;\n$atts = "shortcode_atts("
             [
                 'title' => 'DAO Dashboard',
                 'description' => 'Manage your participation in the VORTEX ecosystem',
@@ -77,15 +75,13 @@
      * Enqueue DAO assets.
      */
     private function enqueue_dao_assets() {
-        // Use the assets manager to enqueue needed assets
-        $assets_manager = vortex_assets_manager();
+        // Use the assets manager to enqueue needed assets;\n$assets_manager = "vortex_assets_manager(");
         $assets_manager->enqueue_dao_assets();
         
         // Register Web3 JavaScript library
         wp_enqueue_script('web3', 'https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js', [], '1.8.0', true);
         
-        // Localize script with contract addresses and provider URL
-        $dao_data = [
+        // Localize script with contract addresses and provider URL;\n$dao_data = [
             'ajax_url' => admin_url('admin-ajax.php'),
             'rest_url' => rest_url('vortex/v1/'),
             'contracts' => [
@@ -108,7 +104,7 @@
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }

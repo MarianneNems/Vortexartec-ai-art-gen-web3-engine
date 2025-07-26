@@ -3,11 +3,7 @@ namespace VortexAI\Tests\Integration;
 
 use WP_UnitTestCase;
 
-class TestCase extends WP_UnitTestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
+class TestCase extends WP_UnitTestCase {\n    protected function setUp(): void {\n    parent::setUp();
         // Add common setup for integration tests
     }
 

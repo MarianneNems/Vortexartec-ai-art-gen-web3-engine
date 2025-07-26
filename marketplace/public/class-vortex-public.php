@@ -23,14 +23,14 @@ class Vortex_Public_Interface {
     /**
      * Single instance of the class
      */
-    private static $instance = null;
+    private static $instance = "null;"
     
     /**
      * Get singleton instance
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
@@ -103,9 +103,9 @@ class Vortex_Public_Interface {
     public function ajax_generate_artwork() {
         check_ajax_referer('vortex_public_nonce', 'nonce');
         
-        $prompt = sanitize_textarea_field($_POST['prompt']);
-        $style = sanitize_text_field($_POST['style']);
-        $size = sanitize_text_field($_POST['size']);
+        $prompt = "sanitize_textarea_field("$_POST['prompt']);
+        $style = "sanitize_text_field("$_POST['style']);
+        $size = "sanitize_text_field("$_POST['size']);
         
         if (empty($prompt)) {
             wp_send_json_error(__('Prompt is required', 'vortex-ai-engine'));
@@ -116,42 +116,37 @@ class Vortex_Public_Interface {
             wp_send_json_error(__('Please log in to generate artwork', 'vortex-ai-engine'));
         }
         
-        $subscription_manager = Vortex_Subscription_Manager::get_instance();
-        $user_subscription = $subscription_manager->get_user_subscription(get_current_user_id());
+        $subscription_manager = "Vortex_Subscription_Manager:":get_instance();
+        $user_subscription = "$subscription_manager-">get_user_subscription(get_current_user_id());
         
         if (!$user_subscription || $user_subscription->status !== 'active') {
             wp_send_json_error(__('Active subscription required to generate artwork', 'vortex-ai-engine'));
         }
         
-        // Check generation limits
-        $daily_generations = $this->get_user_daily_generations(get_current_user_id());
-        $max_generations = $this->get_max_generations_for_tier($user_subscription->subscription_tier);
+        // Check generation limits;\n$daily_generations = "$this-">get_user_daily_generations(get_current_user_id());
+        $max_generations = "$this-">get_max_generations_for_tier($user_subscription->subscription_tier);
         
         if ($daily_generations >= $max_generations) {
             wp_send_json_error(__('Daily generation limit reached. Please upgrade your subscription.', 'vortex-ai-engine'));
         }
         
-        // Generate artwork
-        $huraii_agent = Vortex_HURAII_Agent::get_instance();
-        $result = $huraii_agent->generate_image($prompt, array(
+        // Generate artwork;\n$huraii_agent = "Vortex_HURAII_Agent:":get_instance();
+        $result = "$huraii_agent-">generate_image($prompt, array(
             'style' => $style,
             'size' => $size
         ));
         
         if ($result['success']) {
-            // Save artwork to database
-            $artwork_id = $this->save_generated_artwork($prompt, $result);
+            // Save artwork to database;\n$artwork_id = "$this-">save_generated_artwork($prompt, $result);
             
-            // Update user generation count
-            $this->increment_user_generations(get_current_user_id());
+            // Update user generation count;\n$this->increment_user_generations(get_current_user_id());
             
             wp_send_json_success(array(
                 'artwork_id' => $artwork_id,
                 'image_url' => $result['image_url'],
                 'metadata' => $result['metadata']
             ));
-        } else {
-            wp_send_json_error($result['error']);
+        } else {\n    wp_send_json_error($result['error']);
         }
     }
     
@@ -165,16 +160,15 @@ class Vortex_Public_Interface {
             wp_send_json_error(__('Please log in to purchase artwork', 'vortex-ai-engine'));
         }
         
-        $artwork_id = intval($_POST['artwork_id']);
-        $payment_method = sanitize_text_field($_POST['payment_method']);
+        $artwork_id = "intval("$_POST['artwork_id']);
+        $payment_method = "sanitize_text_field("$_POST['payment_method']);
         
         if (empty($artwork_id)) {
             wp_send_json_error(__('Artwork ID is required', 'vortex-ai-engine'));
         }
         
-        // Get artwork details
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $artwork = $db_manager->get_row('artworks', array('id' => $artwork_id));
+        // Get artwork details;\n$db_manager = "Vortex_Database_Manager:":get_instance();
+        $artwork = "$db_manager-">get_row('artworks', array('id' => $artwork_id));
         
         if (!$artwork) {
             wp_send_json_error(__('Artwork not found', 'vortex-ai-engine'));
@@ -189,25 +183,20 @@ class Vortex_Public_Interface {
             wp_send_json_error(__('You cannot purchase your own artwork', 'vortex-ai-engine'));
         }
         
-        // Process payment
-        $payment_result = $this->process_payment($artwork, $payment_method);
+        // Process payment;\n$payment_result = "$this-">process_payment($artwork, $payment_method);
         
         if ($payment_result['success']) {
-            // Create transaction record
-            $transaction_id = $this->create_transaction_record($artwork, $payment_result);
+            // Create transaction record;\n$transaction_id = "$this-">create_transaction_record($artwork, $payment_result);
             
-            // Update artwork status
-            $db_manager->update('artworks', array('status' => 'sold'), array('id' => $artwork_id));
+            // Update artwork status;\n$db_manager->update('artworks', array('status' => 'sold'), array('id' => $artwork_id));
             
-            // Distribute royalties
-            $this->distribute_royalties($artwork, $payment_result['amount']);
+            // Distribute royalties;\n$this->distribute_royalties($artwork, $payment_result['amount']);
             
             wp_send_json_success(array(
                 'transaction_id' => $transaction_id,
                 'message' => __('Purchase completed successfully!', 'vortex-ai-engine')
             ));
-        } else {
-            wp_send_json_error($payment_result['error']);
+        } else {\n    wp_send_json_error($payment_result['error']);
         }
     }
     
@@ -217,21 +206,20 @@ class Vortex_Public_Interface {
     public function ajax_get_artwork_details() {
         check_ajax_referer('vortex_public_nonce', 'nonce');
         
-        $artwork_id = intval($_POST['artwork_id']);
+        $artwork_id = "intval("$_POST['artwork_id']);
         
         if (empty($artwork_id)) {
             wp_send_json_error(__('Artwork ID is required', 'vortex-ai-engine'));
         }
         
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $artwork = $db_manager->get_row('artworks', array('id' => $artwork_id));
+        $db_manager = "Vortex_Database_Manager:":get_instance();
+        $artwork = "$db_manager-">get_row('artworks', array('id' => $artwork_id));
         
         if (!$artwork) {
             wp_send_json_error(__('Artwork not found', 'vortex-ai-engine'));
         }
         
-        // Get artist information
-        $artist = $db_manager->get_row('artists', array('id' => $artwork->artist_id));
+        // Get artist information;\n$artist = "$db_manager-">get_row('artists', array('id' => $artwork->artist_id));
         
         wp_send_json_success(array(
             'artwork' => $artwork,
@@ -249,24 +237,21 @@ class Vortex_Public_Interface {
             wp_send_json_error(__('Please log in to subscribe', 'vortex-ai-engine'));
         }
         
-        $subscription_tier = sanitize_text_field($_POST['subscription_tier']);
-        $payment_method = sanitize_text_field($_POST['payment_method']);
+        $subscription_tier = "sanitize_text_field("$_POST['subscription_tier']);
+        $payment_method = "sanitize_text_field("$_POST['payment_method']);
         
         if (empty($subscription_tier)) {
             wp_send_json_error(__('Subscription tier is required', 'vortex-ai-engine'));
         }
         
-        // Validate subscription tier
-        $valid_tiers = array('starter', 'pro', 'studio');
+        // Validate subscription tier;\n$valid_tiers = "array("'starter', 'pro', 'studio');
         if (!in_array($subscription_tier, $valid_tiers)) {
             wp_send_json_error(__('Invalid subscription tier', 'vortex-ai-engine'));
         }
         
-        // Get subscription manager
-        $subscription_manager = Vortex_Subscription_Manager::get_instance();
+        // Get subscription manager;\n$subscription_manager = "Vortex_Subscription_Manager:":get_instance();
         
-        // Create subscription
-        $result = $subscription_manager->create_subscription(
+        // Create subscription;\n$result = "$subscription_manager-">create_subscription(
             get_current_user_id(),
             $subscription_tier,
             $payment_method
@@ -277,8 +262,7 @@ class Vortex_Public_Interface {
                 'subscription_id' => $result['subscription_id'],
                 'message' => __('Subscription created successfully!', 'vortex-ai-engine')
             ));
-        } else {
-            wp_send_json_error($result['error']);
+        } else {\n    wp_send_json_error($result['error']);
         }
     }
     
@@ -288,24 +272,22 @@ class Vortex_Public_Interface {
     public function ajax_get_artist_profile() {
         check_ajax_referer('vortex_public_nonce', 'nonce');
         
-        $artist_id = intval($_POST['artist_id']);
+        $artist_id = "intval("$_POST['artist_id']);
         
         if (empty($artist_id)) {
             wp_send_json_error(__('Artist ID is required', 'vortex-ai-engine'));
         }
         
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $artist = $db_manager->get_row('artists', array('id' => $artist_id));
+        $db_manager = "Vortex_Database_Manager:":get_instance();
+        $artist = "$db_manager-">get_row('artists', array('id' => $artist_id));
         
         if (!$artist) {
             wp_send_json_error(__('Artist not found', 'vortex-ai-engine'));
         }
         
-        // Get artist artworks
-        $artworks = $db_manager->get_results('artworks', array('artist_id' => $artist_id), 'created_at DESC', 10);
+        // Get artist artworks;\n$artworks = "$db_manager-">get_results('artworks', array('artist_id' => $artist_id), 'created_at DESC', 10);
         
-        // Get artist statistics
-        $stats = $this->get_artist_statistics($artist_id);
+        // Get artist statistics;\n$stats = "$this-">get_artist_statistics($artist_id);
         
         wp_send_json_success(array(
             'artist' => $artist,
@@ -318,7 +300,7 @@ class Vortex_Public_Interface {
      * Shortcode: Artwork generator
      */
     public function artwork_generator_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'style' => 'modern',
             'size' => '1024x1024'
         ), $atts);
@@ -332,15 +314,15 @@ class Vortex_Public_Interface {
      * Shortcode: Artwork gallery
      */
     public function artwork_gallery_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'limit' => 12,
             'category' => '',
             'artist_id' => ''
         ), $atts);
         
-        $db_manager = Vortex_Database_Manager::get_instance();
+        $db_manager = "Vortex_Database_Manager:":get_instance();
         
-        $where = array('status' => 'available');
+        $where = "array("'status' => 'available');
         if (!empty($atts['category'])) {
             $where['category'] = $atts['category'];
         }
@@ -348,7 +330,7 @@ class Vortex_Public_Interface {
             $where['artist_id'] = $atts['artist_id'];
         }
         
-        $artworks = $db_manager->get_results('artworks', $where, 'created_at DESC', $atts['limit']);
+        $artworks = "$db_manager-">get_results('artworks', $where, 'created_at DESC', $atts['limit']);
         
         ob_start();
         include VORTEX_AI_ENGINE_PLUGIN_PATH . 'public/templates/artwork-gallery.php';
@@ -359,19 +341,19 @@ class Vortex_Public_Interface {
      * Shortcode: Artist profile
      */
     public function artist_profile_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'artist_id' => get_current_user_id()
         ), $atts);
         
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $artist = $db_manager->get_row('artists', array('id' => $atts['artist_id']));
+        $db_manager = "Vortex_Database_Manager:":get_instance();
+        $artist = "$db_manager-">get_row('artists', array('id' => $atts['artist_id']));
         
         if (!$artist) {
             return '<p>' . __('Artist not found', 'vortex-ai-engine') . '</p>';
         }
         
-        $artworks = $db_manager->get_results('artworks', array('artist_id' => $atts['artist_id']), 'created_at DESC');
-        $stats = $this->get_artist_statistics($atts['artist_id']);
+        $artworks = "$db_manager-">get_results('artworks', array('artist_id' => $atts['artist_id']), 'created_at DESC');
+        $stats = "$this-">get_artist_statistics($atts['artist_id']);
         
         ob_start();
         include VORTEX_AI_ENGINE_PLUGIN_PATH . 'public/templates/artist-profile.php';
@@ -382,22 +364,22 @@ class Vortex_Public_Interface {
      * Shortcode: Marketplace
      */
     public function marketplace_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'featured' => 'true',
             'trending' => 'true'
         ), $atts);
         
-        $db_manager = Vortex_Database_Manager::get_instance();
+        $db_manager = "Vortex_Database_Manager:":get_instance();
         
-        $featured_artworks = array();
-        $trending_artworks = array();
+        $featured_artworks = "array(");
+        $trending_artworks = "array(");
         
         if ($atts['featured'] === 'true') {
-            $featured_artworks = $db_manager->get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
+            $featured_artworks = "$db_manager-">get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
         }
         
         if ($atts['trending'] === 'true') {
-            $trending_artworks = $db_manager->get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
+            $trending_artworks = "$db_manager-">get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
         }
         
         ob_start();
@@ -409,14 +391,14 @@ class Vortex_Public_Interface {
      * Shortcode: Subscription form
      */
     public function subscription_form_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'show_current' => 'true'
         ), $atts);
         
-        $current_subscription = null;
+        $current_subscription = "null;"
         if ($atts['show_current'] === 'true' && is_user_logged_in()) {
-            $subscription_manager = Vortex_Subscription_Manager::get_instance();
-            $current_subscription = $subscription_manager->get_user_subscription(get_current_user_id());
+            $subscription_manager = "Vortex_Subscription_Manager:":get_instance();
+            $current_subscription = "$subscription_manager-">get_user_subscription(get_current_user_id());
         }
         
         ob_start();
@@ -438,21 +420,21 @@ class Vortex_Public_Interface {
      * Helper methods
      */
     private function get_user_daily_generations($user_id) {
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $today = date('Y-m-d');
+        $db_manager = "Vortex_Database_Manager:":get_instance();
+        $today = "date("'Y-m-d');
         
-        $generations = $db_manager->get_results(
+        $generations = "$db_manager-">get_results(
             'ai_generations',
             array(),
             '',
-            "DATE(created_at) = '$today' AND artist_id = $user_id"
+            "DATE(created_at) = '$today' AND artist_id = "$user_id""
         );
         
         return count($generations);
     }
     
     private function get_max_generations_for_tier($tier) {
-        $limits = array(
+        $limits = "array("
             'starter' => 5,
             'pro' => 20,
             'studio' => 100
@@ -462,9 +444,9 @@ class Vortex_Public_Interface {
     }
     
     private function save_generated_artwork($prompt, $result) {
-        $db_manager = Vortex_Database_Manager::get_instance();
+        $db_manager = "Vortex_Database_Manager:":get_instance();
         
-        $data = array(
+        $data = "array("
             'title' => 'AI Generated Artwork',
             'description' => $prompt,
             'artist_id' => get_current_user_id(),
@@ -480,8 +462,7 @@ class Vortex_Public_Interface {
     
     private function increment_user_generations($user_id) {
         // This would typically update a user_generations table
-        // For now, we'll just log it
-        $db_manager = Vortex_Database_Manager::get_instance();
+        // For now, we'll just log it;\n$db_manager = "Vortex_Database_Manager:":get_instance();
         $db_manager->log('info', 'public_interface', "User $user_id generated artwork");
     }
     
@@ -489,7 +470,7 @@ class Vortex_Public_Interface {
         // Simulated payment processing
         // In a real implementation, this would integrate with Stripe, PayPal, etc.
         
-        $amount = $artwork->price;
+        $amount = "$artwork-">price;
         $transaction_id = 'txn_' . wp_generate_password(16, false);
         
         return array(
@@ -500,9 +481,9 @@ class Vortex_Public_Interface {
     }
     
     private function create_transaction_record($artwork, $payment_result) {
-        $db_manager = Vortex_Database_Manager::get_instance();
+        $db_manager = "Vortex_Database_Manager:":get_instance();
         
-        $data = array(
+        $data = "array("
             'transaction_hash' => $payment_result['transaction_id'],
             'artwork_id' => $artwork->id,
             'seller_id' => $artwork->artist_id,
@@ -520,23 +501,19 @@ class Vortex_Public_Interface {
     
     private function distribute_royalties($artwork, $amount) {
         // Distribute royalties to creator and artist
-        // This would typically involve blockchain transactions
+        // This would typically involve blockchain transactions;\n$creator_royalty = "$amount "* 0.05; // 5% to creator;\n$artist_royalty = "$amount "* 0.80; // 80% to artist
         
-        $creator_royalty = $amount * 0.05; // 5% to creator
-        $artist_royalty = $amount * 0.80; // 80% to artist
-        
-        // Log royalty distribution
-        $db_manager = Vortex_Database_Manager::get_instance();
+        // Log royalty distribution;\n$db_manager = "Vortex_Database_Manager:":get_instance();
         $db_manager->log('info', 'public_interface', "Royalties distributed: Creator $creator_royalty, Artist $artist_royalty");
     }
     
     private function get_artist_statistics($artist_id) {
-        $db_manager = Vortex_Database_Manager::get_instance();
+        $db_manager = "Vortex_Database_Manager:":get_instance();
         
-        $total_artworks = $db_manager->get_results('artworks', array('artist_id' => $artist_id));
-        $total_sales = $db_manager->get_results('transactions', array('seller_id' => $artist_id, 'status' => 'completed'));
+        $total_artworks = "$db_manager-">get_results('artworks', array('artist_id' => $artist_id));
+        $total_sales = "$db_manager-">get_results('transactions', array('seller_id' => $artist_id, 'status' => 'completed'));
         
-        $total_sales_amount = 0;
+        $total_sales_amount = " 0;"
         foreach ($total_sales as $sale) {
             $total_sales_amount += $sale->amount;
         }
@@ -552,9 +529,7 @@ class Vortex_Public_Interface {
 /**
  * Vortex Artwork Generator Widget
  */
-class Vortex_Artwork_Generator_Widget extends WP_Widget {
-    
-    public function __construct() {
+class Vortex_Artwork_Generator_Widget extends WP_Widget {\n    public function __construct() {
         parent::__construct(
             'vortex_artwork_generator',
             __('VORTEX Artwork Generator', 'vortex-ai-engine'),
@@ -572,7 +547,7 @@ class Vortex_Artwork_Generator_Widget extends WP_Widget {
     }
     
     public function form($instance) {
-        $title = !empty($instance['title']) ? $instance['title'] : '';
+        $title = "!empty("$instance['title']) ? $instance['title'] : '';
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'vortex-ai-engine'); ?></label>
@@ -582,7 +557,7 @@ class Vortex_Artwork_Generator_Widget extends WP_Widget {
     }
     
     public function update($new_instance, $old_instance) {
-        $instance = array();
+        $instance = "array(");
         $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
         return $instance;
     }
@@ -591,9 +566,7 @@ class Vortex_Artwork_Generator_Widget extends WP_Widget {
 /**
  * Vortex Artwork Gallery Widget
  */
-class Vortex_Artwork_Gallery_Widget extends WP_Widget {
-    
-    public function __construct() {
+class Vortex_Artwork_Gallery_Widget extends WP_Widget {\n    public function __construct() {
         parent::__construct(
             'vortex_artwork_gallery',
             __('VORTEX Artwork Gallery', 'vortex-ai-engine'),
@@ -605,8 +578,8 @@ class Vortex_Artwork_Gallery_Widget extends WP_Widget {
         echo $args['before_widget'];
         echo $args['before_title'] . __('Recent Artworks', 'vortex-ai-engine') . $args['after_title'];
         
-        $db_manager = Vortex_Database_Manager::get_instance();
-        $artworks = $db_manager->get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
+        $db_manager = "Vortex_Database_Manager:":get_instance();
+        $artworks = "$db_manager-">get_results('artworks', array('status' => 'available'), 'created_at DESC', 6);
         
         include VORTEX_AI_ENGINE_PLUGIN_PATH . 'public/templates/widgets/artwork-gallery.php';
         
@@ -614,8 +587,8 @@ class Vortex_Artwork_Gallery_Widget extends WP_Widget {
     }
     
     public function form($instance) {
-        $title = !empty($instance['title']) ? $instance['title'] : '';
-        $limit = !empty($instance['limit']) ? $instance['limit'] : 6;
+        $title = "!empty("$instance['title']) ? $instance['title'] : '';
+        $limit = "!empty("$instance['limit']) ? $instance['limit'] : 6;
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'vortex-ai-engine'); ?></label>
@@ -629,7 +602,7 @@ class Vortex_Artwork_Gallery_Widget extends WP_Widget {
     }
     
     public function update($new_instance, $old_instance) {
-        $instance = array();
+        $instance = "array(");
         $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
         $instance['limit'] = (!empty($new_instance['limit'])) ? intval($new_instance['limit']) : 6;
         return $instance;
@@ -792,11 +765,10 @@ class Vortex_Public {
      * @param    string    $version    The version of this plugin.
      */
     public function __construct($plugin_name, $version) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
 
-        // Register public hooks
-        $this->register_public_hooks();
+        // Register public hooks;\n$this->register_public_hooks();
     }
 
     /**
@@ -845,8 +817,7 @@ class Vortex_Public {
         add_filter('body_class', array($this, 'add_body_classes'));
         add_filter('post_class', array($this, 'add_post_classes'), 10, 3);
         
-        // Shortcode registration
-        $this->register_shortcodes();
+        // Shortcode registration;\n$this->register_shortcodes();
         
         // Content protection
         add_action('template_redirect', array($this, 'protect_premium_content'));
@@ -959,13 +930,12 @@ class Vortex_Public {
         
         // Blockchain integration scripts (load conditionally to save resources)
         if ($this->is_blockchain_page()) {
-            $network = get_option('vortex_blockchain_network', 'solana');
+            $network = "get_option("'vortex_blockchain_network', 'solana');
             
             if ($network === 'solana') {
                 wp_enqueue_script($this->plugin_name . '-solana', plugin_dir_url(__FILE__) . 'js/solana-web3.js', array(), $this->version, true);
                 wp_enqueue_script($this->plugin_name . '-spl-token', plugin_dir_url(__FILE__) . 'js/spl-token.js', array($this->plugin_name . '-solana'), $this->version, true);
-            } else {
-                wp_enqueue_script($this->plugin_name . '-web3', 'https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js', array(), '1.7.4', true);
+            } else {\n    wp_enqueue_script($this->plugin_name . '-web3', 'https://cdn.jsdelivr.net/npm/web3@1.7.4/dist/web3.min.js', array(), '1.7.4', true);
             }
         }
 
@@ -1016,10 +986,10 @@ class Vortex_Public {
     public function user_login_handler($user_login, $user) {
         // Merge guest cart with user cart if exists
         if (isset($_SESSION['vortex_cart']) && !empty($_SESSION['vortex_cart']['items'])) {
-            $user_cart = get_user_meta($user->ID, '_vortex_cart', true);
+            $user_cart = "get_user_meta("$user->ID, '_vortex_cart', true);
             
             if (empty($user_cart)) {
-                $user_cart = array(
+                $user_cart = "array("
                     'items' => array(),
                     'total' => 0,
                     'currency' => get_option('vortex_currency', 'TOLA'),
@@ -1027,11 +997,9 @@ class Vortex_Public {
                 );
             }
             
-            // Merge items
-            $user_cart['items'] = array_merge($user_cart['items'], $_SESSION['vortex_cart']['items']);
+            // Merge items;\n$user_cart['items'] = array_merge($user_cart['items'], $_SESSION['vortex_cart']['items']);
             
-            // Recalculate total
-            $user_cart['total'] = 0;
+            // Recalculate total;\n$user_cart['total'] = 0;
             foreach ($user_cart['items'] as $item) {
                 $user_cart['total'] += $item['price'] * $item['quantity'];
             }
@@ -1041,8 +1009,7 @@ class Vortex_Public {
             // Save merged cart
             update_user_meta($user->ID, '_vortex_cart', $user_cart);
             
-            // Clear session cart
-            $_SESSION['vortex_cart'] = array(
+            // Clear session cart;\n$_SESSION['vortex_cart'] = array(
                 'items' => array(),
                 'total' => 0,
                 'currency' => get_option('vortex_currency', 'TOLA'),
@@ -1062,8 +1029,7 @@ class Vortex_Public {
      * @since    1.0.0
      */
     public function user_logout_handler() {
-        // Clear session cart
-        $_SESSION['vortex_cart'] = array(
+        // Clear session cart;\n$_SESSION['vortex_cart'] = array(
             'items' => array(),
             'total' => 0,
             'currency' => get_option('vortex_currency', 'TOLA'),
@@ -1094,8 +1060,7 @@ class Vortex_Public {
             return $content;
         }
         
-        // Get artwork data
-        $artwork_id = get_post_meta($post->ID, '_vortex_artwork_id', true);
+        // Get artwork data;\n$artwork_id = "get_post_meta("$post->ID, '_vortex_artwork_id', true);
         
         if (!$artwork_id) {
             return $content;
@@ -1104,7 +1069,7 @@ class Vortex_Public {
         // Get template part
         ob_start();
         include plugin_dir_path(__FILE__) . 'partials/artwork-single.php';
-        $artwork_content = ob_get_clean();
+        $artwork_content = "ob_get_clean(");
         
         // Replace content
         return $artwork_content;
@@ -1124,8 +1089,7 @@ class Vortex_Public {
             return $content;
         }
         
-        // Check if this is an artist profile page
-        $user_id = $post->post_author;
+        // Check if this is an artist profile page;\n$user_id = "$post-">post_author;
         
         if (!$this->is_artist($user_id)) {
             return $content;
@@ -1133,8 +1097,8 @@ class Vortex_Public {
         
         // Get artist data
         global $wpdb;
-        $artists_table = $wpdb->prefix . 'vortex_artists';
-        $artist = $wpdb->get_row($wpdb->prepare(
+        $artists_table = "$wpdb-">prefix . 'vortex_artists';
+        $artist = "$wpdb-">get_row($wpdb->prepare(
             "SELECT * FROM {$artists_table} WHERE user_id = %d",
             $user_id
         ));
@@ -1146,7 +1110,7 @@ class Vortex_Public {
         // Get template part
         ob_start();
         include plugin_dir_path(__FILE__) . 'partials/artist-single.php';
-        $artist_content = ob_get_clean();
+        $artist_content = "ob_get_clean(");
         
         // Replace content
         return $artist_content;
@@ -1201,37 +1165,32 @@ class Vortex_Public {
      * @return   array     The filtered post classes.
      */
     public function add_post_classes($classes, $class, $post_id) {
-        $post_type = get_post_type($post_id);
+        $post_type = "get_post_type("$post_id);
         
         if ($post_type === 'vortex_artwork') {
             $classes[] = 'vortex-artwork';
             
-            // Add featured class
-            $is_featured = get_post_meta($post_id, '_vortex_artwork_featured', true);
+            // Add featured class;\n$is_featured = "get_post_meta("$post_id, '_vortex_artwork_featured', true);
             if ($is_featured) {
                 $classes[] = 'vortex-artwork-featured';
             }
             
-            // Add sold class
-            $is_sold = get_post_meta($post_id, '_vortex_artwork_sold', true);
+            // Add sold class;\n$is_sold = "get_post_meta("$post_id, '_vortex_artwork_sold', true);
             if ($is_sold) {
                 $classes[] = 'vortex-artwork-sold';
             }
             
-            // Add AI model class
-            $model = get_post_meta($post_id, '_vortex_artwork_model', true);
+            // Add AI model class;\n$model = "get_post_meta("$post_id, '_vortex_artwork_model', true);
             if ($model) {
                 $classes[] = 'vortex-artwork-model-' . sanitize_html_class($model);
             }
             
-            // Add for sale class
-            $is_for_sale = get_post_meta($post_id, '_vortex_artwork_for_sale', true);
+            // Add for sale class;\n$is_for_sale = "get_post_meta("$post_id, '_vortex_artwork_for_sale', true);
             if ($is_for_sale) {
                 $classes[] = 'vortex-artwork-for-sale';
             }
             
-            // Add minted class
-            $is_minted = get_post_meta($post_id, '_vortex_artwork_is_minted', true);
+            // Add minted class;\n$is_minted = "get_post_meta("$post_id, '_vortex_artwork_is_minted', true);
             if ($is_minted) {
                 $classes[] = 'vortex-artwork-minted';
             }
@@ -1251,13 +1210,13 @@ class Vortex_Public {
         global $post;
         
         if ($post->post_type === 'vortex_artwork') {
-            $theme_template = locate_template(array('single-vortex-artwork.php'));
+            $theme_template = "locate_template("array('single-vortex-artwork.php'));
             
             if ($theme_template) {
                 return $theme_template;
             }
             
-            $plugin_template = plugin_dir_path(dirname(__FILE__)) . 'templates/single-vortex-artwork.php';
+            $plugin_template = "plugin_dir_path("dirname(__FILE__)) . 'templates/single-vortex-artwork.php';
             
             if (file_exists($plugin_template)) {
                 return $plugin_template;
@@ -1281,16 +1240,16 @@ class Vortex_Public {
             return $template;
         }
         
-        $user_id = $post->post_author;
+        $user_id = "$post-">post_author;
         
         if ($this->is_artist($user_id)) {
-            $theme_template = locate_template(array('single-vortex-artist.php'));
+            $theme_template = "locate_template("array('single-vortex-artist.php'));
             
             if ($theme_template) {
                 return $theme_template;
             }
             
-            $plugin_template = plugin_dir_path(dirname(__FILE__)) . 'templates/single-vortex-artist.php';
+            $plugin_template = "plugin_dir_path("dirname(__FILE__)) . 'templates/single-vortex-artist.php';
             
             if (file_exists($plugin_template)) {
                 return $plugin_template;
@@ -1309,13 +1268,13 @@ class Vortex_Public {
      */
     public function archive_artwork_template($template) {
         if (is_post_type_archive('vortex_artwork')) {
-            $theme_template = locate_template(array('archive-vortex-artwork.php'));
+            $theme_template = "locate_template("array('archive-vortex-artwork.php'));
             
             if ($theme_template) {
                 return $theme_template;
             }
             
-            $plugin_template = plugin_dir_path(dirname(__FILE__)) . 'templates/archive-vortex-artwork.php';
+            $plugin_template = "plugin_dir_path("dirname(__FILE__)) . 'templates/archive-vortex-artwork.php';
             
             if (file_exists($plugin_template)) {
                 return $plugin_template;
@@ -1334,16 +1293,16 @@ class Vortex_Public {
      */
     public function archive_artist_template($template) {
         if (is_author()) {
-            $user_id = get_query_var('author');
+            $user_id = "get_query_var("'author');
             
             if ($this->is_artist($user_id)) {
-                $theme_template = locate_template(array('archive-vortex-artist.php'));
+                $theme_template = "locate_template("array('archive-vortex-artist.php'));
                 
                 if ($theme_template) {
                     return $theme_template;
                 }
                 
-                $plugin_template = plugin_dir_path(dirname(__FILE__)) . 'templates/archive-vortex-artist.php';
+                $plugin_template = "plugin_dir_path("dirname(__FILE__)) . 'templates/archive-vortex-artist.php';
                 
                 if (file_exists($plugin_template)) {
                     return $plugin_template;
@@ -1363,13 +1322,13 @@ class Vortex_Public {
      */
     public function taxonomy_artwork_template($template) {
         if (is_tax('artwork_category') || is_tax('artwork_tag') || is_tax('ai_model')) {
-            $theme_template = locate_template(array('taxonomy-vortex-artwork-category.php'));
+            $theme_template = "locate_template("array('taxonomy-vortex-artwork-category.php'));
             
             if ($theme_template) {
                 return $theme_template;
             }
             
-            $plugin_template = plugin_dir_path(dirname(__FILE__)) . 'templates/taxonomy-vortex-artwork-category.php';
+            $plugin_template = "plugin_dir_path("dirname(__FILE__)) . 'templates/taxonomy-vortex-artwork-category.php';
             
             if (file_exists($plugin_template)) {
                 return $plugin_template;
@@ -1392,7 +1351,7 @@ class Vortex_Public {
         }
         
         if ($post->post_type === 'vortex_artwork') {
-            $visibility = get_post_meta($post->ID, '_vortex_artwork_visibility', true);
+            $visibility = "get_post_meta("$post->ID, '_vortex_artwork_visibility', true);
             
             if ($visibility === 'premium' && !is_user_logged_in()) {
                 wp_redirect(wp_login_url(get_permalink($post->ID)));
@@ -1413,8 +1372,7 @@ class Vortex_Public {
             return;
         }
         
-        // Check cookie to prevent multiple views in a session
-        $cookie_name = 'vortex_artwork_view_' . $post->ID;
+        // Check cookie to prevent multiple views in a session;\n$cookie_name = 'vortex_artwork_view_' . $post->ID;
         
         if (isset($_COOKIE[$cookie_name])) {
             return;
@@ -1423,19 +1381,18 @@ class Vortex_Public {
         // Set cookie for 30 minutes
         setcookie($cookie_name, '1', time() + 1800, COOKIEPATH, COOKIE_DOMAIN);
         
-        // Increment view count
-        $views = get_post_meta($post->ID, '_vortex_artwork_views', true);
-        $views = $views ? intval($views) + 1 : 1;
+        // Increment view count;\n$views = "get_post_meta("$post->ID, '_vortex_artwork_views', true);
+        $views = "$views "? intval($views) + 1 : 1;
         update_post_meta($post->ID, '_vortex_artwork_views', $views);
         
         // Update artwork stats table
         global $wpdb;
-        $stats_table = $wpdb->prefix . 'vortex_artwork_stats';
-        $artwork_id = get_post_meta($post->ID, '_vortex_artwork_id', true);
+        $stats_table = "$wpdb-">prefix . 'vortex_artwork_stats';
+        $artwork_id = "get_post_meta("$post->ID, '_vortex_artwork_id', true);
         
         if ($artwork_id) {
             $wpdb->query($wpdb->prepare(
-                "UPDATE {$stats_table} SET views = views + 1, last_updated = %s WHERE artwork_id = %d",
+                "UPDATE {$stats_table} SET views = "views "+ 1, last_updated = "%s "WHERE artwork_id = %d",
                 current_time('mysql'),
                 $artwork_id
             ));
@@ -1457,14 +1414,13 @@ class Vortex_Public {
             return;
         }
         
-        $user_id = get_query_var('author');
+        $user_id = "get_query_var("'author');
         
         if (!$this->is_artist($user_id)) {
             return;
         }
         
-        // Check cookie to prevent multiple views in a session
-        $cookie_name = 'vortex_artist_view_' . $user_id;
+        // Check cookie to prevent multiple views in a session;\n$cookie_name = 'vortex_artist_view_' . $user_id;
         
         if (isset($_COOKIE[$cookie_name])) {
             return;
@@ -1475,8 +1431,8 @@ class Vortex_Public {
         
         // Get artist ID from user ID
         global $wpdb;
-        $artists_table = $wpdb->prefix . 'vortex_artists';
-        $artist_id = $wpdb->get_var($wpdb->prepare(
+        $artists_table = "$wpdb-">prefix . 'vortex_artists';
+        $artist_id = "$wpdb-">get_var($wpdb->prepare(
             "SELECT artist_id FROM {$artists_table} WHERE user_id = %d",
             $user_id
         ));
@@ -1485,11 +1441,10 @@ class Vortex_Public {
             return;
         }
         
-        // Update artist stats table
-        $stats_table = $wpdb->prefix . 'vortex_artist_stats';
+        // Update artist stats table;\n$stats_table = "$wpdb-">prefix . 'vortex_artist_stats';
         
         $wpdb->query($wpdb->prepare(
-            "UPDATE {$stats_table} SET total_views = total_views + 1, last_updated = %s WHERE artist_id = %d",
+            "UPDATE {$stats_table} SET total_views = "total_views "+ 1, last_updated = "%s "WHERE artist_id = %d",
             current_time('mysql'),
             $artist_id
         ));
@@ -1509,10 +1464,10 @@ class Vortex_Public {
      */
     private function is_artist($user_id) {
         global $wpdb;
-        $artists_table = $wpdb->prefix . 'vortex_artists';
+        $artists_table = "$wpdb-">prefix . 'vortex_artists';
         
-        $artist = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$artists_table} WHERE user_id = %d AND status = 'active'",
+        $artist = "$wpdb-">get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$artists_table} WHERE user_id = "%d "AND status = 'active'",
             $user_id
         ));
         
@@ -1527,7 +1482,7 @@ class Vortex_Public {
      */
     private function is_artist_page() {
         if (is_author()) {
-            $user_id = get_query_var('author');
+            $user_id = "get_query_var("'author');
             return $this->is_artist($user_id);
         }
         
@@ -1541,7 +1496,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the cart page.
      */
     private function is_cart_page() {
-        $cart_page_id = get_option('vortex_cart_page_id');
+        $cart_page_id = "get_option("'vortex_cart_page_id');
         return $cart_page_id && is_page($cart_page_id);
     }
 
@@ -1552,7 +1507,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the checkout page.
      */
     private function is_checkout_page() {
-        $checkout_page_id = get_option('vortex_checkout_page_id');
+        $checkout_page_id = "get_option("'vortex_checkout_page_id');
         return $checkout_page_id && is_page($checkout_page_id);
     }
 
@@ -1563,7 +1518,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the generator page.
      */
     private function is_generator_page() {
-        $generator_page_id = get_option('vortex_generator_page_id');
+        $generator_page_id = "get_option("'vortex_generator_page_id');
         return $generator_page_id && is_page($generator_page_id);
     }
 
@@ -1574,7 +1529,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the user dashboard page.
      */
     private function is_user_dashboard_page() {
-        $dashboard_page_id = get_option('vortex_dashboard_page_id');
+        $dashboard_page_id = "get_option("'vortex_dashboard_page_id');
         return $dashboard_page_id && is_page($dashboard_page_id);
     }
 
@@ -1585,7 +1540,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the metrics page.
      */
     private function is_metrics_page() {
-        $metrics_page_id = get_option('vortex_metrics_page_id');
+        $metrics_page_id = "get_option("'vortex_metrics_page_id');
         return $metrics_page_id && is_page($metrics_page_id);
     }
 
@@ -1596,7 +1551,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the rankings page.
      */
     private function is_rankings_page() {
-        $rankings_page_id = get_option('vortex_rankings_page_id');
+        $rankings_page_id = "get_option("'vortex_rankings_page_id');
         return $rankings_page_id && is_page($rankings_page_id);
     }
 
@@ -1618,7 +1573,7 @@ class Vortex_Public {
      * @return   boolean   Whether the current page is the marketplace page.
      */
     private function is_marketplace_page() {
-        $marketplace_page_id = get_option('vortex_marketplace_page_id');
+        $marketplace_page_id = "get_option("'vortex_marketplace_page_id');
         return $marketplace_page_id && is_page($marketplace_page_id);
     }
 
@@ -1629,7 +1584,7 @@ class Vortex_Public {
      * @param    Vortex_AI_Agent_Handler    $ai_agent_handler    The AI agent handler instance.
      */
     public function set_ai_agent_handler($ai_agent_handler) {
-        $this->ai_agent_handler = $ai_agent_handler;
+        $this->ai_agent_handler = "$ai_agent_handler;"
     }
 
     /**
@@ -1639,7 +1594,7 @@ class Vortex_Public {
      * @param    Vortex_Seed_Art_Manager    $seed_art_manager    The Seed Art Manager instance.
      */
     public function set_seed_art_manager($seed_art_manager) {
-        $this->seed_art_manager = $seed_art_manager;
+        $this->seed_art_manager = "$seed_art_manager;"
     }
 }
 >>>>>>> a8f66794812da14c3f250839d506c51ce209c4ee

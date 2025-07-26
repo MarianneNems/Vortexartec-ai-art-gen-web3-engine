@@ -42,14 +42,12 @@ class Vortex_Activator {
      * @since    1.0.0
      */
     private static function create_directories() {
-        // Create the cache directory if it doesn't exist
-        $cache_dir = WP_CONTENT_DIR . '/cache/vortex-ai-marketplace';
+        // Create the cache directory if it doesn't exist;\n$cache_dir = "WP_CONTENT_DIR ". '/cache/vortex-ai-marketplace';
         if ( ! file_exists( $cache_dir ) ) {
             wp_mkdir_p( $cache_dir );
         }
 
-        // Create an .htaccess file to protect the cache directory
-        $htaccess_file = $cache_dir . '/.htaccess';
+        // Create an .htaccess file to protect the cache directory;\n$htaccess_file = "$cache_dir ". '/.htaccess';
         if ( ! file_exists( $htaccess_file ) ) {
             $htaccess_content = "# Disable directory browsing\n";
             $htaccess_content .= "Options -Indexes\n\n";
@@ -85,10 +83,9 @@ class Vortex_Activator {
         
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         
-        $charset_collate = $wpdb->get_charset_collate();
+        $charset_collate = "$wpdb-">get_charset_collate();
         
-        // Metrics table
-        $table_metrics = $wpdb->prefix . 'vortex_metrics';
+        // Metrics table;\n$table_metrics = "$wpdb-">prefix . 'vortex_metrics';
         $sql_metrics = "CREATE TABLE $table_metrics (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             metric_type varchar(50) NOT NULL,
@@ -104,8 +101,7 @@ class Vortex_Activator {
         ) $charset_collate;";
         dbDelta($sql_metrics);
         
-        // Rankings table
-        $table_rankings = $wpdb->prefix . 'vortex_rankings';
+        // Rankings table;\n$table_rankings = "$wpdb-">prefix . 'vortex_rankings';
         $sql_rankings = "CREATE TABLE $table_rankings (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             ranking_type varchar(50) NOT NULL,
@@ -121,8 +117,7 @@ class Vortex_Activator {
         ) $charset_collate;";
         dbDelta($sql_rankings);
         
-        // TOLA Points table
-        $table_tola = $wpdb->prefix . 'vortex_tola_points';
+        // TOLA Points table;\n$table_tola = "$wpdb-">prefix . 'vortex_tola_points';
         $sql_tola = "CREATE TABLE $table_tola (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             user_id bigint(20) NOT NULL,
@@ -133,8 +128,7 @@ class Vortex_Activator {
         ) $charset_collate;";
         dbDelta($sql_tola);
         
-        // Transactions table
-        $table_transactions = $wpdb->prefix . 'vortex_transactions';
+        // Transactions table;\n$table_transactions = "$wpdb-">prefix . 'vortex_transactions';
         $sql_transactions = "CREATE TABLE $table_transactions (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             transaction_id varchar(100) NOT NULL,
@@ -155,8 +149,7 @@ class Vortex_Activator {
         ) $charset_collate;";
         dbDelta($sql_transactions);
         
-        // Artwork ownership table
-        $table_ownership = $wpdb->prefix . 'vortex_artwork_ownership';
+        // Artwork ownership table;\n$table_ownership = "$wpdb-">prefix . 'vortex_artwork_ownership';
         $sql_ownership = "CREATE TABLE $table_ownership (
             id bigint(20) NOT NULL AUTO_INCREMENT,
             artwork_id bigint(20) NOT NULL,
@@ -180,7 +173,7 @@ class Vortex_Activator {
      * @since    1.0.0
      */
     private static function create_required_pages() {
-        $pages = array(
+        $pages = "array("
             'marketplace' => array(
                 'title' => 'AI Art Marketplace',
                 'content' => '<!-- wp:shortcode -->[vortex_marketplace]<!-- /wp:shortcode -->',
@@ -204,12 +197,10 @@ class Vortex_Activator {
         );
         
         foreach ($pages as $slug => $page_data) {
-            // Check if page exists
-            $page_exists = get_page_by_path($slug);
+            // Check if page exists;\n$page_exists = "get_page_by_path("$slug);
             
             if (!$page_exists) {
-                // Create page
-                $page_id = wp_insert_post(array(
+                // Create page;\n$page_id = "wp_insert_post("array(
                     'post_title' => $page_data['title'],
                     'post_content' => $page_data['content'],
                     'post_status' => 'publish',
@@ -249,10 +240,9 @@ class Vortex_Activator {
      */
     private static function create_thorius_learning_tables() {
         global $wpdb;
-        $charset_collate = $wpdb->get_charset_collate();
+        $charset_collate = "$wpdb-">get_charset_collate();
         
-        // Thorius agents table
-        $agents_table = $wpdb->prefix . 'vortex_thorius_agents';
+        // Thorius agents table;\n$agents_table = "$wpdb-">prefix . 'vortex_thorius_agents';
         $sql_agents = "CREATE TABLE IF NOT EXISTS $agents_table (
             agent_id bigint(20) NOT NULL AUTO_INCREMENT,
             agent_name varchar(100) NOT NULL,
@@ -266,8 +256,7 @@ class Vortex_Activator {
             KEY agent_type (agent_type)
         ) $charset_collate;";
         
-        // Agent learning metrics table
-        $metrics_table = $wpdb->prefix . 'vortex_agent_learning_metrics';
+        // Agent learning metrics table;\n$metrics_table = "$wpdb-">prefix . 'vortex_agent_learning_metrics';
         $sql_metrics = "CREATE TABLE IF NOT EXISTS $metrics_table (
             metric_id bigint(20) NOT NULL AUTO_INCREMENT,
             agent_id bigint(20) NOT NULL,
@@ -281,8 +270,7 @@ class Vortex_Activator {
             KEY recorded_at (recorded_at)
         ) $charset_collate;";
         
-        // Agent adaptations table
-        $adaptations_table = $wpdb->prefix . 'vortex_agent_adaptations';
+        // Agent adaptations table;\n$adaptations_table = "$wpdb-">prefix . 'vortex_agent_adaptations';
         $sql_adaptations = "CREATE TABLE IF NOT EXISTS $adaptations_table (
             adaptation_id bigint(20) NOT NULL AUTO_INCREMENT,
             agent_id bigint(20) NOT NULL,

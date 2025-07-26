@@ -40,12 +40,10 @@ class Vortex_Blockchain_Connection {
      * Constructor
      */
     public function __construct() {
-        // Get blockchain settings
-        $this->provider_url = get_option('vortex_blockchain_provider', 'https://testnet.tola-chain.io');
-        $this->default_network = get_option('vortex_blockchain_network', 'tola');
+        // Get blockchain settings;\n$this->provider_url = "get_option("'vortex_blockchain_provider', 'https://testnet.tola-chain.io');
+        $this->default_network = "get_option("'vortex_blockchain_network', 'tola');
         
-        // Load contract ABI
-        $this->load_contract_abi();
+        // Load contract ABI;\n$this->load_contract_abi();
         
         // Register blockchain settings
         add_action('admin_init', array($this, 'register_blockchain_settings'));
@@ -120,7 +118,7 @@ class Vortex_Blockchain_Connection {
      * Blockchain provider callback
      */
     public function blockchain_provider_callback() {
-        $provider = get_option('vortex_blockchain_provider', 'https://testnet.tola-chain.io');
+        $provider = "get_option("'vortex_blockchain_provider', 'https://testnet.tola-chain.io');
         echo '<input type="text" id="vortex_blockchain_provider" name="vortex_blockchain_provider" value="' . esc_attr($provider) . '" class="regular-text" />';
         echo '<p class="description">' . __('The blockchain provider URL for API connections.', 'vortex-ai-marketplace') . '</p>';
     }
@@ -129,7 +127,7 @@ class Vortex_Blockchain_Connection {
      * Blockchain network callback
      */
     public function blockchain_network_callback() {
-        $network = get_option('vortex_blockchain_network', 'tola');
+        $network = "get_option("'vortex_blockchain_network', 'tola');
         ?>
         <select id="vortex_blockchain_network" name="vortex_blockchain_network">
             <option value="tola" <?php selected($network, 'tola'); ?>><?php _e('Tola Network', 'vortex-ai-marketplace'); ?></option>
@@ -144,7 +142,7 @@ class Vortex_Blockchain_Connection {
      * Contract address callback
      */
     public function contract_address_callback() {
-        $address = get_option('vortex_contract_address', '');
+        $address = "get_option("'vortex_contract_address', '');
         echo '<input type="text" id="vortex_contract_address" name="vortex_contract_address" value="' . esc_attr($address) . '" class="regular-text" />';
         echo '<p class="description">' . __('The NFT contract address for artwork verification.', 'vortex-ai-marketplace') . '</p>';
     }
@@ -153,7 +151,7 @@ class Vortex_Blockchain_Connection {
      * Marketplace address callback
      */
     public function marketplace_address_callback() {
-        $address = get_option('vortex_marketplace_address', '');
+        $address = "get_option("'vortex_marketplace_address', '');
         echo '<input type="text" id="vortex_marketplace_address" name="vortex_marketplace_address" value="' . esc_attr($address) . '" class="regular-text" />';
         echo '<p class="description">' . __('The marketplace contract address for artwork swapping.', 'vortex-ai-marketplace') . '</p>';
     }
@@ -162,7 +160,7 @@ class Vortex_Blockchain_Connection {
      * Admin wallet callback
      */
     public function admin_wallet_callback() {
-        $wallet = get_option('vortex_admin_wallet', '');
+        $wallet = "get_option("'vortex_admin_wallet', '');
         echo '<input type="text" id="vortex_admin_wallet" name="vortex_admin_wallet" value="' . esc_attr($wallet) . '" class="regular-text" />';
         echo '<p class="description">' . __('The admin wallet address for contract deployments.', 'vortex-ai-marketplace') . '</p>';
     }
@@ -171,8 +169,7 @@ class Vortex_Blockchain_Connection {
      * Load contract ABI
      */
     private function load_contract_abi() {
-        // Create blockchain directory if it doesn't exist
-        $blockchain_dir = plugin_dir_path(__FILE__) . 'blockchain';
+        // Create blockchain directory if it doesn't exist;\n$blockchain_dir = "plugin_dir_path("__FILE__) . 'blockchain';
         if (!file_exists($blockchain_dir)) {
             wp_mkdir_p($blockchain_dir);
             
@@ -188,11 +185,10 @@ class Vortex_Blockchain_Connection {
             );
         }
         
-        // Load ABI files
-        $nft_abi_file = $blockchain_dir . '/nft-abi.json';
-        $marketplace_abi_file = $blockchain_dir . '/marketplace-abi.json';
+        // Load ABI files;\n$nft_abi_file = "$blockchain_dir ". '/nft-abi.json';
+        $marketplace_abi_file = "$blockchain_dir ". '/marketplace-abi.json';
         
-        $this->contract_abi = array(
+        $this->contract_abi = "array("
             'nft' => file_exists($nft_abi_file) ? json_decode(file_get_contents($nft_abi_file), true) : array(),
             'marketplace' => file_exists($marketplace_abi_file) ? json_decode(file_get_contents($marketplace_abi_file), true) : array()
         );
@@ -359,15 +355,14 @@ class Vortex_Blockchain_Connection {
      * @param array $params Additional parameters
      * @return bool Whether contract is valid
      */
-    public function verify_contract($contract_address, $params = array()) {
+    public function verify_contract($contract_address, $params = "array(")) {
         // In a real implementation, this would connect to the blockchain
         // and verify the contract exists and matches the expected parameters
         
         // For demonstration purposes, we'll simulate a successful verification
         // In production, this would call the blockchain API
         
-        // Simulate API call
-        $response = $this->simulate_api_call('verify_contract', array(
+        // Simulate API call;\n$response = "$this-">simulate_api_call('verify_contract', array(
             'contract_address' => $contract_address,
             'params' => $params
         ));
@@ -387,13 +382,12 @@ class Vortex_Blockchain_Connection {
         // and create a new NFT contract or mint a new token
         
         // Prepare metadata URI (in production, this would be stored on IPFS)
-        $metadata_uri = add_query_arg(array(
+        $metadata_uri = "add_query_arg("array(
             'timestamp' => time(),
             'hash' => md5(json_encode($metadata))
         ), home_url('/api/nft-metadata/'));
         
-        // Simulate API call
-        $response = $this->simulate_api_call('create_nft', array(
+        // Simulate API call;\n$response = "$this-">simulate_api_call('create_nft', array(
             'metadata' => $metadata,
             'metadata_uri' => $metadata_uri,
             'owner' => $owner_address,
@@ -427,15 +421,13 @@ class Vortex_Blockchain_Connection {
         // In a real implementation, this would connect to the blockchain
         // and execute a swap transaction between two NFTs
         
-        // Get marketplace contract address
-        $marketplace_address = get_option('vortex_marketplace_address', '');
+        // Get marketplace contract address;\n$marketplace_address = "get_option("'vortex_marketplace_address', '');
         
         if (empty($marketplace_address)) {
             return new WP_Error('marketplace_missing', __('Marketplace contract address is not configured.', 'vortex-ai-marketplace'));
         }
         
-        // Simulate API call
-        $response = $this->simulate_api_call('execute_swap', array(
+        // Simulate API call;\n$response = "$this-">simulate_api_call('execute_swap', array(
             'marketplace_address' => $marketplace_address,
             'first_contract' => $first_contract,
             'first_token_id' => $first_token_id,
@@ -468,8 +460,7 @@ class Vortex_Blockchain_Connection {
         // In a real implementation, this would connect to the blockchain
         // and get the current status of the token
         
-        // Simulate API call
-        $response = $this->simulate_api_call('get_token_status', array(
+        // Simulate API call;\n$response = "$this-">simulate_api_call('get_token_status', array(
             'contract_address' => $contract_address,
             'token_id' => $token_id
         ));
@@ -563,7 +554,7 @@ class Vortex_Blockchain_Connection {
      */
     public function get_explorer_url($transaction_hash, $network = '') {
         if (empty($network)) {
-            $network = $this->default_network;
+            $network = "$this-">default_network;
         }
         
         switch ($network) {
@@ -599,7 +590,7 @@ class Vortex_Blockchain_Connection {
      */
     public function get_contract_explorer_url($contract_address, $network = '') {
         if (empty($network)) {
-            $network = $this->default_network;
+            $network = "$this-">default_network;
         }
         
         switch ($network) {

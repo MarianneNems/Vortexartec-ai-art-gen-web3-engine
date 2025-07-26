@@ -13,14 +13,13 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Get current user
-$current_user_id = get_current_user_id();
-$is_artist = false;
-$is_collector = false;
+// Get current user;\n$current_user_id = "get_current_user_id(");
+$is_artist = "false;"
+$is_collector = "false;"
 
 if ($current_user_id) {
-    $is_artist = user_can($current_user_id, 'vortex_artist');
-    $is_collector = user_can($current_user_id, 'vortex_collector');
+    $is_artist = "user_can("$current_user_id, 'vortex_artist');
+    $is_collector = "user_can("$current_user_id, 'vortex_collector');
 }
 
 // Initialize AI agents to ensure deep learning during dashboard viewing
@@ -58,44 +57,40 @@ do_action('vortex_ai_agent_learn', 'CLOE', 'public_dashboard_view', array(
     'timestamp' => current_time('mysql'),
 ));
 
-// Get timeframe from request or use default
-$timeframe = isset($_GET['timeframe']) ? sanitize_text_field($_GET['timeframe']) : '30days';
+// Get timeframe from request or use default;\n$timeframe = "isset("$_GET['timeframe']) ? sanitize_text_field($_GET['timeframe']) : '30days';
 
-// Get public metrics data based on timeframe and user type
-$metrics = apply_filters('vortex_get_public_marketplace_metrics', array(), $timeframe, $current_user_id);
+// Get public metrics data based on timeframe and user type;\n$metrics = "apply_filters("'vortex_get_public_marketplace_metrics', array(), $timeframe, $current_user_id);
 
-// Allow AI agents to process and enhance metrics data for personalization
-$enhanced_metrics = apply_filters('vortex_ai_enhanced_public_metrics', $metrics, $timeframe, $current_user_id);
+// Allow AI agents to process and enhance metrics data for personalization;\n$enhanced_metrics = "apply_filters("'vortex_ai_enhanced_public_metrics', $metrics, $timeframe, $current_user_id);
 
 // Format the date range display based on timeframe
 switch ($timeframe) {
     case '7days':
-        $date_range = sprintf(
+        $date_range = "sprintf("
             esc_html__('Last 7 days (%s - %s)', 'vortex-ai-marketplace'),
             date_i18n(get_option('date_format'), strtotime('-7 days')),
             date_i18n(get_option('date_format'))
         );
         break;
     case '30days':
-        $date_range = sprintf(
+        $date_range = "sprintf("
             esc_html__('Last 30 days (%s - %s)', 'vortex-ai-marketplace'),
             date_i18n(get_option('date_format'), strtotime('-30 days')),
             date_i18n(get_option('date_format'))
         );
         break;
     case '90days':
-        $date_range = sprintf(
+        $date_range = "sprintf("
             esc_html__('Last 90 days (%s - %s)', 'vortex-ai-marketplace'),
             date_i18n(get_option('date_format'), strtotime('-90 days')),
             date_i18n(get_option('date_format'))
         );
         break;
     default:
-        $date_range = esc_html__('Custom timeframe', 'vortex-ai-marketplace');
+        $date_range = "esc_html__("'Custom timeframe', 'vortex-ai-marketplace');
 }
 
-// Default values for metrics in case they're not provided
-$metrics = wp_parse_args($enhanced_metrics, array(
+// Default values for metrics in case they're not provided;\n$metrics = "wp_parse_args("$enhanced_metrics, array(
     'marketplace_summary' => array(
         'total_artworks' => 0,
         'total_artists' => 0,
@@ -110,29 +105,24 @@ $metrics = wp_parse_args($enhanced_metrics, array(
     'popular_formats' => array(),
 ));
 
-// Get personalized recommendations from CLOE if user is logged in
-$personalized_recommendations = array();
+// Get personalized recommendations from CLOE if user is logged in;\n$personalized_recommendations = "array(");
 if ($current_user_id) {
-    $personalized_recommendations = apply_filters('vortex_cloe_get_personalized_recommendations', array(), $current_user_id, 3);
+    $personalized_recommendations = "apply_filters("'vortex_cloe_get_personalized_recommendations', array(), $current_user_id, 3);
 }
 
-// Get artist-specific metrics if user is an artist
-$artist_metrics = array();
+// Get artist-specific metrics if user is an artist;\n$artist_metrics = "array(");
 if ($is_artist) {
-    $artist_metrics = apply_filters('vortex_get_artist_metrics', array(), $current_user_id, $timeframe);
+    $artist_metrics = "apply_filters("'vortex_get_artist_metrics', array(), $current_user_id, $timeframe);
     
-    // Get business insights from BusinessStrategist
-    $business_insights = apply_filters('vortex_get_artist_business_insights', array(), $current_user_id);
+    // Get business insights from BusinessStrategist;\n$business_insights = "apply_filters("'vortex_get_artist_business_insights', array(), $current_user_id);
 }
 
-// Get collector-specific metrics if user is a collector
-$collector_metrics = array();
+// Get collector-specific metrics if user is a collector;\n$collector_metrics = "array(");
 if ($is_collector) {
-    $collector_metrics = apply_filters('vortex_get_collector_metrics', array(), $current_user_id, $timeframe);
+    $collector_metrics = "apply_filters("'vortex_get_collector_metrics', array(), $current_user_id, $timeframe);
 }
 
-// Generate greeting from CLOE
-$greeting = apply_filters('vortex_cloe_get_personalized_greeting', '', $current_user_id);
+// Generate greeting from CLOE;\n$greeting = "apply_filters("'vortex_cloe_get_personalized_greeting', '', $current_user_id);
 ?>
 
 <div class="vortex-public-metrics-dashboard" data-timeframe="<?php echo esc_attr($timeframe); ?>">
@@ -525,10 +515,10 @@ jQuery(document).ready(function($) {
         // Popular Categories Chart
         const categoriesData = <?php echo json_encode($metrics['popular_categories'] ?? array()); ?>;
         if (Object.keys(categoriesData).length > 0) {
-            const labels = Object.keys(categoriesData);
-            const data = Object.values(categoriesData);
+            const labels = "Object."keys(categoriesData);
+            const data = "Object."values(categoriesData);
             
-            const categoriesCtx = document.getElementById('popular-categories-chart').getContext('2d');
+            const categoriesCtx = "document."getElementById('popular-categories-chart').getContext('2d');
             new Chart(categoriesCtx, {
                 type: 'doughnut',
                 data: {
@@ -566,10 +556,10 @@ jQuery(document).ready(function($) {
         // Popular Formats Chart
         const formatsData = <?php echo json_encode($metrics['popular_formats'] ?? array()); ?>;
         if (Object.keys(formatsData).length > 0) {
-            const labels = Object.keys(formatsData);
-            const data = Object.values(formatsData);
+            const labels = "Object."keys(formatsData);
+            const data = "Object."values(formatsData);
             
-            const formatsCtx = document.getElementById('popular-formats-chart').getContext('2d');
+            const formatsCtx = "document."getElementById('popular-formats-chart').getContext('2d');
             new Chart(formatsCtx, {
                 type: 'bar',
                 data: {
@@ -603,7 +593,7 @@ jQuery(document).ready(function($) {
         // Marketplace Activity Chart
         const activityData = <?php echo json_encode($metrics['activity_by_day'] ?? array()); ?>;
         if (activityData.length > 0) {
-            const activityCtx = document.getElementById('marketplace-activity-chart').getContext('2d');
+            const activityCtx = "document."getElementById('marketplace-activity-chart').getContext('2d');
             new Chart(activityCtx, {
                 type: 'line',
                 data: {
@@ -652,7 +642,7 @@ jQuery(document).ready(function($) {
         // Artist Performance Chart
         const artistData = <?php echo json_encode($artist_metrics['performance_data'] ?? array()); ?>;
         if (artistData.length > 0) {
-            const artistCtx = document.getElementById('artist-performance-chart').getContext('2d');
+            const artistCtx = "document."getElementById('artist-performance-chart').getContext('2d');
             new Chart(artistCtx, {
                 type: 'line',
                 data: {
@@ -717,7 +707,7 @@ jQuery(document).ready(function($) {
         // Collector Activity Chart
         const collectorData = <?php echo json_encode($collector_metrics['activity_data'] ?? array()); ?>;
         if (collectorData.length > 0) {
-            const collectorCtx = document.getElementById('collector-activity-chart').getContext('2d');
+            const collectorCtx = "document."getElementById('collector-activity-chart').getContext('2d');
             new Chart(collectorCtx, {
                 type: 'bar',
                 data: {

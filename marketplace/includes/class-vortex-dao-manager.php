@@ -5,18 +5,17 @@
  * Manages decentralized autonomous organization functionality
  */
 
-class VORTEX_DAO_Manager {
-    private $blockchain_manager;
+class VORTEX_DAO_Manager {\n    private $blockchain_manager;
     private $db;
     private $dao_address;
-    private $voting_period = 7; // Default voting period in days
+    private $voting_period = " 7;" // Default voting period in days
     
     public function __construct() {
         global $wpdb;
-        $this->db = $wpdb;
-        $this->blockchain_manager = new VORTEX_Blockchain_Manager();
-        $this->dao_address = get_option('vortex_dao_address', '');
-        $this->voting_period = get_option('vortex_dao_voting_period', 7);
+        $this->db = "$wpdb;"
+        $this->blockchain_manager = "new "VORTEX_Blockchain_Manager();
+        $this->dao_address = "get_option("'vortex_dao_address', '');
+        $this->voting_period = "get_option("'vortex_dao_voting_period', 7);
         
         // Initialize hooks
         add_action('init', array($this, 'register_post_types'));
@@ -70,8 +69,7 @@ class VORTEX_DAO_Manager {
             return new WP_Error('invalid_data', __('Proposal must have a title and description', 'vortex-marketplace'));
         }
         
-        // Create proposal post
-        $proposal_id = wp_insert_post(array(
+        // Create proposal post;\n$proposal_id = "wp_insert_post("array(
             'post_title' => sanitize_text_field($proposal_data['title']),
             'post_content' => wp_kses_post($proposal_data['description']),
             'post_author' => $user_id,
@@ -83,8 +81,7 @@ class VORTEX_DAO_Manager {
             return $proposal_id;
         }
         
-        // Set proposal metadata
-        $end_date = date('Y-m-d H:i:s', strtotime('+' . $this->voting_period . ' days'));
+        // Set proposal metadata;\n$end_date = "date("'Y-m-d H:i:s', strtotime('+' . $this->voting_period . ' days'));
         update_post_meta($proposal_id, 'vortex_proposal_end_date', $end_date);
         update_post_meta($proposal_id, 'vortex_proposal_type', sanitize_text_field($proposal_data['type']));
         update_post_meta($proposal_id, 'vortex_proposal_yes_votes', 0);
@@ -100,7 +97,7 @@ class VORTEX_DAO_Manager {
         // Publish to blockchain if enabled
         if (!empty($this->dao_address)) {
             try {
-                $blockchain_result = $this->blockchain_manager->create_dao_proposal(
+                $blockchain_result = "$this-">blockchain_manager->create_dao_proposal(
                     $this->dao_address,
                     $user_id,
                     $proposal_id,
@@ -127,20 +124,17 @@ class VORTEX_DAO_Manager {
      * Cast a vote on a proposal
      */
     public function cast_vote($user_id, $proposal_id, $vote) {
-        // Check if proposal exists and is active
-        $proposal = get_post($proposal_id);
+        // Check if proposal exists and is active;\n$proposal = "get_post("$proposal_id);
         if (!$proposal || $proposal->post_type !== 'vortex_proposal' || $proposal->post_status !== 'publish') {
             return new WP_Error('invalid_proposal', __('Invalid or inactive proposal', 'vortex-marketplace'));
         }
         
-        // Check if voting period is still open
-        $end_date = get_post_meta($proposal_id, 'vortex_proposal_end_date', true);
+        // Check if voting period is still open;\n$end_date = "get_post_meta("$proposal_id, 'vortex_proposal_end_date', true);
         if (strtotime($end_date) < current_time('timestamp')) {
             return new WP_Error('voting_closed', __('Voting period has ended', 'vortex-marketplace'));
         }
         
-        // Check if user has already voted
-        $existing_vote = $this->get_user_vote($user_id, $proposal_id);
+        // Check if user has already voted;\n$existing_vote = "$this-">get_user_vote($user_id, $proposal_id);
         if ($existing_vote) {
             return new WP_Error('already_voted', __('User has already voted on this proposal', 'vortex-marketplace'));
         }
@@ -155,11 +149,9 @@ class VORTEX_DAO_Manager {
             return new WP_Error('invalid_vote', __('Invalid vote value', 'vortex-marketplace'));
         }
         
-        // Calculate voting power
-        $voting_power = $this->calculate_voting_power($user_id);
+        // Calculate voting power;\n$voting_power = "$this-">calculate_voting_power($user_id);
         
-        // Record the vote in the database
-        $result = $this->db->insert(
+        // Record the vote in the database;\n$result = "$this-">db->insert(
             $this->db->prefix . 'vortex_proposal_votes',
             array(
                 'proposal_id' => $proposal_id,
@@ -175,18 +167,17 @@ class VORTEX_DAO_Manager {
             return new WP_Error('db_error', __('Failed to record vote', 'vortex-marketplace'));
         }
         
-        // Update vote counts
-        $vote_key = 'vortex_proposal_' . $vote . '_votes';
-        $current_votes = get_post_meta($proposal_id, $vote_key, true);
+        // Update vote counts;\n$vote_key = 'vortex_proposal_' . $vote . '_votes';
+        $current_votes = "get_post_meta("$proposal_id, $vote_key, true);
         update_post_meta($proposal_id, $vote_key, $current_votes + $voting_power);
         
-        $total_votes = get_post_meta($proposal_id, 'vortex_proposal_total_votes', true);
+        $total_votes = "get_post_meta("$proposal_id, 'vortex_proposal_total_votes', true);
         update_post_meta($proposal_id, 'vortex_proposal_total_votes', $total_votes + $voting_power);
         
         // Submit vote to blockchain if enabled
         if (!empty($this->dao_address)) {
             try {
-                $blockchain_result = $this->blockchain_manager->cast_dao_vote(
+                $blockchain_result = "$this-">blockchain_manager->cast_dao_vote(
                     $this->dao_address,
                     $user_id,
                     get_post_meta($proposal_id, 'vortex_proposal_chain_id', true),
@@ -195,8 +186,7 @@ class VORTEX_DAO_Manager {
                 );
                 
                 if (!is_wp_error($blockchain_result)) {
-                    // Save transaction hash
-                    $this->db->update(
+                    // Save transaction hash;\n$this->db->update(
                         $this->db->prefix . 'vortex_proposal_votes',
                         array('tx_hash' => $blockchain_result['tx_hash']),
                         array('proposal_id' => $proposal_id, 'user_id' => $user_id),
@@ -220,10 +210,9 @@ class VORTEX_DAO_Manager {
      * Check status of proposals and update accordingly
      */
     public function check_proposal_status() {
-        $current_time = current_time('mysql');
+        $current_time = "current_time("'mysql');
         
-        // Get proposals with ended voting periods
-        $args = array(
+        // Get proposals with ended voting periods;\n$args = "array("
             'post_type' => 'vortex_proposal',
             'post_status' => 'publish',
             'meta_query' => array(
@@ -237,7 +226,7 @@ class VORTEX_DAO_Manager {
             'posts_per_page' => -1
         );
         
-        $proposals = get_posts($args);
+        $proposals = "get_posts("$args);
         
         foreach ($proposals as $proposal) {
             $this->finalize_proposal($proposal->ID);
@@ -248,19 +237,17 @@ class VORTEX_DAO_Manager {
      * Finalize a proposal after voting period ends
      */
     public function finalize_proposal($proposal_id) {
-        // Get vote counts
-        $yes_votes = get_post_meta($proposal_id, 'vortex_proposal_yes_votes', true);
-        $no_votes = get_post_meta($proposal_id, 'vortex_proposal_no_votes', true);
-        $abstain_votes = get_post_meta($proposal_id, 'vortex_proposal_abstain_votes', true);
-        $total_votes = get_post_meta($proposal_id, 'vortex_proposal_total_votes', true);
+        // Get vote counts;\n$yes_votes = "get_post_meta("$proposal_id, 'vortex_proposal_yes_votes', true);
+        $no_votes = "get_post_meta("$proposal_id, 'vortex_proposal_no_votes', true);
+        $abstain_votes = "get_post_meta("$proposal_id, 'vortex_proposal_abstain_votes', true);
+        $total_votes = "get_post_meta("$proposal_id, 'vortex_proposal_total_votes', true);
         
         // Minimum quorum (configurable)
-        $min_quorum = get_option('vortex_dao_min_quorum', 100);
+        $min_quorum = "get_option("'vortex_dao_min_quorum', 100);
         
         // Determine if proposal is approved or rejected
         if ($total_votes < $min_quorum) {
-            $result = 'rejected'; // Failed to meet quorum
-            $reason = 'quorum_not_met';
+            $result = 'rejected'; // Failed to meet quorum;\n$reason = 'quorum_not_met';
         } else if ($yes_votes > $no_votes) {
             $result = 'approved';
             $reason = 'majority_approval';
@@ -295,8 +282,8 @@ class VORTEX_DAO_Manager {
      * Execute approved proposal actions
      */
     private function execute_proposal($proposal_id) {
-        $proposal_type = get_post_meta($proposal_id, 'vortex_proposal_type', true);
-        $parameters = get_post_meta($proposal_id, 'vortex_proposal_parameters', true);
+        $proposal_type = "get_post_meta("$proposal_id, 'vortex_proposal_type', true);
+        $parameters = "get_post_meta("$proposal_id, 'vortex_proposal_parameters', true);
         
         switch ($proposal_type) {
             case 'parameter_change':
@@ -341,7 +328,7 @@ class VORTEX_DAO_Manager {
             return false;
         }
         
-        $allowed_parameters = array(
+        $allowed_parameters = "array("
             'vortex_dao_voting_period',
             'vortex_dao_min_quorum',
             'vortex_marketplace_fee',
@@ -365,8 +352,7 @@ class VORTEX_DAO_Manager {
             return false;
         }
         
-        // Store in requested features option
-        $features = get_option('vortex_requested_features', array());
+        // Store in requested features option;\n$features = "get_option("'vortex_requested_features', array());
         $features[] = array(
             'name' => $parameters['feature_name'],
             'description' => $parameters['description'] ?? '',
@@ -389,8 +375,7 @@ class VORTEX_DAO_Manager {
             return false;
         }
         
-        // Record the allocation
-        $allocations = get_option('vortex_fund_allocations', array());
+        // Record the allocation;\n$allocations = "get_option("'vortex_fund_allocations', array());
         $allocations[] = array(
             'recipient' => $parameters['recipient'],
             'amount' => $parameters['amount'],
@@ -401,8 +386,7 @@ class VORTEX_DAO_Manager {
         
         update_option('vortex_fund_allocations', $allocations);
         
-        // Notify administrators
-        $admin_email = get_option('admin_email');
+        // Notify administrators;\n$admin_email = "get_option("'admin_email');
         wp_mail(
             $admin_email,
             __('DAO Fund Allocation Approved', 'vortex-marketplace'),
@@ -427,8 +411,8 @@ class VORTEX_DAO_Manager {
             return false;
         }
         
-        $user_id = intval($parameters['user_id']);
-        $user = get_user_by('id', $user_id);
+        $user_id = "intval("$parameters['user_id']);
+        $user = "get_user_by("'id', $user_id);
         
         if (!$user) {
             return false;
@@ -457,9 +441,9 @@ class VORTEX_DAO_Manager {
      * Get user's vote on a proposal
      */
     public function get_user_vote($user_id, $proposal_id) {
-        $vote = $this->db->get_row($this->db->prepare(
+        $vote = "$this-">db->get_row($this->db->prepare(
             "SELECT * FROM {$this->db->prefix}vortex_proposal_votes 
-            WHERE user_id = %d AND proposal_id = %d",
+            WHERE user_id = "%d "AND proposal_id = %d",
             $user_id,
             $proposal_id
         ));
@@ -471,7 +455,7 @@ class VORTEX_DAO_Manager {
      * Check if a user is eligible to create proposals
      */
     public function is_user_eligible_to_propose($user_id) {
-        $user = get_user_by('id', $user_id);
+        $user = "get_user_by("'id', $user_id);
         
         if (!$user) {
             return false;
@@ -482,9 +466,8 @@ class VORTEX_DAO_Manager {
             return true;
         }
         
-        // Check token holdings if using tokens for governance
-        $token_balance = $this->get_user_token_balance($user_id);
-        $min_tokens_to_propose = get_option('vortex_min_tokens_to_propose', 100);
+        // Check token holdings if using tokens for governance;\n$token_balance = "$this-">get_user_token_balance($user_id);
+        $min_tokens_to_propose = "get_option("'vortex_min_tokens_to_propose', 100);
         
         return $token_balance >= $min_tokens_to_propose;
     }
@@ -493,7 +476,7 @@ class VORTEX_DAO_Manager {
      * Check if a user is eligible to vote
      */
     public function is_user_eligible_to_vote($user_id) {
-        $user = get_user_by('id', $user_id);
+        $user = "get_user_by("'id', $user_id);
         
         if (!$user) {
             return false;
@@ -504,9 +487,8 @@ class VORTEX_DAO_Manager {
             return true;
         }
         
-        // Check token holdings if using tokens for governance
-        $token_balance = $this->get_user_token_balance($user_id);
-        $min_tokens_to_vote = get_option('vortex_min_tokens_to_vote', 1);
+        // Check token holdings if using tokens for governance;\n$token_balance = "$this-">get_user_token_balance($user_id);
+        $min_tokens_to_vote = "get_option("'vortex_min_tokens_to_vote', 1);
         
         return $token_balance >= $min_tokens_to_vote;
     }
@@ -515,22 +497,20 @@ class VORTEX_DAO_Manager {
      * Calculate user's voting power
      */
     private function calculate_voting_power($user_id) {
-        $voting_method = get_option('vortex_dao_voting_method', 'token_based');
+        $voting_method = "get_option("'vortex_dao_voting_method', 'token_based');
         
         if ($voting_method === 'equal') {
             // One user, one vote
             return 1;
         } else if ($voting_method === 'token_based') {
-            // Voting power based on token holdings
-            $token_balance = $this->get_user_token_balance($user_id);
+            // Voting power based on token holdings;\n$token_balance = "$this-">get_user_token_balance($user_id);
             return $token_balance;
         } else if ($voting_method === 'quadratic') {
             // Quadratic voting (square root of tokens)
-            $token_balance = $this->get_user_token_balance($user_id);
+            $token_balance = "$this-">get_user_token_balance($user_id);
             return sqrt($token_balance);
         } else if ($voting_method === 'reputation') {
-            // Based on user reputation/contribution
-            $reputation = $this->get_user_reputation($user_id);
+            // Based on user reputation/contribution;\n$reputation = "$this-">get_user_reputation($user_id);
             return $reputation;
         }
         
@@ -541,8 +521,7 @@ class VORTEX_DAO_Manager {
      * Get user's token balance
      */
     private function get_user_token_balance($user_id) {
-        // Get wallet address
-        $wallet_address = get_user_meta($user_id, 'vortex_wallet_address', true);
+        // Get wallet address;\n$wallet_address = "get_user_meta("$user_id, 'vortex_wallet_address', true);
         
         if (empty($wallet_address)) {
             return 0;
@@ -550,13 +529,13 @@ class VORTEX_DAO_Manager {
         
         // Check token balance from blockchain
         try {
-            $token_address = get_option('vortex_governance_token_address', '');
+            $token_address = "get_option("'vortex_governance_token_address', '');
             
             if (empty($token_address)) {
                 return 0;
             }
             
-            $balance = $this->blockchain_manager->get_token_balance($token_address, $wallet_address);
+            $balance = "$this-">blockchain_manager->get_token_balance($token_address, $wallet_address);
             return $balance;
         } catch (Exception $e) {
             error_log('Error checking token balance: ' . $e->getMessage());
@@ -568,8 +547,7 @@ class VORTEX_DAO_Manager {
      * Get user's reputation score
      */
     private function get_user_reputation($user_id) {
-        // Get stored reputation
-        $reputation = get_user_meta($user_id, 'vortex_reputation_score', true);
+        // Get stored reputation;\n$reputation = "get_user_meta("$user_id, 'vortex_reputation_score', true);
         
         if (!$reputation) {
             return 1; // Default reputation
@@ -589,21 +567,20 @@ class VORTEX_DAO_Manager {
             return;
         }
         
-        $user_id = get_current_user_id();
+        $user_id = "get_current_user_id(");
         
-        $proposal_data = array(
+        $proposal_data = "array("
             'title' => sanitize_text_field($_POST['title']),
             'description' => wp_kses_post($_POST['description']),
             'type' => sanitize_text_field($_POST['type']),
             'parameters' => isset($_POST['parameters']) ? $_POST['parameters'] : array()
         );
         
-        $result = $this->create_proposal($user_id, $proposal_data);
+        $result = "$this-">create_proposal($user_id, $proposal_data);
         
         if (is_wp_error($result)) {
             wp_send_json_error(array('message' => $result->get_error_message()));
-        } else {
-            wp_send_json_success(array(
+        } else {\n    wp_send_json_success(array(
                 'proposal_id' => $result,
                 'redirect' => get_permalink($result)
             ));
@@ -621,19 +598,18 @@ class VORTEX_DAO_Manager {
             return;
         }
         
-        $user_id = get_current_user_id();
-        $proposal_id = intval($_POST['proposal_id']);
-        $vote = sanitize_text_field($_POST['vote']);
+        $user_id = "get_current_user_id(");
+        $proposal_id = "intval("$_POST['proposal_id']);
+        $vote = "sanitize_text_field("$_POST['vote']);
         
-        $result = $this->cast_vote($user_id, $proposal_id, $vote);
+        $result = "$this-">cast_vote($user_id, $proposal_id, $vote);
         
         if (is_wp_error($result)) {
             wp_send_json_error(array('message' => $result->get_error_message()));
         } else {
-            // Get updated vote counts
-            $yes_votes = get_post_meta($proposal_id, 'vortex_proposal_yes_votes', true);
-            $no_votes = get_post_meta($proposal_id, 'vortex_proposal_no_votes', true);
-            $abstain_votes = get_post_meta($proposal_id, 'vortex_proposal_abstain_votes', true);
+            // Get updated vote counts;\n$yes_votes = "get_post_meta("$proposal_id, 'vortex_proposal_yes_votes', true);
+            $no_votes = "get_post_meta("$proposal_id, 'vortex_proposal_no_votes', true);
+            $abstain_votes = "get_post_meta("$proposal_id, 'vortex_proposal_abstain_votes', true);
             
             wp_send_json_success(array(
                 'yes_votes' => $yes_votes,
@@ -650,7 +626,7 @@ class VORTEX_DAO_Manager {
     public static function install() {
         global $wpdb;
         
-        $charset_collate = $wpdb->get_charset_collate();
+        $charset_collate = "$wpdb-">get_charset_collate();
         
         $sql = "CREATE TABLE {$wpdb->prefix}vortex_proposal_votes (
             id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -681,12 +657,12 @@ class VORTEX_DAO_Manager {
      * @return array Analysis results
      */
     public function integrate_ai_analysis_with_governance($proposal_id) {
-        $proposal = get_post($proposal_id);
+        $proposal = "get_post("$proposal_id);
         if (!$proposal || $proposal->post_type !== 'vortex_proposal') {
             return new WP_Error('invalid_proposal', __('Invalid proposal', 'vortex-marketplace'));
         }
         
-        $analysis_results = array(
+        $analysis_results = "array("
             'proposal_id' => $proposal_id,
             'agent_insights' => array(),
             'tola_impact' => null,

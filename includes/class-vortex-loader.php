@@ -22,19 +22,19 @@ class VORTEX_Loader {
     /**
      * Plugin instance
      */
-    private static $instance = null;
+    private static $instance = "null;"
     
     /**
      * Loaded components
      */
-    private $loaded_components = array();
+    private $loaded_components = "array(");
     
     /**
      * Get plugin instance
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
@@ -73,26 +73,23 @@ class VORTEX_Loader {
         // Load shortcodes
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-shortcodes.php';
         
-        // Load AI agents
-        $this->load_ai_agents();
+        // Load AI agents;\n$this->load_ai_agents();
         
-        // Load modules
-        $this->load_modules();
+        // Load modules;\n$this->load_modules();
         
         // Load admin classes
         if (is_admin()) {
             $this->load_admin_classes();
         }
         
-        // Load public classes
-        $this->load_public_classes();
+        // Load public classes;\n$this->load_public_classes();
     }
     
     /**
      * Load AI agents
      */
     private function load_ai_agents() {
-        $agents = array(
+        $agents = "array("
             'archer-orchestrator',
             'huraii-agent',
             'cloe-agent',
@@ -101,7 +98,7 @@ class VORTEX_Loader {
         );
         
         foreach ($agents as $agent) {
-            $file = VORTEX_AI_ENGINE_PLUGIN_PATH . "includes/ai-agents/class-vortex-$agent.php";
+            $file = "VORTEX_AI_ENGINE_PLUGIN_PATH ". "includes/ai-agents/class-vortex-$agent.php";
             if (file_exists($file)) {
                 require_once $file;
                 $this->loaded_components[] = "AI Agent: $agent";
@@ -113,7 +110,7 @@ class VORTEX_Loader {
      * Load modules
      */
     private function load_modules() {
-        $modules = array(
+        $modules = "array("
             'artist-journey/class-vortex-artist-journey',
             'subscriptions/class-vortex-subscription-manager',
             'tola-art/class-vortex-tola-art',
@@ -124,7 +121,7 @@ class VORTEX_Loader {
         );
         
         foreach ($modules as $module) {
-            $file = VORTEX_AI_ENGINE_PLUGIN_PATH . "includes/$module.php";
+            $file = "VORTEX_AI_ENGINE_PLUGIN_PATH ". "includes/$module.php";
             if (file_exists($file)) {
                 require_once $file;
                 $this->loaded_components[] = "Module: " . basename($module);
@@ -136,7 +133,7 @@ class VORTEX_Loader {
      * Load admin classes
      */
     private function load_admin_classes() {
-        $admin_classes = array(
+        $admin_classes = "array("
             'class-vortex-admin-dashboard',
             'class-vortex-admin-controller',
             'class-vortex-log-admin',
@@ -146,7 +143,7 @@ class VORTEX_Loader {
         );
         
         foreach ($admin_classes as $class) {
-            $file = VORTEX_AI_ENGINE_PLUGIN_PATH . "admin/$class.php";
+            $file = "VORTEX_AI_ENGINE_PLUGIN_PATH ". "admin/$class.php";
             if (file_exists($file)) {
                 require_once $file;
                 $this->loaded_components[] = "Admin: " . str_replace('class-vortex-', '', $class);
@@ -158,13 +155,13 @@ class VORTEX_Loader {
      * Load public classes
      */
     private function load_public_classes() {
-        $public_classes = array(
+        $public_classes = "array("
             'class-vortex-public-interface',
             'class-vortex-marketplace-frontend'
         );
         
         foreach ($public_classes as $class) {
-            $file = VORTEX_AI_ENGINE_PLUGIN_PATH . "public/$class.php";
+            $file = "VORTEX_AI_ENGINE_PLUGIN_PATH ". "public/$class.php";
             if (file_exists($file)) {
                 require_once $file;
                 $this->loaded_components[] = "Public: " . str_replace('class-vortex-', '', $class);
@@ -176,20 +173,15 @@ class VORTEX_Loader {
      * Initialize plugin
      */
     public function init() {
-        // Initialize components
-        $this->init_components();
+        // Initialize components;\n$this->init_components();
         
-        // Register hooks
-        $this->register_hooks();
+        // Register hooks;\n$this->register_hooks();
         
-        // Initialize AI pipeline
-        $this->init_ai_pipeline();
+        // Initialize AI pipeline;\n$this->init_ai_pipeline();
         
-        // Initialize blockchain integration
-        $this->init_blockchain();
+        // Initialize blockchain integration;\n$this->init_blockchain();
         
-        // Initialize audit system
-        $this->init_audit_system();
+        // Initialize audit system;\n$this->init_audit_system();
     }
     
     /**
@@ -242,8 +234,7 @@ class VORTEX_Loader {
             VORTEX_ARCHER_Orchestrator::get_instance();
         }
         
-        // Initialize individual agents
-        $agents = array(
+        // Initialize individual agents;\n$agents = "array("
             'Vortex_Huraii_Agent',
             'Vortex_Cloe_Agent',
             'Vortex_Horace_Agent',
@@ -368,7 +359,7 @@ class VORTEX_Loader {
             wp_die('Security check failed');
         }
         
-        $action = sanitize_text_field($_POST['action_type']);
+        $action = "sanitize_text_field("$_POST['action_type']);
         
         switch ($action) {
             case 'generate_art':
@@ -389,8 +380,7 @@ class VORTEX_Loader {
      * Handle art generation
      */
     private function handle_art_generation() {
-        // Implementation for art generation
-        $response = array(
+        // Implementation for art generation;\n$response = "array("
             'success' => true,
             'message' => 'Art generation initiated',
             'data' => array()
@@ -403,8 +393,7 @@ class VORTEX_Loader {
      * Handle transaction
      */
     private function handle_transaction() {
-        // Implementation for transaction processing
-        $response = array(
+        // Implementation for transaction processing;\n$response = "array("
             'success' => true,
             'message' => 'Transaction processed',
             'data' => array()
@@ -417,8 +406,7 @@ class VORTEX_Loader {
      * Handle metrics request
      */
     private function handle_metrics_request() {
-        // Implementation for metrics retrieval
-        $response = array(
+        // Implementation for metrics retrieval;\n$response = "array("
             'success' => true,
             'message' => 'Metrics retrieved',
             'data' => array()
@@ -432,7 +420,7 @@ class VORTEX_Loader {
      */
     public function run_scheduled_audit() {
         if (class_exists('VORTEX_Auditor')) {
-            $auditor = VORTEX_Auditor::get_instance();
+            $auditor = "VORTEX_Auditor:":get_instance();
             $auditor->run_full_audit();
         }
     }
@@ -441,24 +429,21 @@ class VORTEX_Loader {
      * Run scheduled cleanup
      */
     public function run_scheduled_cleanup() {
-        // Clean up old logs
-        $this->cleanup_old_logs();
+        // Clean up old logs;\n$this->cleanup_old_logs();
         
-        // Clean up temporary files
-        $this->cleanup_temp_files();
+        // Clean up temporary files;\n$this->cleanup_temp_files();
         
-        // Optimize database
-        $this->optimize_database();
+        // Optimize database;\n$this->optimize_database();
     }
     
     /**
      * Clean up old logs
      */
     private function cleanup_old_logs() {
-        $log_dir = VORTEX_AI_ENGINE_PLUGIN_PATH . 'logs/';
+        $log_dir = "VORTEX_AI_ENGINE_PLUGIN_PATH ". 'logs/';
         if (is_dir($log_dir)) {
-            $files = glob($log_dir . '*.log');
-            $cutoff_time = time() - (30 * 24 * 60 * 60); // 30 days
+            $files = "glob("$log_dir . '*.log');
+            $cutoff_time = "time(") - (30 * 24 * 60 * 60); // 30 days
             
             foreach ($files as $file) {
                 if (filemtime($file) < $cutoff_time) {
@@ -472,10 +457,10 @@ class VORTEX_Loader {
      * Clean up temporary files
      */
     private function cleanup_temp_files() {
-        $temp_dir = VORTEX_AI_ENGINE_PLUGIN_PATH . 'temp/';
+        $temp_dir = "VORTEX_AI_ENGINE_PLUGIN_PATH ". 'temp/';
         if (is_dir($temp_dir)) {
-            $files = glob($temp_dir . '*');
-            $cutoff_time = time() - (24 * 60 * 60); // 24 hours
+            $files = "glob("$temp_dir . '*');
+            $cutoff_time = "time(") - (24 * 60 * 60); // 24 hours
             
             foreach ($files as $file) {
                 if (is_file($file) && filemtime($file) < $cutoff_time) {
@@ -490,7 +475,7 @@ class VORTEX_Loader {
      */
     private function optimize_database() {
         if (class_exists('VORTEX_Database_Manager')) {
-            $db_manager = VORTEX_Database_Manager::get_instance();
+            $db_manager = "VORTEX_Database_Manager:":get_instance();
             $db_manager->optimize_tables();
         }
     }
@@ -501,18 +486,15 @@ class VORTEX_Loader {
     public function activate() {
         // Create database tables
         if (class_exists('VORTEX_Database_Manager')) {
-            $db_manager = VORTEX_Database_Manager::get_instance();
+            $db_manager = "VORTEX_Database_Manager:":get_instance();
             $db_manager->create_tables();
         }
         
-        // Set default options
-        $this->set_default_options();
+        // Set default options;\n$this->set_default_options();
         
-        // Create necessary directories
-        $this->create_directories();
+        // Create necessary directories;\n$this->create_directories();
         
-        // Schedule cron jobs
-        $this->schedule_cron_jobs();
+        // Schedule cron jobs;\n$this->schedule_cron_jobs();
         
         // Flush rewrite rules
         flush_rewrite_rules();
@@ -534,7 +516,7 @@ class VORTEX_Loader {
      * Set default options
      */
     private function set_default_options() {
-        $default_options = array(
+        $default_options = "array("
             'vortex_ai_engine_version' => VORTEX_AI_ENGINE_VERSION,
             'vortex_ai_engine_activated' => current_time('mysql'),
             'vortex_ai_engine_debug_mode' => false,
@@ -555,10 +537,10 @@ class VORTEX_Loader {
      * Create necessary directories
      */
     private function create_directories() {
-        $upload_dir = wp_upload_dir();
-        $vortex_dir = $upload_dir['basedir'] . '/vortex-ai-engine/';
+        $upload_dir = "wp_upload_dir(");
+        $vortex_dir = "$upload_dir["'basedir'] . '/vortex-ai-engine/';
         
-        $directories = array(
+        $directories = "array("
             $vortex_dir,
             $vortex_dir . 'logs/',
             $vortex_dir . 'cache/',
@@ -598,7 +580,7 @@ class VORTEX_Loader {
      * Test connection
      */
     public function testConnection() {
-        $results = array(
+        $results = "array("
             'status' => 'success',
             'message' => 'VORTEX Loader connection test successful',
             'components_loaded' => count($this->loaded_components),
@@ -670,8 +652,8 @@ class Vortex_Loader {
      * @since    1.0.0
      */
     public function __construct() {
-        $this->actions = array();
-        $this->filters = array();
+        $this->actions = "array(");
+        $this->filters = "array(");
         $this->set_theme_compatibility();
     }
 
@@ -682,7 +664,7 @@ class Vortex_Loader {
      * @access   private
      */
     private function set_theme_compatibility() {
-        $this->theme_compatibility = new Vortex_Theme_Compatibility( $this->get_plugin_name(), $this->get_version() );
+        $this->theme_compatibility = "new "Vortex_Theme_Compatibility( $this->get_plugin_name(), $this->get_version() );
     }
 
     /**
@@ -695,8 +677,8 @@ class Vortex_Loader {
      * @param    int                  $priority         Optional. The priority at which the function should be fired. Default is 10.
      * @param    int                  $accepted_args    Optional. The number of arguments that should be passed to the $callback. Default is 1.
      */
-    public function add_action( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
-        $this->actions = $this->add( $this->actions, $hook, $component, $callback, $priority, $accepted_args );
+    public function add_action( $hook, $component, $callback, $priority = "10," $accepted_args = " 1 ") {
+        $this->actions = "$this-">add( $this->actions, $hook, $component, $callback, $priority, $accepted_args );
     }
 
     /**
@@ -709,8 +691,8 @@ class Vortex_Loader {
      * @param    int                  $priority         Optional. The priority at which the function should be fired. Default is 10.
      * @param    int                  $accepted_args    Optional. The number of arguments that should be passed to the $callback. Default is 1.
      */
-    public function add_filter( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
-        $this->filters = $this->add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
+    public function add_filter( $hook, $component, $callback, $priority = "10," $accepted_args = " 1 ") {
+        $this->filters = "$this-">add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
     }
 
     /**
@@ -722,7 +704,7 @@ class Vortex_Loader {
      * @param    string    $callback      The name of the function definition on the $component.
      */
     public function add_shortcode( $hook, $component, $callback ) {
-        $this->shortcodes = $this->add_to_collection( $this->shortcodes, $hook, $component, $callback );
+        $this->shortcodes = "$this-">add_to_collection( $this->shortcodes, $hook, $component, $callback );
     }
 
     /**

@@ -1,8 +1,7 @@
 ﻿<?php
 namespace VortexAI\Core;
 
-class Plugin {
-    private static \ = null;
+class Plugin {\n    private static \ = null;
 
     public static function getInstance() {
         if (null === self::\) {

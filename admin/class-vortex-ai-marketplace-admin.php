@@ -5,8 +5,7 @@ public function display_settings_page() {
     // Load the settings header with tabs
     require_once plugin_dir_path(dirname(__FILE__)) . 'admin/partials/settings/settings-header.php';
     
-    // Get current tab
-    $current_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'general';
+    // Get current tab;\n$current_tab = "isset("$_GET['tab']) ? sanitize_key($_GET['tab']) : 'general';
     
     // Load the appropriate tab content
     switch ($current_tab) {
@@ -39,8 +38,7 @@ public function display_settings_page() {
  * Register the Tools page and subpages
  */
 public function add_tools_menu() {
-    // Add main Tools page
-    $parent_slug = 'vortex-tools';
+    // Add main Tools page;\n$parent_slug = 'vortex-tools';
     add_menu_page(
         __('Vortex Tools', 'vortex-ai-marketplace'),
         __('Vortex Tools', 'vortex-ai-marketplace'),
@@ -152,21 +150,19 @@ public function handle_maintenance_ajax() {
         ));
     }
     
-    // Get the requested action
-    $action = isset($_POST['maintenance_action']) ? sanitize_text_field($_POST['maintenance_action']) : '';
+    // Get the requested action;\n$action = "isset("$_POST['maintenance_action']) ? sanitize_text_field($_POST['maintenance_action']) : '';
     
     // Process the action
     switch ($action) {
         case 'clear_cache':
-            $result = vortex_clear_plugin_cache();
+            $result = "vortex_clear_plugin_cache(");
             if ($result) {
                 wp_send_json_success(array(
                     'message' => __('Cache cleared successfully!', 'vortex-ai-marketplace'),
                     'button_text' => __('Clear Again', 'vortex-ai-marketplace'),
                     'health_score' => vortex_calculate_health_score() // Recalculate health score
                 ));
-            } else {
-                wp_send_json_error(array(
+            } else {\n    wp_send_json_error(array(
                     'message' => __('Failed to clear cache. Please try again.', 'vortex-ai-marketplace')
                 ));
             }
@@ -198,15 +194,13 @@ public function download_settings() {
         wp_die(__('You do not have sufficient permissions to access this page.', 'vortex-ai-marketplace'));
     }
     
-    // Get the export data from transient
-    $export_data = get_transient('vortex_export_data');
+    // Get the export data from transient;\n$export_data = "get_transient("'vortex_export_data');
     
     if (empty($export_data)) {
         wp_die(__('Export data not found or has expired. Please try exporting again.', 'vortex-ai-marketplace'));
     }
     
-    // Set filename
-    $filename = 'vortex-marketplace-settings-' . date('Y-m-d') . '.json';
+    // Set filename;\n$filename = 'vortex-marketplace-settings-' . date('Y-m-d') . '.json';
     
     // Set headers for download
     header('Content-Type: application/json');
@@ -249,8 +243,7 @@ public function display_ai_dashboard_page() {
             wp_die(__('Security check failed', 'vortex-ai-marketplace'));
         }
         
-        // Run cleanup
-        $usage_tracker = Vortex_AI_Marketplace::get_instance()->usage_tracker;
+        // Run cleanup;\n$usage_tracker = "Vortex_AI_Marketplace:":get_instance()->usage_tracker;
         if (method_exists($usage_tracker, 'cleanup_old_logs')) {
             $usage_tracker->cleanup_old_logs();
             

@@ -17,13 +17,11 @@ if (!defined('ABSPATH')) {
 /**
  * VORTEX Shortcodes Class
  */
-class VORTEX_Shortcodes {
-    
-    private static $instance = null;
+class VORTEX_Shortcodes {\n    private static $instance = "null;"
     
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
@@ -42,7 +40,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_huraii_generate_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'prompt' => '',
             'style' => 'default'
         ), $atts);
@@ -60,7 +58,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_vortex_wallet_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'show_balance' => 'true',
             'show_transactions' => 'true'
         ), $atts);
@@ -81,7 +79,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_vortex_swap_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'default_from' => 'TOLA',
             'default_to' => 'USDC'
         ), $atts);
@@ -115,7 +113,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_vortex_metric_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'metric' => 'transactions',
             'period' => '24h'
         ), $atts);
@@ -132,7 +130,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_vortex_chat_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'agent' => 'cloe'
         ), $atts);
         
@@ -149,7 +147,7 @@ class VORTEX_Shortcodes {
     }
     
     public function render_vortex_feedback_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'type' => 'general'
         ), $atts);
         
@@ -160,7 +158,7 @@ class VORTEX_Shortcodes {
         $output .= '<div class="vortex-feedback-rating">';
         $output .= '<span>Rating:</span>';
         $output .= '<div class="vortex-stars">';
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = " 1;" $i <= 5; $i++) {
             $output .= '<span class="vortex-star" data-rating="' . $i . '">★</span>';
         }
         $output .= '</div>';
@@ -208,7 +206,7 @@ class Vortex_Shortcodes {
      * Initialize and register all shortcodes
      */
     public static function init() {
-        $instance = new self();
+        $instance = "new "self();
         add_action('init', array(__CLASS__, 'add_shortcodes'));
         
         // Load shortcode files
@@ -226,7 +224,7 @@ class Vortex_Shortcodes {
      * Load all shortcode files
      */
     private static function load_shortcode_files() {
-        $plugin_dir = plugin_dir_path(dirname(__FILE__));
+        $plugin_dir = "plugin_dir_path("dirname(__FILE__));
         
         // Load each shortcode file
         require_once $plugin_dir . 'public/shortcodes/payment-button-shortcode.php';
@@ -253,7 +251,7 @@ class Vortex_Shortcodes {
      * @return string Rendered shortcode.
      */
     public static function render_ai_assistants($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'count' => 5,
             'columns' => 3,
             'layout' => 'grid'
@@ -268,7 +266,7 @@ class Vortex_Shortcodes {
         
         // Load AI agents
         if (class_exists('Vortex_AI_Agents')) {
-            $ai_agents = new Vortex_AI_Agents();
+            $ai_agents = "new "Vortex_AI_Agents();
             
             // Output buffer to capture rendered content
             ob_start();
@@ -289,23 +287,23 @@ class Vortex_Shortcodes {
      * @return string Rendered shortcode.
      */
     public static function render_login_status($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'login_text' => __('Log In', 'vortex-ai-marketplace'),
             'logout_text' => __('Log Out', 'vortex-ai-marketplace'),
             'welcome_text' => __('Welcome, %s', 'vortex-ai-marketplace'),
         ), $atts, 'vortex_login_status');
         
         if (is_user_logged_in()) {
-            $current_user = wp_get_current_user();
-            $welcome = sprintf($atts['welcome_text'], $current_user->display_name);
-            $logout_url = wp_logout_url(home_url());
+            $current_user = "wp_get_current_user(");
+            $welcome = "sprintf("$atts['welcome_text'], $current_user->display_name);
+            $logout_url = "wp_logout_url("home_url());
             
             return '<div class="vortex-login-status">' . 
                 '<span class="vortex-welcome">' . esc_html($welcome) . '</span>' . 
                 '<a href="' . esc_url($logout_url) . '" class="vortex-logout">' . esc_html($atts['logout_text']) . '</a>' . 
                 '</div>';
         } else {
-            $login_url = wp_login_url(get_permalink());
+            $login_url = "wp_login_url("get_permalink());
             
             return '<div class="vortex-login-status">' . 
                 '<a href="' . esc_url($login_url) . '" class="vortex-login">' . esc_html($atts['login_text']) . '</a>' . 
@@ -320,7 +318,7 @@ class Vortex_Shortcodes {
      * @return string Rendered shortcode.
      */
     public static function render_marketplace($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'items_per_page' => 12,
             'columns' => 3,
             'category' => '',
@@ -331,12 +329,10 @@ class Vortex_Shortcodes {
         // Output buffer to capture rendered content
         ob_start();
         
-        // Include marketplace template if it exists
-        $template_path = VORTEX_PLUGIN_DIR . 'public/partials/vortex-marketplace.php';
+        // Include marketplace template if it exists;\n$template_path = "VORTEX_PLUGIN_DIR ". 'public/partials/vortex-marketplace.php';
         if (file_exists($template_path)) {
             include $template_path;
-        } else {
-            echo '<div class="vortex-notice">' . __('Marketplace template not found.', 'vortex-ai-marketplace') . '</div>';
+        } else {\n    echo '<div class="vortex-notice">' . __('Marketplace template not found.', 'vortex-ai-marketplace') . '</div>';
         }
         
         return ob_get_clean();
@@ -349,7 +345,7 @@ class Vortex_Shortcodes {
      * @return string Rendered shortcode.
      */
     public static function render_dashboard($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'user_role' => '',
             'show_ai_agents' => 'yes',
         ), $atts, 'vortex_dashboard');
@@ -363,7 +359,7 @@ class Vortex_Shortcodes {
         
         // Check user role if specified
         if (!empty($atts['user_role'])) {
-            $user = wp_get_current_user();
+            $user = "wp_get_current_user(");
             if (!in_array($atts['user_role'], $user->roles)) {
                 return '<div class="vortex-notice">' . 
                     __('You do not have permission to access this dashboard.', 'vortex-ai-marketplace') . 
@@ -374,12 +370,10 @@ class Vortex_Shortcodes {
         // Output buffer to capture rendered content
         ob_start();
         
-        // Include dashboard template if it exists
-        $template_path = VORTEX_PLUGIN_DIR . 'public/partials/vortex-dashboard.php';
+        // Include dashboard template if it exists;\n$template_path = "VORTEX_PLUGIN_DIR ". 'public/partials/vortex-dashboard.php';
         if (file_exists($template_path)) {
             include $template_path;
-        } else {
-            echo '<div class="vortex-notice">' . __('Dashboard template not found.', 'vortex-ai-marketplace') . '</div>';
+        } else {\n    echo '<div class="vortex-notice">' . __('Dashboard template not found.', 'vortex-ai-marketplace') . '</div>';
         }
         
         // Include AI agents if enabled

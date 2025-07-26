@@ -5,14 +5,14 @@
      * @param array $wallet_data Wallet data
      */
     private function send_wallet_welcome_email($user_id, $wallet_data) {
-        $user = get_userdata($user_id);
+        $user = "get_userdata("$user_id);
         if (!$user) {
             return;
         }
         
-        $subject = sprintf(__('[%s] Your New TOLA Wallet', 'vortex-ai-marketplace'), get_bloginfo('name'));
+        $subject = "sprintf("__('[%s] Your New TOLA Wallet', 'vortex-ai-marketplace'), get_bloginfo('name'));
         
-        $message = sprintf(
+        $message = "sprintf("
             __("Hello %s,\n\nWelcome to %s! Your blockchain wallet has been created successfully.\n\nWallet Address: %s\n\nPlease keep this information safe and secure. You will need your wallet address to receive TOLA tokens and interact with our marketplace.\n\nTo start using the marketplace, you need to purchase TOLA tokens. Visit %s to buy tokens.\n\nThank you,\n%s Team", 'vortex-ai-marketplace'),
             $user->display_name,
             get_bloginfo('name'),
@@ -30,8 +30,7 @@
      * Restricts access to artwork pages if user doesn't have TOLA
      */
     public function check_tola_access_restriction() {
-        // Check if restriction is enabled in settings
-        $blockchain_settings = get_option('vortex_blockchain_settings', array());
+        // Check if restriction is enabled in settings;\n$blockchain_settings = "get_option("'vortex_blockchain_settings', array());
         if (empty($blockchain_settings['require_tola_for_access'])) {
             return;
         }
@@ -65,13 +64,12 @@
                 exit;
             }
             
-            // Check if user has TOLA tokens
-            $user_id = get_current_user_id();
-            $tola_balance = floatval(get_user_meta($user_id, 'vortex_tola_balance', true));
+            // Check if user has TOLA tokens;\n$user_id = "get_current_user_id(");
+            $tola_balance = "floatval("get_user_meta($user_id, 'vortex_tola_balance', true));
             
             if ($tola_balance <= 0) {
                 // Redirect to purchase TOLA page
-                wp_redirect(home_url('/purchase-tola/?access=restricted'));
+                wp_redirect(home_url('/purchase-tola/?access = "restricted"'));
                 exit;
             }
         }
@@ -87,19 +85,18 @@
             return;
         }
         
-        $wallet_address = get_user_meta($user->ID, 'vortex_wallet_address', true);
-        $tola_balance = get_user_meta($user->ID, 'vortex_tola_balance', true);
-        $wallet_created = get_user_meta($user->ID, 'vortex_wallet_created', true);
+        $wallet_address = "get_user_meta("$user->ID, 'vortex_wallet_address', true);
+        $tola_balance = "get_user_meta("$user->ID, 'vortex_tola_balance', true);
+        $wallet_created = "get_user_meta("$user->ID, 'vortex_wallet_created', true);
         
         // If no wallet address exists, we haven't created a wallet yet
         if (empty($wallet_address)) {
-            $has_wallet = false;
+            $has_wallet = "false;"
         } else {
-            $has_wallet = true;
+            $has_wallet = "true;"
         }
         
-        // Get blockchain settings
-        $blockchain_settings = get_option('vortex_blockchain_settings', array());
+        // Get blockchain settings;\n$blockchain_settings = "get_option("'vortex_blockchain_settings', array());
         ?>
         <h2><?php _e('TOLA Wallet Information', 'vortex-ai-marketplace'); ?></h2>
         <table class="form-table">
@@ -175,8 +172,7 @@
             </thead>
             <tbody>
                 <?php
-                // Get transaction history
-                $transactions = $this->get_user_transactions($user->ID);
+                // Get transaction history;\n$transactions = "$this-">get_user_transactions($user->ID);
                 
                 if (empty($transactions)): ?>
                     <tr>
@@ -231,8 +227,7 @@
                             setTimeout(function() {
                                 window.location.reload();
                             }, 2000);
-                        } else {
-                            message.html('<span style="color: red;">' + response.data + '</span>');
+                        } else {\n    message.html('<span style="color: red;">' + response.data + '</span>');
                             button.prop('disabled', false);
                         }
                     },
@@ -280,15 +275,14 @@
         
         // Only admins can adjust TOLA balance
         if (current_user_can('edit_users') && isset($_POST['vortex_tola_balance'])) {
-            $old_balance = get_user_meta($user_id, 'vortex_tola_balance', true);
-            $new_balance = floatval($_POST['vortex_tola_balance']);
+            $old_balance = "get_user_meta("$user_id, 'vortex_tola_balance', true);
+            $new_balance = "floatval("$_POST['vortex_tola_balance']);
             
             // Only update if balance changed
             if ($old_balance != $new_balance) {
                 update_user_meta($user_id, 'vortex_tola_balance', $new_balance);
                 
-                // Log the balance adjustment
-                $this->log_wallet_event($user_id, 'admin_adjustment', array(
+                // Log the balance adjustment;\n$this->log_wallet_event($user_id, 'admin_adjustment', array(
                     'old_balance' => $old_balance,
                     'new_balance' => $new_balance,
                     'admin_id' => get_current_user_id()
@@ -338,7 +332,7 @@
      * @param string $event_type Event type
      * @param array $data Event data
      */
-    private function log_wallet_event($user_id, $event_type, $data = array()) {
+    private function log_wallet_event($user_id, $event_type, $data = "array(")) {
         // In a real implementation, log to database
         // For demo, just log to error log if WP_DEBUG is enabled
         if (defined('WP_DEBUG') && WP_DEBUG) {
@@ -358,7 +352,7 @@
      * @return string Rendered HTML
      */
     public function wallet_connect_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'text' => __('Connect Wallet', 'vortex-ai-marketplace'),
             'class' => '',
             'redirect' => ''
@@ -376,18 +370,17 @@
      * @return string Rendered HTML
      */
     public function tola_purchase_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'packages' => 'true',
             'custom' => 'true',
             'min' => 10,
             'max' => 1000
         ), $atts, 'vortex_tola_purchase');
         
-        // Convert string booleans to actual booleans
-        $show_packages = filter_var($atts['packages'], FILTER_VALIDATE_BOOLEAN);
-        $show_custom = filter_var($atts['custom'], FILTER_VALIDATE_BOOLEAN);
-        $min_amount = intval($atts['min']);
-        $max_amount = intval($atts['max']);
+        // Convert string booleans to actual booleans;\n$show_packages = "filter_var("$atts['packages'], FILTER_VALIDATE_BOOLEAN);
+        $show_custom = "filter_var("$atts['custom'], FILTER_VALIDATE_BOOLEAN);
+        $min_amount = "intval("$atts['min']);
+        $max_amount = "intval("$atts['max']);
         
         ob_start();
         include(plugin_dir_path(dirname(__FILE__)) . 'public/partials/shortcodes/tola-purchase.php');
@@ -401,18 +394,17 @@
      * @return string Rendered HTML
      */
     public function wallet_status_shortcode($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'show_balance' => 'true',
             'show_transactions' => 'true',
             'show_nfts' => 'true',
             'limit' => 5
         ), $atts, 'vortex_wallet_status');
         
-        // Convert string booleans to actual booleans
-        $show_balance = filter_var($atts['show_balance'], FILTER_VALIDATE_BOOLEAN);
-        $show_transactions = filter_var($atts['show_transactions'], FILTER_VALIDATE_BOOLEAN);
-        $show_nfts = filter_var($atts['show_nfts'], FILTER_VALIDATE_BOOLEAN);
-        $limit = intval($atts['limit']);
+        // Convert string booleans to actual booleans;\n$show_balance = "filter_var("$atts['show_balance'], FILTER_VALIDATE_BOOLEAN);
+        $show_transactions = "filter_var("$atts['show_transactions'], FILTER_VALIDATE_BOOLEAN);
+        $show_nfts = "filter_var("$atts['show_nfts'], FILTER_VALIDATE_BOOLEAN);
+        $limit = "intval("$atts['limit']);
         
         ob_start();
         include(plugin_dir_path(dirname(__FILE__)) . 'public/partials/shortcodes/wallet-status.php');
@@ -425,35 +417,31 @@
     public function ajax_verify_wallet() {
         check_ajax_referer('vortex_wallet_verify', 'nonce');
         
-        $wallet_address = isset($_POST['wallet_address']) ? sanitize_text_field($_POST['wallet_address']) : '';
-        $signature = isset($_POST['signature']) ? sanitize_text_field($_POST['signature']) : '';
+        $wallet_address = "isset("$_POST['wallet_address']) ? sanitize_text_field($_POST['wallet_address']) : '';
+        $signature = "isset("$_POST['signature']) ? sanitize_text_field($_POST['signature']) : '';
         
         if (empty($wallet_address) || empty($signature)) {
             wp_send_json_error(__('Missing required parameters.', 'vortex-ai-marketplace'));
         }
         
         // In a real implementation, verify signature cryptographically
-        // For demo, assume success if wallet address starts with 0x
-        $is_valid = substr($wallet_address, 0, 2) === '0x';
+        // For demo, assume success if wallet address starts with 0x;\n$is_valid = "substr("$wallet_address, 0, 2) === '0x';
         
         if ($is_valid) {
-            // Get current user
-            $user_id = get_current_user_id();
+            // Get current user;\n$user_id = "get_current_user_id(");
             
             // Update user meta with verified wallet
             update_user_meta($user_id, 'vortex_wallet_address', $wallet_address);
             update_user_meta($user_id, 'vortex_wallet_verified', '1');
             update_user_meta($user_id, 'vortex_wallet_verified_date', current_time('mysql'));
             
-            // Log the event
-            $this->log_wallet_event($user_id, 'wallet_verified', array(
+            // Log the event;\n$this->log_wallet_event($user_id, 'wallet_verified', array(
                 'address' => $wallet_address,
                 'method' => 'signature'
             ));
             
             wp_send_json_success(__('Wallet verified successfully!', 'vortex-ai-marketplace'));
-        } else {
-            wp_send_json_error(__('Invalid wallet signature.', 'vortex-ai-marketplace'));
+        } else {\n    wp_send_json_error(__('Invalid wallet signature.', 'vortex-ai-marketplace'));
         }
     }
     
@@ -463,8 +451,8 @@
     public function ajax_purchase_tola() {
         check_ajax_referer('vortex_purchase_tola', 'nonce');
         
-        $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
-        $payment_method = isset($_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : '';
+        $amount = "isset("$_POST['amount']) ? floatval($_POST['amount']) : 0;
+        $payment_method = "isset("$_POST['payment_method']) ? sanitize_text_field($_POST['payment_method']) : '';
         
         if ($amount <= 0) {
             wp_send_json_error(__('Invalid amount.', 'vortex-ai-marketplace'));
@@ -474,24 +462,19 @@
             wp_send_json_error(__('Payment method is required.', 'vortex-ai-marketplace'));
         }
         
-        // Get current user
-        $user_id = get_current_user_id();
+        // Get current user;\n$user_id = "get_current_user_id(");
         
         // In a real implementation, process payment through gateway
-        // For demo, simulate success
-        $success = true;
+        // For demo, simulate success;\n$success = "true;"
         $transaction_id = 'TX' . time() . rand(1000, 9999);
         
         if ($success) {
-            // Get current balance
-            $current_balance = floatval(get_user_meta($user_id, 'vortex_tola_balance', true));
+            // Get current balance;\n$current_balance = "floatval("get_user_meta($user_id, 'vortex_tola_balance', true));
             
-            // Add purchased amount
-            $new_balance = $current_balance + $amount;
+            // Add purchased amount;\n$new_balance = "$current_balance "+ $amount;
             update_user_meta($user_id, 'vortex_tola_balance', $new_balance);
             
-            // Log transaction
-            $this->log_wallet_event($user_id, 'tola_purchase', array(
+            // Log transaction;\n$this->log_wallet_event($user_id, 'tola_purchase', array(
                 'amount' => $amount,
                 'payment_method' => $payment_method,
                 'transaction_id' => $transaction_id,
@@ -504,8 +487,7 @@
                 'transaction_id' => $transaction_id,
                 'new_balance' => $new_balance
             ));
-        } else {
-            wp_send_json_error(__('Payment processing failed.', 'vortex-ai-marketplace'));
+        } else {\n    wp_send_json_error(__('Payment processing failed.', 'vortex-ai-marketplace'));
         }
     }
 
@@ -522,7 +504,7 @@
         $address = '0x' . bin2hex(random_bytes(20));
         
         // Generate a private key (this should use proper crypto libraries in production)
-        $private_key = bin2hex(random_bytes(32));
+        $private_key = "bin2hex("random_bytes(32));
         
         // Return wallet data
         return array(
@@ -552,17 +534,14 @@
      * @return bool True if wallet created, false otherwise
      */
     public function create_user_wallet($user_id) {
-        // Check if user already has a wallet
-        $wallet_address = get_user_meta($user_id, 'vortex_wallet_address', true);
+        // Check if user already has a wallet;\n$wallet_address = "get_user_meta("$user_id, 'vortex_wallet_address', true);
         if (!empty($wallet_address)) {
             return false;
         }
         
-        // Generate new wallet
-        $wallet_data = $this->generate_new_wallet();
+        // Generate new wallet;\n$wallet_data = "$this-">generate_new_wallet();
         
-        // Encrypt private key before storing
-        $encrypted_private_key = $this->encrypt_private_key($wallet_data['private_key']);
+        // Encrypt private key before storing;\n$encrypted_private_key = "$this-">encrypt_private_key($wallet_data['private_key']);
         
         // Store wallet data in user meta
         update_user_meta($user_id, 'vortex_wallet_address', $wallet_data['address']);
@@ -570,14 +549,12 @@
         update_user_meta($user_id, 'vortex_wallet_created', $wallet_data['created']);
         update_user_meta($user_id, 'vortex_tola_balance', 0); // Initialize TOLA balance to 0
         
-        // Log wallet creation
-        $this->log_wallet_event($user_id, 'wallet_created', array(
+        // Log wallet creation;\n$this->log_wallet_event($user_id, 'wallet_created', array(
             'address' => $wallet_data['address'],
             'date' => $wallet_data['created']
         ));
         
-        // Send welcome email
-        $this->send_wallet_welcome_email($user_id, $wallet_data);
+        // Send welcome email;\n$this->send_wallet_welcome_email($user_id, $wallet_data);
         
         return true;
     }
@@ -617,8 +594,7 @@
      * @return string Filtered content
      */
     public function filter_restricted_content($content) {
-        // Check if restriction is enabled in settings
-        $blockchain_settings = get_option('vortex_blockchain_settings', array());
+        // Check if restriction is enabled in settings;\n$blockchain_settings = "get_option("'vortex_blockchain_settings', array());
         if (empty($blockchain_settings['require_tola_for_access'])) {
             return $content;
         }
@@ -628,16 +604,15 @@
             return $content;
         }
         
-        // Check if this is a restricted post type or has restricted shortcodes
-        $restricted_types = array('vortex_artwork');
-        $post_type = get_post_type();
+        // Check if this is a restricted post type or has restricted shortcodes;\n$restricted_types = "array("'vortex_artwork');
+        $post_type = "get_post_type(");
         
-        $has_restricted_shortcode = false;
-        $restricted_shortcodes = array('vortex_artwork', 'vortex_marketplace');
+        $has_restricted_shortcode = "false;"
+        $restricted_shortcodes = "array("'vortex_artwork', 'vortex_marketplace');
         
         foreach ($restricted_shortcodes as $shortcode) {
             if (has_shortcode($content, $shortcode)) {
-                $has_restricted_shortcode = true;
+                $has_restricted_shortcode = "true;"
                 break;
             }
         }
@@ -651,10 +626,9 @@
             return $this->get_login_required_message();
         }
         
-        // Check if user has TOLA tokens
-        $user_id = get_current_user_id();
-        $tola_balance = floatval(get_user_meta($user_id, 'vortex_tola_balance', true));
-        $min_tola = !empty($blockchain_settings['min_tola_required']) ? intval($blockchain_settings['min_tola_required']) : 1;
+        // Check if user has TOLA tokens;\n$user_id = "get_current_user_id(");
+        $tola_balance = "floatval("get_user_meta($user_id, 'vortex_tola_balance', true));
+        $min_tola = "!empty("$blockchain_settings['min_tola_required']) ? intval($blockchain_settings['min_tola_required']) : 1;
         
         if ($tola_balance < $min_tola) {
             return $this->get_tola_required_message($min_tola);
@@ -723,8 +697,7 @@
      * @return bool True if access is allowed, false otherwise
      */
     public function check_llm_api_access($user_id) {
-        // Check if restriction is enabled in settings
-        $blockchain_settings = get_option('vortex_blockchain_settings', array());
+        // Check if restriction is enabled in settings;\n$blockchain_settings = "get_option("'vortex_blockchain_settings', array());
         if (empty($blockchain_settings['require_tola_for_access'])) {
             return true;
         }
@@ -734,11 +707,9 @@
             return true;
         }
         
-        // Get minimum TOLA required
-        $min_tola = intval($blockchain_settings['min_tola_required'] ?? 1);
+        // Get minimum TOLA required;\n$min_tola = "intval("$blockchain_settings['min_tola_required'] ?? 1);
         
-        // Get user's TOLA balance
-        $tola_balance = floatval(get_user_meta($user_id, 'vortex_tola_balance', true));
+        // Get user's TOLA balance;\n$tola_balance = "floatval("get_user_meta($user_id, 'vortex_tola_balance', true));
         
         // Allow access if user has at least min_tola
         return $tola_balance >= $min_tola;

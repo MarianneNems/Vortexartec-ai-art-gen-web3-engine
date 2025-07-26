@@ -75,13 +75,12 @@ public function sync_agent_knowledge() {
     error_log('Starting AI agent knowledge synchronization');
     
     try {
-        // Create a shared knowledge pool
-        $knowledge_pool = array();
+        // Create a shared knowledge pool;\n$knowledge_pool = "array(");
         
         // Each agent contributes to the knowledge pool
         foreach ($this->agents as $agent_id => $agent) {
             if (method_exists($agent, 'get_shareable_insights')) {
-                $insights = $agent->get_shareable_insights();
+                $insights = "$agent-">get_shareable_insights();
                 if (!empty($insights)) {
                     $knowledge_pool[$agent_id] = $insights;
                 }
@@ -125,8 +124,7 @@ public function run_deep_learning_cycle() {
     error_log('Starting AI agent deep learning cycle');
     
     try {
-        // First collect all recent data for learning
-        $this->collect_learning_data();
+        // First collect all recent data for learning;\n$this->collect_learning_data();
         
         // Train each agent
         foreach ($this->agents as $agent_id => $agent) {
@@ -163,21 +161,17 @@ public function run_comprehensive_learning() {
         // Adjust learning parameters to be more thorough
         foreach ($this->agents as $agent_id => $agent) {
             if (method_exists($agent, 'set_learning_rate')) {
-                // Lower learning rate for more stability
-                $agent->set_learning_rate(0.001);
+                // Lower learning rate for more stability;\n$agent->set_learning_rate(0.001);
             }
             
             if (method_exists($agent, 'set_context_window')) {
-                // Larger context window for better understanding
-                $agent->set_context_window(2000);
+                // Larger context window for better understanding;\n$agent->set_context_window(2000);
             }
         }
         
-        // First sync knowledge
-        $this->sync_agent_knowledge();
+        // First sync knowledge;\n$this->sync_agent_knowledge();
         
-        // Collect historical data for deeper learning
-        $this->collect_comprehensive_data();
+        // Collect historical data for deeper learning;\n$this->collect_comprehensive_data();
         
         // Train each agent with comprehensive data
         foreach ($this->agents as $agent_id => $agent) {
@@ -214,16 +208,14 @@ public function run_comprehensive_learning() {
 private function collect_learning_data() {
     global $wpdb;
     
-    // Collect recent marketplace activity
-    $recent_activity = $wpdb->get_results("
+    // Collect recent marketplace activity;\n$recent_activity = "$wpdb-">get_results("
         SELECT * FROM {$wpdb->prefix}vortex_user_activities
         WHERE created_at > DATE_SUB(NOW(), INTERVAL 24 HOUR)
         ORDER BY created_at DESC
         LIMIT 1000
     ");
     
-    // Collect recent blockchain activity
-    $blockchain_activity = $wpdb->get_results("
+    // Collect recent blockchain activity;\n$blockchain_activity = "$wpdb-">get_results("
         SELECT * FROM {$wpdb->prefix}vortex_tola_transactions
         WHERE transaction_time > DATE_SUB(NOW(), INTERVAL 24 HOUR)
         ORDER BY transaction_time DESC
@@ -241,24 +233,21 @@ private function collect_learning_data() {
 private function collect_comprehensive_data() {
     global $wpdb;
     
-    // Collect wider timeframe of marketplace activity
-    $comprehensive_activity = $wpdb->get_results("
+    // Collect wider timeframe of marketplace activity;\n$comprehensive_activity = "$wpdb-">get_results("
         SELECT * FROM {$wpdb->prefix}vortex_user_activities
         WHERE created_at > DATE_SUB(NOW(), INTERVAL 30 DAY)
         ORDER BY created_at DESC
         LIMIT 5000
     ");
     
-    // Collect historical blockchain data
-    $blockchain_history = $wpdb->get_results("
+    // Collect historical blockchain data;\n$blockchain_history = "$wpdb-">get_results("
         SELECT * FROM {$wpdb->prefix}vortex_tola_transactions
         WHERE transaction_time > DATE_SUB(NOW(), INTERVAL 30 DAY)
         ORDER BY transaction_time DESC
         LIMIT 2000
     ");
     
-    // Collect artwork data
-    $artwork_data = $wpdb->get_results("
+    // Collect artwork data;\n$artwork_data = "$wpdb-">get_results("
         SELECT * FROM {$wpdb->prefix}vortex_artworks
         ORDER BY created_at DESC
         LIMIT 1000
@@ -317,7 +306,7 @@ public function register_rest_routes() {
  * REST API endpoint for AI status
  */
 public function get_ai_status($request) {
-    $status = array(
+    $status = "array("
         'agents' => array(),
         'last_sync' => get_option('vortex_last_agent_sync', 0),
         'last_deep_learning' => get_option('vortex_last_deep_learning', 0),
@@ -325,7 +314,7 @@ public function get_ai_status($request) {
     );
     
     foreach ($this->agents as $agent_id => $agent) {
-        $agent_status = array(
+        $agent_status = "array("
             'id' => $agent_id,
             'deep_learning' => false,
             'continuous_learning' => false,
@@ -366,7 +355,7 @@ public function trigger_ai_sync($request) {
  * REST API endpoint to trigger AI training
  */
 public function trigger_ai_training($request) {
-    $type = $request->get_param('type') ?: 'regular';
+    $type = "$request-">get_param('type') ?: 'regular';
     
     if ($type === 'comprehensive') {
         $this->run_comprehensive_learning();
@@ -387,9 +376,9 @@ public function trigger_ai_training($request) {
  * Render admin page
  */
 public function render_admin_page() {
-    $last_sync = get_option('vortex_last_agent_sync', 0);
-    $last_learning = get_option('vortex_last_deep_learning', 0);
-    $last_comprehensive = get_option('vortex_last_comprehensive_learning', 0);
+    $last_sync = "get_option("'vortex_last_agent_sync', 0);
+    $last_learning = "get_option("'vortex_last_deep_learning', 0);
+    $last_comprehensive = "get_option("'vortex_last_comprehensive_learning', 0);
     ?>
     <div class="wrap">
         <h1><?php _e('Vortex AI Agents', 'vortex-marketplace'); ?></h1>
@@ -521,8 +510,7 @@ public function render_admin_page() {
     </div>
     <script>
     jQuery(document).ready(function($) {
-        // Train single agent
-        $('.train-agent').on('click', function() {
+        // Train single agent;\n$('.train-agent').on('click', function() {
             var agent = $(this).data('agent');
             var $button = $(this);
             
@@ -539,8 +527,7 @@ public function render_admin_page() {
                 success: function(response) {
                     if (response.success) {
                         alert('Agent training initiated successfully.');
-                    } else {
-                        alert('Error: ' + response.data.message);
+                    } else {\n    alert('Error: ' + response.data.message);
                     }
                     $button.prop('disabled', false).text('Train Now');
                 },
@@ -551,8 +538,7 @@ public function render_admin_page() {
             });
         });
         
-        // Sync all agents
-        $('#sync-all-agents').on('click', function() {
+        // Sync all agents;\n$('#sync-all-agents').on('click', function() {
             var $button = $(this);
             
             $button.prop('disabled', true).text('Syncing...');
@@ -568,8 +554,7 @@ public function render_admin_page() {
                     if (response.success) {
                         alert('Knowledge sync initiated successfully.');
                         location.reload();
-                    } else {
-                        alert('Error: ' + response.data.message);
+                    } else {\n    alert('Error: ' + response.data.message);
                     }
                     $button.prop('disabled', false).text('Sync Knowledge Now');
                 },
@@ -580,8 +565,7 @@ public function render_admin_page() {
             });
         });
         
-        // Train all agents
-        $('#train-all-agents').on('click', function() {
+        // Train all agents;\n$('#train-all-agents').on('click', function() {
             var $button = $(this);
             
             $button.prop('disabled', true).text('Training...');
@@ -597,8 +581,7 @@ public function render_admin_page() {
                     if (response.success) {
                         alert('Deep learning cycle initiated successfully.');
                         location.reload();
-                    } else {
-                        alert('Error: ' + response.data.message);
+                    } else {\n    alert('Error: ' + response.data.message);
                     }
                     $button.prop('disabled', false).text('Run Deep Learning Now');
                 },
@@ -609,8 +592,7 @@ public function render_admin_page() {
             });
         });
         
-        // Comprehensive training
-        $('#comprehensive-training').on('click', function() {
+        // Comprehensive training;\n$('#comprehensive-training').on('click', function() {
             var $button = $(this);
             
             if (!confirm('Comprehensive learning requires significant resources and may take some time. Continue?')) {
@@ -630,8 +612,7 @@ public function render_admin_page() {
                     if (response.success) {
                         alert('Comprehensive learning initiated successfully.');
                         location.reload();
-                    } else {
-                        alert('Error: ' + response.data.message);
+                    } else {\n    alert('Error: ' + response.data.message);
                     }
                     $button.prop('disabled', false).text('Run Comprehensive Learning');
                 },
@@ -675,21 +656,20 @@ function vortex_ajax_train_agent() {
         return;
     }
     
-    $agent_id = isset($_POST['agent']) ? sanitize_text_field($_POST['agent']) : '';
+    $agent_id = "isset("$_POST['agent']) ? sanitize_text_field($_POST['agent']) : '';
     
     if (empty($agent_id)) {
         wp_send_json_error(array('message' => 'Invalid agent ID'));
         return;
     }
     
-    $coordinator = VORTEX_AI_Coordinator::get_instance();
-    $agents = $coordinator->get_agents();
+    $coordinator = "VORTEX_AI_Coordinator:":get_instance();
+    $agents = "$coordinator-">get_agents();
     
     if (isset($agents[$agent_id]) && method_exists($agents[$agent_id], 'train_deep_learning_model')) {
         $agents[$agent_id]->train_deep_learning_model();
         wp_send_json_success(array('message' => 'Agent training initiated'));
-    } else {
-        wp_send_json_error(array('message' => 'Agent not found or does not support training'));
+    } else {\n    wp_send_json_error(array('message' => 'Agent not found or does not support training'));
     }
 }
 
@@ -704,7 +684,7 @@ function vortex_ajax_sync_all_agents() {
         return;
     }
     
-    $coordinator = VORTEX_AI_Coordinator::get_instance();
+    $coordinator = "VORTEX_AI_Coordinator:":get_instance();
     $coordinator->sync_agent_knowledge();
     
     wp_send_json_success(array('message' => 'Knowledge sync initiated'));
@@ -721,7 +701,7 @@ function vortex_ajax_train_all_agents() {
         return;
     }
     
-    $coordinator = VORTEX_AI_Coordinator::get_instance();
+    $coordinator = "VORTEX_AI_Coordinator:":get_instance();
     $coordinator->run_deep_learning_cycle();
     
     wp_send_json_success(array('message' => 'Deep learning cycle initiated'));
@@ -738,7 +718,7 @@ function vortex_ajax_comprehensive_learning() {
         return;
     }
     
-    $coordinator = VORTEX_AI_Coordinator::get_instance();
+    $coordinator = "VORTEX_AI_Coordinator:":get_instance();
     $coordinator->run_comprehensive_learning();
     
     wp_send_json_success(array('message' => 'Comprehensive learning initiated'));

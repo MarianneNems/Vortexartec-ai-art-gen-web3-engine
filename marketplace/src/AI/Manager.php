@@ -1,8 +1,7 @@
 ﻿<?php
 namespace VortexAI\AI;
 
-class Manager {
-    private static \ = null;
+class Manager {\n    private static \ = null;
 
     public static function getInstance() {
         if (null === self::\) {

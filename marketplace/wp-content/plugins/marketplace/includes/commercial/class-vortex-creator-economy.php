@@ -1,5 +1,5 @@
-            $placeholder = implode(',', array_fill(0, count($all_tags), '%s'));
-            $query = $wpdb->prepare(
+            $placeholder = "implode("',', array_fill(0, count($all_tags), '%s'));
+            $query = "$wpdb-">prepare(
                 "SELECT * FROM {$wpdb->prefix}vortex_creator_trends 
                  WHERE trend_category = 'tag' AND trend_name IN ($placeholder)
                  AND trend_status IN ('emerging', 'growing')
@@ -8,7 +8,7 @@
                 $all_tags
             );
             
-            $relevant_trends = $wpdb->get_results($query);
+            $relevant_trends = "$wpdb-">get_results($query);
         }
         
         // Render panel
@@ -134,86 +134,70 @@
         </div>
         
         <style>
-            .vortex-creator-economy-panel {
-                background: #fff;
+            .vortex-creator-economy-panel {\n    background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 padding: 20px;
                 margin-bottom: 30px;
             }
             
-            .vortex-creator-tier {
-                display: flex;
+            .vortex-creator-tier {\n    display: flex;
                 align-items: center;
                 margin-bottom: 20px;
                 padding-bottom: 20px;
                 border-bottom: 1px solid #eee;
             }
             
-            .tier-badge {
-                padding: 8px 16px;
+            .tier-badge {\n    padding: 8px 16px;
                 border-radius: 20px;
                 font-weight: bold;
                 color: white;
                 margin-right: 20px;
             }
             
-            .tier-none {
-                background-color: #607d8b;
+            .tier-none {\n    background-color: #607d8b;
             }
             
-            .tier-emerging {
-                background-color: #4caf50;
+            .tier-emerging {\n    background-color: #4caf50;
             }
             
-            .tier-established {
-                background-color: #2196f3;
+            .tier-established {\n    background-color: #2196f3;
             }
             
-            .tier-signature {
-                background-color: #9c27b0;
+            .tier-signature {\n    background-color: #9c27b0;
             }
             
-            .tier-elite {
-                background: linear-gradient(90deg, #f44336, #ff9800);
+            .tier-elite {\n    background: linear-gradient(90deg, #f44336, #ff9800);
             }
             
-            .tier-details {
-                flex: 1;
+            .tier-details {\n    flex: 1;
             }
             
-            .tier-benefit {
-                display: flex;
+            .tier-benefit {\n    display: flex;
                 justify-content: space-between;
                 margin-bottom: 5px;
             }
             
-            .benefit-value {
-                font-weight: bold;
+            .benefit-value {\n    font-weight: bold;
             }
             
-            .tier-since {
-                font-size: 0.9em;
+            .tier-since {\n    font-size: 0.9em;
                 color: #666;
                 margin-top: 10px;
             }
             
-            .requirements-progress {
-                margin: 15px 0;
+            .requirements-progress {\n    margin: 15px 0;
             }
             
-            .requirement {
-                display: flex;
+            .requirement {\n    display: flex;
                 align-items: center;
                 margin-bottom: 10px;
             }
             
-            .req-label {
-                width: 80px;
+            .req-label {\n    width: 80px;
             }
             
-            .progress-bar {
-                flex: 1;
+            .progress-bar {\n    flex: 1;
                 height: 8px;
                 background: #f1f1f1;
                 border-radius: 4px;
@@ -221,65 +205,54 @@
                 overflow: hidden;
             }
             
-            .progress {
-                height: 100%;
+            .progress {\n    height: 100%;
                 background: linear-gradient(90deg, #4a6cf7, #46b450);
                 border-radius: 4px;
             }
             
-            .req-value {
-                width: 80px;
+            .req-value {\n    width: 80px;
                 text-align: right;
                 font-size: 0.9em;
             }
             
-            .next-tier-benefits ul {
-                margin: 10px 0;
+            .next-tier-benefits ul {\n    margin: 10px 0;
                 padding-left: 20px;
             }
             
-            .vortex-trends-insight {
-                margin-top: 20px;
+            .vortex-trends-insight {\n    margin-top: 20px;
                 padding-top: 20px;
                 border-top: 1px solid #eee;
             }
             
-            .trends-list {
-                margin: 15px 0;
+            .trends-list {\n    margin: 15px 0;
                 padding: 0;
                 list-style: none;
             }
             
-            .trends-list li {
-                display: flex;
+            .trends-list li {\n    display: flex;
                 justify-content: space-between;
                 padding: 8px 0;
                 border-bottom: 1px solid #f1f1f1;
             }
             
-            .trend-name {
-                font-weight: bold;
+            .trend-name {\n    font-weight: bold;
             }
             
-            .trend-status {
-                padding: 2px 8px;
+            .trend-status {\n    padding: 2px 8px;
                 border-radius: 10px;
                 font-size: 0.8em;
                 font-weight: bold;
             }
             
-            .trend-emerging {
-                background-color: #e3f2fd;
+            .trend-emerging {\n    background-color: #e3f2fd;
                 color: #1976d2;
             }
             
-            .trend-growing {
-                background-color: #e8f5e9;
+            .trend-growing {\n    background-color: #e8f5e9;
                 color: #388e3c;
             }
             
-            .trend-tip {
-                font-style: italic;
+            .trend-tip {\n    font-style: italic;
                 font-size: 0.9em;
                 color: #666;
                 margin-top: 15px;
@@ -308,8 +281,7 @@
     public function render_admin_page() {
         global $wpdb;
         
-        // Get creator tiers summary
-        $tier_summary = $wpdb->get_results(
+        // Get creator tiers summary;\n$tier_summary = "$wpdb-">get_results(
             "SELECT tier_name, COUNT(DISTINCT user_id) as creator_count 
              FROM {$wpdb->prefix}vortex_creator_tiers 
              WHERE (user_id, assigned_date) IN (
@@ -320,15 +292,13 @@
              GROUP BY tier_name"
         );
         
-        // Get trend summary
-        $trend_summary = $wpdb->get_results(
+        // Get trend summary;\n$trend_summary = "$wpdb-">get_results(
             "SELECT trend_status, COUNT(*) as trend_count 
              FROM {$wpdb->prefix}vortex_creator_trends 
              GROUP BY trend_status"
         );
         
-        // Get top trends
-        $top_trends = $wpdb->get_results(
+        // Get top trends;\n$top_trends = "$wpdb-">get_results(
             "SELECT * FROM {$wpdb->prefix}vortex_creator_trends 
              ORDER BY confidence_score DESC, first_detected DESC 
              LIMIT 10"
@@ -354,10 +324,10 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($this->creator_tiers as $tier_name => $tier_data): 
-                                    $count = 0;
+                                    $count = " 0;"
                                     foreach ($tier_summary as $summary) {
                                         if ($summary->tier_name === $tier_name) {
-                                            $count = $summary->creator_count;
+                                            $count = "$summary-">creator_count;
                                             break;
                                         }
                                     }
@@ -367,7 +337,7 @@
                                     <td><?php echo intval($count); ?></td>
                                     <td><?php echo esc_html($tier_data['commission']); ?>%</td>
                                     <td>
-                                        <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-creators&tier=' . $tier_name)); ?>" class="button button-small">
+                                        <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"creators&tier=' . $tier_name)); ?>" class="button button-small">
                                             <?php _e('View Creators', 'vortex-marketplace'); ?>
                                         </a>
                                     </td>
@@ -383,25 +353,24 @@
                     
                     <div class="trend-analytics">
                         <div class="trend-summary">
-                            <?php
-                            $emerging_count = 0;
-                            $growing_count = 0;
-                            $established_count = 0;
-                            $declining_count = 0;
+                            <?php;\n$emerging_count = " 0;"
+                            $growing_count = " 0;"
+                            $established_count = " 0;"
+                            $declining_count = " 0;"
                             
                             foreach ($trend_summary as $summary) {
                                 switch ($summary->trend_status) {
                                     case 'emerging':
-                                        $emerging_count = $summary->trend_count;
+                                        $emerging_count = "$summary-">trend_count;
                                         break;
                                     case 'growing':
-                                        $growing_count = $summary->trend_count;
+                                        $growing_count = "$summary-">trend_count;
                                         break;
                                     case 'established':
-                                        $established_count = $summary->trend_count;
+                                        $established_count = "$summary-">trend_count;
                                         break;
                                     case 'declining':
-                                        $declining_count = $summary->trend_count;
+                                        $declining_count = "$summary-">trend_count;
                                         break;
                                 }
                             }
@@ -428,7 +397,7 @@
                             </div>
                         </div>
                         
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=vortex-trend-analysis')); ?>" class="button button-primary">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page = "vortex-"trend-analysis')); ?>" class="button button-primary">
                             <?php _e('View All Trends', 'vortex-marketplace'); ?>
                         </a>
                     </div>
@@ -474,71 +443,59 @@
         </div>
         
         <style>
-            .vortex-creator-economy-admin {
-                max-width: 1200px;
+            .vortex-creator-economy-admin {\n    max-width: 1200px;
             }
             
-            .vortex-admin-overview {
-                display: flex;
+            .vortex-admin-overview {\n    display: flex;
                 gap: 20px;
                 margin-bottom: 30px;
             }
             
-            .admin-card {
-                flex: 1;
+            .admin-card {\n    flex: 1;
                 background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 padding: 20px;
             }
             
-            .trend-summary {
-                margin-bottom: 20px;
+            .trend-summary {\n    margin-bottom: 20px;
             }
             
-            .trend-stat {
-                display: flex;
+            .trend-stat {\n    display: flex;
                 justify-content: space-between;
                 margin-bottom: 10px;
                 padding-bottom: 10px;
                 border-bottom: 1px solid #f1f1f1;
             }
             
-            .trend-value {
-                font-weight: bold;
+            .trend-value {\n    font-weight: bold;
                 padding: 3px 8px;
                 border-radius: 12px;
             }
             
-            .trend-emerging {
-                background-color: #e3f2fd;
+            .trend-emerging {\n    background-color: #e3f2fd;
                 color: #1976d2;
             }
             
-            .trend-growing {
-                background-color: #e8f5e9;
+            .trend-growing {\n    background-color: #e8f5e9;
                 color: #388e3c;
             }
             
-            .trend-established {
-                background-color: #fff3e0;
+            .trend-established {\n    background-color: #fff3e0;
                 color: #e65100;
             }
             
-            .trend-declining {
-                background-color: #ffebee;
+            .trend-declining {\n    background-color: #ffebee;
                 color: #c62828;
             }
             
-            .trend-badge {
-                display: inline-block;
+            .trend-badge {\n    display: inline-block;
                 padding: 3px 8px;
                 border-radius: 12px;
                 font-size: 12px;
             }
             
-            .vortex-top-trends {
-                background: #fff;
+            .vortex-top-trends {\n    background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 padding: 20px;

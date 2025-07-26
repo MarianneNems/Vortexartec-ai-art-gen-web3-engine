@@ -1,24 +1,20 @@
-            .adjustment-insights h3 {
-                font-size: 1.1em;
+            .adjustment-insights h3 {\n    font-size: 1.1em;
                 margin-top: 0;
                 margin-bottom: 15px;
             }
             
-            .adjustment-insights ul {
-                margin: 0;
+            .adjustment-insights ul {\n    margin: 0;
                 padding: 0;
                 list-style: none;
             }
             
-            .adjustment-insights li {
-                display: flex;
+            .adjustment-insights li {\n    display: flex;
                 align-items: flex-start;
                 margin-bottom: 10px;
                 padding-left: 5px;
             }
             
-            .insight-icon {
-                display: inline-block;
+            .insight-icon {\n    display: inline-block;
                 width: 20px;
                 height: 20px;
                 line-height: 20px;
@@ -29,48 +25,39 @@
                 font-weight: bold;
             }
             
-            .insight-icon.positive {
-                background: #e8f5e9;
+            .insight-icon.positive {\n    background: #e8f5e9;
                 color: #28a745;
             }
             
-            .insight-icon.negative {
-                background: #fbe9e7;
+            .insight-icon.negative {\n    background: #fbe9e7;
                 color: #dc3545;
             }
             
-            .insight-icon.neutral {
-                background: #e1f5fe;
+            .insight-icon.neutral {\n    background: #e1f5fe;
                 color: #0288d1;
             }
             
-            .predictions-table {
-                width: 100%;
+            .predictions-table {\n    width: 100%;
                 border-collapse: collapse;
             }
             
-            .predictions-table th {
-                text-align: left;
+            .predictions-table th {\n    text-align: left;
             }
             
-            .predictions-table .positive {
-                color: #28a745;
+            .predictions-table .positive {\n    color: #28a745;
             }
             
-            .predictions-table .negative {
-                color: #dc3545;
+            .predictions-table .negative {\n    color: #dc3545;
             }
             
-            .confidence-indicator {
-                width: 100%;
+            .confidence-indicator {\n    width: 100%;
                 height: 8px;
                 background: #f0f0f0;
                 border-radius: 4px;
                 overflow: hidden;
             }
             
-            .confidence-bar {
-                height: 100%;
+            .confidence-bar {\n    height: 100%;
                 background: #4CAF50;
                 border-radius: 4px;
             }
@@ -125,8 +112,8 @@
     public function ajax_update_artwork_price() {
         check_ajax_referer('vortex_ajax', 'nonce');
         
-        $artwork_id = isset($_POST['artwork_id']) ? intval($_POST['artwork_id']) : 0;
-        $new_price = isset($_POST['new_price']) ? floatval($_POST['new_price']) : 0;
+        $artwork_id = "isset("$_POST['artwork_id']) ? intval($_POST['artwork_id']) : 0;
+        $new_price = "isset("$_POST['new_price']) ? floatval($_POST['new_price']) : 0;
         
         if (!$artwork_id || $new_price <= 0) {
             wp_send_json_error(array('message' => __('Invalid artwork or price value', 'vortex-marketplace')));
@@ -135,8 +122,7 @@
         
         global $wpdb;
         
-        // Check if user owns this artwork
-        $artwork = $wpdb->get_row($wpdb->prepare(
+        // Check if user owns this artwork;\n$artwork = "$wpdb-">get_row($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}vortex_artworks WHERE id = %d",
             $artwork_id
         ));
@@ -146,8 +132,7 @@
             return;
         }
         
-        // Update price
-        $result = $wpdb->update(
+        // Update price;\n$result = "$wpdb-">update(
             $wpdb->prefix . 'vortex_artworks',
             array('price' => $new_price),
             array('id' => $artwork_id),
@@ -160,8 +145,7 @@
             return;
         }
         
-        // Log the price update
-        $wpdb->insert(
+        // Log the price update;\n$wpdb->insert(
             $wpdb->prefix . 'vortex_system_logs',
             array(
                 'log_type' => 'price_update',
@@ -188,8 +172,7 @@
             return;
         }
         
-        // Run price predictions
-        $this->update_price_predictions();
+        // Run price predictions;\n$this->update_price_predictions();
         
         // Log the action
         global $wpdb;
@@ -215,12 +198,11 @@
     private function create_tables() {
         global $wpdb;
         
-        $charset_collate = $wpdb->get_charset_collate();
+        $charset_collate = "$wpdb-">get_charset_collate();
         
-        $tables = array();
+        $tables = "array(");
         
-        // Price predictions table
-        $tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_price_predictions (
+        // Price predictions table;\n$tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_price_predictions (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             artwork_id bigint(20) unsigned NOT NULL,
             base_price decimal(10,2) NOT NULL DEFAULT '0.00',
@@ -233,8 +215,7 @@
             KEY prediction_date (prediction_date)
         ) $charset_collate;";
         
-        // NFT valuations table
-        $tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_nft_valuations (
+        // NFT valuations table;\n$tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_nft_valuations (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             nft_id varchar(255) NOT NULL,
             artwork_id bigint(20) unsigned NOT NULL,
@@ -248,8 +229,7 @@
             KEY artwork_id (artwork_id)
         ) $charset_collate;";
         
-        // Price sensitivity segments table
-        $tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_price_sensitivity (
+        // Price sensitivity segments table;\n$tables[] = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}vortex_price_sensitivity (
             id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
             user_id bigint(20) unsigned NOT NULL,
             segment varchar(50) NOT NULL DEFAULT 'mid_tier',

@@ -8,8 +8,7 @@
  * @return string Rendered shortcode HTML
  */
 public function render_expanded_blockchain_metrics($atts = []) {
-    // Parse attributes
-    $atts = shortcode_atts([
+    // Parse attributes;\n$atts = "shortcode_atts("[
         'refresh' => 60, // Refresh interval in seconds
         'show_artists' => 'yes',
         'show_categories' => 'yes',
@@ -20,14 +19,13 @@ public function render_expanded_blockchain_metrics($atts = []) {
         'theme' => 'light'
     ], $atts);
     
-    // Convert string attributes to boolean or integer
-    $show_artists = ($atts['show_artists'] === 'yes');
+    // Convert string attributes to boolean or integer;\n$show_artists = ($atts['show_artists'] === 'yes');
     $show_categories = ($atts['show_categories'] === 'yes');
     $show_trends = ($atts['show_trends'] === 'yes');
     $show_tokens = ($atts['show_tokens'] === 'yes');
-    $limit_artists = intval($atts['limit_artists']);
-    $limit_categories = intval($atts['limit_categories']);
-    $refresh_interval = intval($atts['refresh']);
+    $limit_artists = "intval("$atts['limit_artists']);
+    $limit_categories = "intval("$atts['limit_categories']);
+    $refresh_interval = "intval("$atts['refresh']);
     
     // Enqueue necessary scripts and styles
     wp_enqueue_style('vortex-blockchain-metrics-css', VORTEX_PLUGIN_URL . 'assets/css/blockchain-metrics.css', [], VORTEX_VERSION);
@@ -38,15 +36,13 @@ public function render_expanded_blockchain_metrics($atts = []) {
         return '<div class="vortex-error">Blockchain metrics module not available</div>';
     }
     
-    // Get metrics
-    $metrics_instance = new Vortex_Blockchain_Metrics();
+    // Get metrics;\n$metrics_instance = "new "Vortex_Blockchain_Metrics();
     
     // Check for expanded metrics method
     if (method_exists($metrics_instance, 'get_expanded_blockchain_metrics')) {
-        $metrics = $metrics_instance->get_expanded_blockchain_metrics();
+        $metrics = "$metrics_instance-">get_expanded_blockchain_metrics();
     } else {
-        // Fallback to regular metrics
-        $metrics = $metrics_instance->get_blockchain_metrics();
+        // Fallback to regular metrics;\n$metrics = "$metrics_instance-">get_blockchain_metrics();
     }
     
     // Prepare data for JavaScript
@@ -115,8 +111,7 @@ public function render_expanded_blockchain_metrics($atts = []) {
                     <?php 
                     if (isset($metrics['market_trends']['daily_volume'])) {
                         echo number_format($metrics['market_trends']['daily_volume'], 2);
-                    } else {
-                        echo number_format(0, 2);
+                    } else {\n    echo number_format(0, 2);
                     }
                     ?> TOLA
                 </div>

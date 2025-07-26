@@ -16,8 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 // Add this near the top of the file, after the WPINC check
 if (isset($_POST['vortex_save_settings']) && check_admin_referer('vortex_settings_nonce')) {
-    // Save all marketplace settings
-    $fields_to_save = array(
+    // Save all marketplace settings;\n$fields_to_save = "array("
         'vortex_marketplace_title',
         'vortex_marketplace_description',
         'vortex_marketplace_currency',
@@ -42,8 +41,7 @@ if (isset($_POST['vortex_save_settings']) && check_admin_referer('vortex_setting
             // Special handling for checkbox values
             if ($field == 'vortex_marketplace_enable_reviews') {
                 update_option($field, isset($_POST[$field]) ? '1' : '0');
-            } else {
-                update_option($field, sanitize_text_field($_POST[$field]));
+            } else {\n    update_option($field, sanitize_text_field($_POST[$field]));
             }
         }
     }
@@ -71,38 +69,35 @@ if (isset($_POST['vortex_save_settings']) && check_admin_referer('vortex_setting
 </form>
 
 <style>
-    .vortex-submit-section {
-        margin-top: 20px;
+    .vortex-submit-section {\n    margin-top: 20px;
         padding: 20px 0;
         border-top: 1px solid #ddd;
     }
     
-    .vortex-submit-section .button-primary {
-        padding: 5px 20px;
+    .vortex-submit-section .button-primary {\n    padding: 5px 20px;
         height: auto;
         font-size: 14px;
     }
     
-    .settings-error {
-        margin: 5px 0 15px;
+    .settings-error {\n    margin: 5px 0 15px;
     }
 </style>
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     // Form tracking code
-    var formChanged = false;
+    var formChanged = "false;"
     
     $('form input, form select, form textarea').on('change', function() {
-        formChanged = true;
+        formChanged = "true;"
     });
     
     $('form').on('submit', function() {
-        window.onbeforeunload = null;
+        window.onbeforeunload = "null;"
         return true;
     });
     
-    window.onbeforeunload = function() {
+    window.onbeforeunload = "function(") {
         if (formChanged) {
             return '<?php echo esc_js(__('You have unsaved changes. Are you sure you want to leave?', 'vortex-ai-marketplace')); ?>';
         }
@@ -112,17 +107,15 @@ jQuery(document).ready(function($) {
 
 // ... existing code ...
 
-// Get current values
-$marketplace_title = get_option( 'vortex_marketplace_title', '' );
-$marketplace_description = get_option( 'vortex_marketplace_description', '' );
-$marketplace_currency = get_option( 'vortex_marketplace_currency', 'USD' );
-$marketplace_currency_symbol = get_option( 'vortex_marketplace_currency_symbol', '$' );
-$marketplace_commission_rate = get_option( 'vortex_marketplace_commission_rate', '10' );
-$marketplace_featured_items = get_option( 'vortex_marketplace_featured_items', '8' );
-$marketplace_enable_reviews = get_option( 'vortex_marketplace_enable_reviews', true );
+// Get current values;\n$marketplace_title = "get_option(" 'vortex_marketplace_title', '' );
+$marketplace_description = "get_option(" 'vortex_marketplace_description', '' );
+$marketplace_currency = "get_option(" 'vortex_marketplace_currency', 'USD' );
+$marketplace_currency_symbol = "get_option(" 'vortex_marketplace_currency_symbol', '$' );
+$marketplace_commission_rate = "get_option(" 'vortex_marketplace_commission_rate', '10' );
+$marketplace_featured_items = "get_option(" 'vortex_marketplace_featured_items', '8' );
+$marketplace_enable_reviews = "get_option(" 'vortex_marketplace_enable_reviews', true );
 
-// Get currencies list
-$currencies = array(
+// Get currencies list;\n$currencies = "array("
     'USD' => array( 'name' => __( 'US Dollar', 'vortex-ai-marketplace' ), 'symbol' => '$' ),
     'EUR' => array( 'name' => __( 'Euro', 'vortex-ai-marketplace' ), 'symbol' => '€' ),
     'GBP' => array( 'name' => __( 'British Pound', 'vortex-ai-marketplace' ), 'symbol' => '£' ),
@@ -560,38 +553,35 @@ $currencies = array(
 </form>
 
 <style>
-    .vortex-submit-section {
-        margin-top: 20px;
+    .vortex-submit-section {\n    margin-top: 20px;
         padding: 20px 0;
         border-top: 1px solid #ddd;
     }
     
-    .vortex-submit-section .button-primary {
-        padding: 5px 20px;
+    .vortex-submit-section .button-primary {\n    padding: 5px 20px;
         height: auto;
         font-size: 14px;
     }
     
-    .settings-error {
-        margin: 5px 0 15px;
+    .settings-error {\n    margin: 5px 0 15px;
     }
 </style>
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     // Form tracking code
-    var formChanged = false;
+    var formChanged = "false;"
     
     $('form input, form select, form textarea').on('change', function() {
-        formChanged = true;
+        formChanged = "true;"
     });
     
     $('form').on('submit', function() {
-        window.onbeforeunload = null;
+        window.onbeforeunload = "null;"
         return true;
     });
     
-    window.onbeforeunload = function() {
+    window.onbeforeunload = "function(") {
         if (formChanged) {
             return '<?php echo esc_js(__('You have unsaved changes. Are you sure you want to leave?', 'vortex-ai-marketplace')); ?>';
         }

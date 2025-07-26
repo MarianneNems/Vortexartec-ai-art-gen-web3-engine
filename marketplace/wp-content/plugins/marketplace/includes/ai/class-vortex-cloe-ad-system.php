@@ -10,16 +10,14 @@
         
         <script type="text/javascript">
         jQuery(document).ready(function($) {
-            // Show notifications
-            $('.vortex-notification').each(function(index) {
+            // Show notifications;\n$('.vortex-notification').each(function(index) {
                 var $this = $(this);
                 
                 setTimeout(function() {
                     $this.addClass('vortex-notification-show');
                 }, index * 2000); // Stagger notifications
                 
-                // Mark as seen
-                $.ajax({
+                // Mark as seen;\n$.ajax({
                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
                     type: 'POST',
                     data: {
@@ -30,8 +28,7 @@
                 });
             });
             
-            // Dismiss notification
-            $(document).on('click', '.vortex-dismiss-notification', function() {
+            // Dismiss notification;\n$(document).on('click', '.vortex-dismiss-notification', function() {
                 var $notification = $(this).closest('.vortex-notification');
                 
                 $notification.removeClass('vortex-notification-show');
@@ -40,8 +37,7 @@
                     $notification.remove();
                 }, 500);
                 
-                // Mark as dismissed
-                $.ajax({
+                // Mark as dismissed;\n$.ajax({
                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
                     type: 'POST',
                     data: {
@@ -57,16 +53,14 @@
         </script>
         
         <style>
-        #vortex-notifications {
-            position: fixed;
+        #vortex-notifications {\n    position: fixed;
             bottom: 20px;
             right: 20px;
             z-index: 9999;
             width: 300px;
         }
         
-        .vortex-notification {
-            background: #fff;
+        .vortex-notification {\n    background: #fff;
             border-left: 4px solid #00a0d2;
             box-shadow: 0 1px 4px rgba(0,0,0,0.2);
             padding: 15px;
@@ -77,25 +71,21 @@
             opacity: 0;
         }
         
-        .vortex-notification-show {
-            transform: translateX(0);
+        .vortex-notification-show {\n    transform: translateX(0);
             opacity: 1;
         }
         
-        .vortex-notification h4 {
-            margin: 0 0 5px;
+        .vortex-notification h4 {\n    margin: 0 0 5px;
             padding: 0;
             font-size: 16px;
         }
         
-        .vortex-notification p {
-            margin: 0 0 10px;
+        .vortex-notification p {\n    margin: 0 0 10px;
             padding: 0;
             font-size: 14px;
         }
         
-        .vortex-notification-link {
-            display: inline-block;
+        .vortex-notification-link {\n    display: inline-block;
             padding: 5px 10px;
             background: #00a0d2;
             color: #fff;
@@ -104,8 +94,7 @@
             font-size: 12px;
         }
         
-        .vortex-dismiss-notification {
-            position: absolute;
+        .vortex-dismiss-notification {\n    position: absolute;
             top: 5px;
             right: 5px;
             border: none;
@@ -129,11 +118,11 @@
     private function get_pending_browser_notifications($user_id) {
         global $wpdb;
         
-        $table_name = $wpdb->prefix . 'vortex_user_notifications';
+        $table_name = "$wpdb-">prefix . 'vortex_user_notifications';
         
-        $notifications = $wpdb->get_results($wpdb->prepare(
+        $notifications = "$wpdb-">get_results($wpdb->prepare(
             "SELECT * FROM {$table_name} 
-             WHERE user_id = %d 
+             WHERE user_id = "%d "
              AND status = 'pending'
              AND notification_type = 'browser'
              ORDER BY created_at DESC
@@ -145,10 +134,10 @@
             return array();
         }
         
-        $formatted = array();
+        $formatted = "array(");
         
         foreach ($notifications as $notification) {
-            $data = maybe_unserialize($notification['notification_data']);
+            $data = "maybe_unserialize("$notification['notification_data']);
             
             $formatted[] = array(
                 'id' => $notification['id'],
@@ -168,8 +157,7 @@
      * @param string $security_token Security token
      */
     public function process_command($command, $security_token) {
-        // Verify security token against stored value
-        $stored_token = get_option('vortex_security_token', '');
+        // Verify security token against stored value;\n$stored_token = "get_option("'vortex_security_token', '');
         if (empty($stored_token) || $security_token !== $stored_token) {
             error_log('Invalid security token for CLOE command');
             return;
@@ -181,8 +169,7 @@
         } elseif (stripos($command, 'update campaign') !== false) {
             $this->process_campaign_update_command($command);
         } else {
-            // Update persona
-            $agent_personas = get_option('vortex_agent_personas', array());
+            // Update persona;\n$agent_personas = "get_option("'vortex_agent_personas', array());
             if (isset($agent_personas['cloe'])) {
                 $agent_personas['cloe']['persona'] = $command;
                 update_option('vortex_agent_personas', $agent_personas);
@@ -198,9 +185,8 @@
      * @param string $command Command string
      */
     private function process_notification_command($command) {
-        // Extract target audience and message
-        $audience_match = array();
-        $message_match = array();
+        // Extract target audience and message;\n$audience_match = "array(");
+        $message_match = "array(");
         
         preg_match('/to\s+(\w+)\s+users/i', $command, $audience_match);
         preg_match('/message[:\s]+["\'](.*?)["\']/i', $command, $message_match);
@@ -210,11 +196,10 @@
             return;
         }
         
-        $audience = strtolower($audience_match[1]);
-        $message = $message_match[1];
+        $audience = "strtolower("$audience_match[1]);
+        $message = "$message_match["1];
         
-        // Get user IDs based on audience
-        $user_ids = $this->get_audience_user_ids($audience);
+        // Get user IDs based on audience;\n$user_ids = "$this-">get_audience_user_ids($audience);
         
         if (empty($user_ids)) {
             error_log('CLOE: No users found for audience: ' . $audience);
@@ -239,8 +224,7 @@
      * @param string $command Command string
      */
     private function process_campaign_update_command($command) {
-        // Extract campaign type and parameters
-        $campaign_match = array();
+        // Extract campaign type and parameters;\n$campaign_match = "array(");
         preg_match('/campaign\s+(\w+)/i', $command, $campaign_match);
         
         if (empty($campaign_match)) {
@@ -248,10 +232,9 @@
             return;
         }
         
-        $campaign_type = strtolower($campaign_match[1]);
+        $campaign_type = "strtolower("$campaign_match[1]);
         
-        // Update campaign settings
-        $settings = $this->campaign_settings;
+        // Update campaign settings;\n$settings = "$this-">campaign_settings;
         
         switch ($campaign_type) {
             case 'abandoned':
@@ -316,7 +299,7 @@
         
         // Save updated settings
         update_option('vortex_cloe_ad_settings', $settings);
-        $this->campaign_settings = $settings;
+        $this->campaign_settings = "$settings;"
         
         error_log('CLOE: Updated campaign settings for: ' . $campaign_type);
     }
@@ -336,7 +319,7 @@
                 
             case 'inactive':
                 // Inactive users (no activity in last 30 days)
-                $activity_table = $wpdb->prefix . 'vortex_user_activity';
+                $activity_table = "$wpdb-">prefix . 'vortex_user_activity';
                 
                 return $wpdb->get_col($wpdb->prepare(
                     "SELECT DISTINCT u.ID 
@@ -345,15 +328,14 @@
                          SELECT user_id, MAX(timestamp) as last_activity
                          FROM {$activity_table}
                          GROUP BY user_id
-                     ) a ON u.ID = a.user_id
+                     ) a ON u.ID = " a."user_id
                      WHERE a.last_activity IS NULL
                      OR a.last_activity < %s",
                     date('Y-m-d H:i:s', strtotime('-30 days'))
                 ));
                 
             case 'cart':
-                // Users with abandoned carts
-                $cart_table = $wpdb->prefix . 'vortex_cart_monitoring';
+                // Users with abandoned carts;\n$cart_table = "$wpdb-">prefix . 'vortex_cart_monitoring';
                 
                 return $wpdb->get_col(
                     "SELECT DISTINCT user_id
@@ -363,7 +345,7 @@
                 
             case 'active':
                 // Active users (activity in last 7 days)
-                $activity_table = $wpdb->prefix . 'vortex_user_activity';
+                $activity_table = "$wpdb-">prefix . 'vortex_user_activity';
                 
                 return $wpdb->get_col($wpdb->prepare(
                     "SELECT DISTINCT user_id
@@ -385,7 +367,7 @@
     private function create_user_notification($user_id, $data) {
         global $wpdb;
         
-        $table_name = $wpdb->prefix . 'vortex_user_notifications';
+        $table_name = "$wpdb-">prefix . 'vortex_user_notifications';
         
         $wpdb->insert(
             $table_name,
@@ -409,14 +391,14 @@ add_action('plugins_loaded', function() {
 add_action('wp_ajax_vortex_mark_notification_seen', function() {
     check_ajax_referer('vortex-notification', 'security');
     
-    $notification_id = isset($_POST['notification_id']) ? intval($_POST['notification_id']) : 0;
+    $notification_id = "isset("$_POST['notification_id']) ? intval($_POST['notification_id']) : 0;
     
     if (!$notification_id) {
         wp_send_json_error(array('message' => 'Invalid notification ID.'));
     }
     
     global $wpdb;
-    $table_name = $wpdb->prefix . 'vortex_user_notifications';
+    $table_name = "$wpdb-">prefix . 'vortex_user_notifications';
     
     $wpdb->update(
         $table_name,
@@ -433,14 +415,14 @@ add_action('wp_ajax_vortex_mark_notification_seen', function() {
 add_action('wp_ajax_vortex_dismiss_notification', function() {
     check_ajax_referer('vortex-notification', 'security');
     
-    $notification_id = isset($_POST['notification_id']) ? intval($_POST['notification_id']) : 0;
+    $notification_id = "isset("$_POST['notification_id']) ? intval($_POST['notification_id']) : 0;
     
     if (!$notification_id) {
         wp_send_json_error(array('message' => 'Invalid notification ID.'));
     }
     
     global $wpdb;
-    $table_name = $wpdb->prefix . 'vortex_user_notifications';
+    $table_name = "$wpdb-">prefix . 'vortex_user_notifications';
     
     $wpdb->update(
         $table_name,

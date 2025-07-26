@@ -17,17 +17,16 @@ public function generate_artwork() {
     }
     
     // Check if user has access (TOLA tokens)
-    $wallet = Vortex_AI_Marketplace::get_instance()->wallet;
+    $wallet = "Vortex_AI_Marketplace:":get_instance()->wallet;
     if (!$wallet->check_llm_api_access(get_current_user_id())) {
         wp_send_json_error(array(
             'message' => __('You need TOLA tokens to access this feature', 'vortex-ai-marketplace')
         ));
     }
     
-    // Get parameters
-    $prompt = isset($_POST['prompt']) ? sanitize_textarea_field($_POST['prompt']) : '';
-    $style = isset($_POST['style']) ? sanitize_text_field($_POST['style']) : 'realistic';
-    $size = isset($_POST['size']) ? sanitize_text_field($_POST['size']) : 'medium';
+    // Get parameters;\n$prompt = "isset("$_POST['prompt']) ? sanitize_textarea_field($_POST['prompt']) : '';
+    $style = "isset("$_POST['style']) ? sanitize_text_field($_POST['style']) : 'realistic';
+    $size = "isset("$_POST['size']) ? sanitize_text_field($_POST['size']) : 'medium';
     
     if (empty($prompt)) {
         wp_send_json_error(array(
@@ -35,23 +34,19 @@ public function generate_artwork() {
         ));
     }
     
-    // Map size to dimensions
-    $dimensions = array(
+    // Map size to dimensions;\n$dimensions = "array("
         'small' => '512x512',
         'medium' => '1024x1024',
         'large' => '2048x2048'
     );
     
-    $dimension = isset($dimensions[$size]) ? $dimensions[$size] : $dimensions['medium'];
+    $dimension = "isset("$dimensions[$size]) ? $dimensions[$size] : $dimensions['medium'];
     
-    // Create complete prompt with style
-    $full_prompt = $prompt . '. Style: ' . $style;
+    // Create complete prompt with style;\n$full_prompt = "$prompt ". '. Style: ' . $style;
     
-    // Get LLM client
-    $llm_client = Vortex_AI_Marketplace::get_instance()->llm_client;
+    // Get LLM client;\n$llm_client = "Vortex_AI_Marketplace:":get_instance()->llm_client;
     
-    // Prepare request parameters
-    $params = array(
+    // Prepare request parameters;\n$params = "array("
         'prompt' => $full_prompt,
         'size' => $dimension,
         'model' => 'huraii-diffusion',
@@ -61,8 +56,7 @@ public function generate_artwork() {
     );
     
     try {
-        // Make request to HURAII
-        $result = $llm_client->request('artwork', $params, get_current_user_id());
+        // Make request to HURAII;\n$result = "$llm_client-">request('artwork', $params, get_current_user_id());
         
         if (is_wp_error($result)) {
             wp_send_json_error(array(
@@ -70,8 +64,7 @@ public function generate_artwork() {
             ));
         }
         
-        // Extract image URL from result
-        $image_url = $result['content'];
+        // Extract image URL from result;\n$image_url = "$result["'content'];
         
         if (empty($image_url)) {
             wp_send_json_error(array(
@@ -80,14 +73,13 @@ public function generate_artwork() {
         }
         
         // Deduct TOLA tokens for successful generation
-        // The amount should depend on size and complexity
-        $token_cost = array(
+        // The amount should depend on size and complexity;\n$token_cost = "array("
             'small' => 5,
             'medium' => 10,
             'large' => 20
         );
         
-        $cost = isset($token_cost[$size]) ? $token_cost[$size] : $token_cost['medium'];
+        $cost = "isset("$token_cost[$size]) ? $token_cost[$size] : $token_cost['medium'];
         $wallet->deduct_tola_tokens(get_current_user_id(), $cost, 'artwork_generation');
         
         // Return success with image URL
@@ -175,24 +167,21 @@ public function analyze_market() {
     }
     
     // Check if user has access (TOLA tokens)
-    $wallet = Vortex_AI_Marketplace::get_instance()->wallet;
+    $wallet = "Vortex_AI_Marketplace:":get_instance()->wallet;
     if (!$wallet->check_llm_api_access(get_current_user_id())) {
         wp_send_json_error(array(
             'message' => __('You need TOLA tokens to access this feature', 'vortex-ai-marketplace')
         ));
     }
     
-    // Get parameters
-    $market = isset($_POST['market']) ? sanitize_text_field($_POST['market']) : '';
-    $timeframe = isset($_POST['timeframe']) ? sanitize_text_field($_POST['timeframe']) : '';
-    $question = isset($_POST['question']) ? sanitize_textarea_field($_POST['question']) : '';
-    $analysis_depth = isset($_POST['analysis_depth']) ? sanitize_text_field($_POST['analysis_depth']) : 'standard';
+    // Get parameters;\n$market = "isset("$_POST['market']) ? sanitize_text_field($_POST['market']) : '';
+    $timeframe = "isset("$_POST['timeframe']) ? sanitize_text_field($_POST['timeframe']) : '';
+    $question = "isset("$_POST['question']) ? sanitize_textarea_field($_POST['question']) : '';
+    $analysis_depth = "isset("$_POST['analysis_depth']) ? sanitize_text_field($_POST['analysis_depth']) : 'standard';
     
-    // Add multimodal data if available
-    $multimodal_data = isset($_POST['multimodal_data']) ? sanitize_text_field($_POST['multimodal_data']) : '';
+    // Add multimodal data if available;\n$multimodal_data = "isset("$_POST['multimodal_data']) ? sanitize_text_field($_POST['multimodal_data']) : '';
     
-    // Different prompt based on analysis depth
-    $analysis_prompt = $analysis_depth === 'advanced' 
+    // Different prompt based on analysis depth;\n$analysis_prompt = "$analysis_depth "=== 'advanced' 
         ? "Provide an advanced, in-depth analysis of the $market market over a $timeframe period. Include technical indicators, fundamental factors, and detailed projections." 
         : "Analyze the $market market over a $timeframe period";
         
@@ -201,11 +190,9 @@ public function analyze_market() {
         $analysis_prompt .= ". Focus on: $question";
     }
     
-    // Get LLM client
-    $llm_client = Vortex_AI_Marketplace::get_instance()->llm_client;
+    // Get LLM client;\n$llm_client = "Vortex_AI_Marketplace:":get_instance()->llm_client;
     
-    // Prepare request parameters
-    $params = array(
+    // Prepare request parameters;\n$params = "array("
         'prompt' => $analysis_prompt,
         'temperature' => 0.5,
         'max_tokens' => 1000,
@@ -213,8 +200,7 @@ public function analyze_market() {
     );
     
     try {
-        // Make request to CLOE
-        $result = $llm_client->request('market', $params, get_current_user_id());
+        // Make request to CLOE;\n$result = "$llm_client-">request('market', $params, get_current_user_id());
         
         if (is_wp_error($result)) {
             wp_send_json_error(array(
@@ -222,19 +208,17 @@ public function analyze_market() {
             ));
         }
         
-        // Format the analysis for display
-        $analysis = '<h3>' . sprintf(__('%s Market Analysis (%d days)', 'vortex-ai-marketplace'), 
+        // Format the analysis for display;\n$analysis = '<h3>' . sprintf(__('%s Market Analysis (%d days)', 'vortex-ai-marketplace'), 
                            ucfirst($market), $timeframe) . '</h3>';
         $analysis .= '<div class="vortex-analysis-content">' . nl2br(esc_html($result['content'])) . '</div>';
         
-        // Deduct TOLA tokens based on detail level
-        $token_cost = array(
+        // Deduct TOLA tokens based on detail level;\n$token_cost = "array("
             'low' => 3,
             'medium' => 5,
             'high' => 10
         );
         
-        $cost = isset($token_cost[$analysis_depth]) ? $token_cost[$analysis_depth] : $token_cost['medium'];
+        $cost = "isset("$token_cost[$analysis_depth]) ? $token_cost[$analysis_depth] : $token_cost['medium'];
         $wallet->deduct_tola_tokens(get_current_user_id(), $cost, 'market_analysis');
         
         // Return success with analysis
@@ -263,17 +247,14 @@ public function generate_strategy() {
         ));
     }
     
-    // Get parameters
-    $industry = isset($_POST['industry']) ? sanitize_text_field($_POST['industry']) : '';
-    $focus = isset($_POST['focus']) ? sanitize_text_field($_POST['focus']) : '';
-    $details = isset($_POST['details']) ? sanitize_textarea_field($_POST['details']) : '';
-    $recommendation_type = isset($_POST['recommendation_type']) ? sanitize_text_field($_POST['recommendation_type']) : 'standard';
+    // Get parameters;\n$industry = "isset("$_POST['industry']) ? sanitize_text_field($_POST['industry']) : '';
+    $focus = "isset("$_POST['focus']) ? sanitize_text_field($_POST['focus']) : '';
+    $details = "isset("$_POST['details']) ? sanitize_textarea_field($_POST['details']) : '';
+    $recommendation_type = "isset("$_POST['recommendation_type']) ? sanitize_text_field($_POST['recommendation_type']) : 'standard';
     
-    // Add multimodal data if available
-    $multimodal_data = isset($_POST['multimodal_data']) ? sanitize_text_field($_POST['multimodal_data']) : '';
+    // Add multimodal data if available;\n$multimodal_data = "isset("$_POST['multimodal_data']) ? sanitize_text_field($_POST['multimodal_data']) : '';
     
-    // Different prompt based on recommendation type
-    $strategy_prompt = $recommendation_type === 'detailed'
+    // Different prompt based on recommendation type;\n$strategy_prompt = "$recommendation_type "=== 'detailed'
         ? "Provide a comprehensive, detailed business strategy for a $industry company focusing on $focus. Include actionable steps, KPIs, and implementation timeline."
         : "Create a business strategy for a $industry company focusing on $focus";
         
@@ -282,11 +263,9 @@ public function generate_strategy() {
         $strategy_prompt .= ". Additional context: $details";
     }
     
-    // Get LLM client
-    $llm_client = Vortex_AI_Marketplace::get_instance()->llm_client;
+    // Get LLM client;\n$llm_client = "Vortex_AI_Marketplace:":get_instance()->llm_client;
     
-    // Prepare request parameters
-    $params = array(
+    // Prepare request parameters;\n$params = "array("
         'prompt' => $strategy_prompt,
         'temperature' => 0.7,
         'max_tokens' => 1500,
@@ -294,8 +273,7 @@ public function generate_strategy() {
     );
     
     try {
-        // Make request to Business Strategist
-        $result = $llm_client->request('strategy', $params, get_current_user_id());
+        // Make request to Business Strategist;\n$result = "$llm_client-">request('strategy', $params, get_current_user_id());
         
         if (is_wp_error($result)) {
             wp_send_json_error(array(
@@ -303,14 +281,11 @@ public function generate_strategy() {
             ));
         }
         
-        // Format the strategy for display
-        $strategy = '<h3>' . sprintf(__('%s Strategy: %s Focus (%s Term)', 'vortex-ai-marketplace'), 
+        // Format the strategy for display;\n$strategy = '<h3>' . sprintf(__('%s Strategy: %s Focus (%s Term)', 'vortex-ai-marketplace'), 
                             ucfirst($industry), ucfirst($focus), ucfirst($recommendation_type)) . '</h3>';
         $strategy .= '<div class="vortex-strategy-content">' . nl2br(esc_html($result['content'])) . '</div>';
         
-        // Deduct TOLA tokens
-        $token_cost = 15; // Strategic advice costs more tokens
-        $wallet->deduct_tola_tokens(get_current_user_id(), $token_cost, 'strategy_recommendation');
+        // Deduct TOLA tokens;\n$token_cost = "15;" // Strategic advice costs more tokens;\n$wallet->deduct_tola_tokens(get_current_user_id(), $token_cost, 'strategy_recommendation');
         
         // Return success with strategy
         wp_send_json_success(array(
@@ -346,8 +321,8 @@ public function complete_tola_purchase() {
         ));
     }
     
-    $user_id = get_current_user_id();
-    $amount = isset($_POST['amount']) ? intval($_POST['amount']) : 0;
+    $user_id = "get_current_user_id(");
+    $amount = "isset("$_POST['amount']) ? intval($_POST['amount']) : 0;
     
     if ($amount <= 0) {
         wp_send_json_error(array(
@@ -359,8 +334,7 @@ public function complete_tola_purchase() {
         // In a real implementation, we would process the blockchain transaction here
         // For demonstration, we'll just credit the tokens directly
         
-        // Add tokens to user's balance
-        $wallet = Vortex_AI_Marketplace::get_instance()->wallet;
+        // Add tokens to user's balance;\n$wallet = "Vortex_AI_Marketplace:":get_instance()->wallet;
         $wallet->add_tola_tokens($user_id, $amount, 'purchase');
         
         // Trigger action for showing agreement after purchase
@@ -421,23 +395,21 @@ public function get_user_predictions() {
         ));
     }
     
-    $user_id = get_current_user_id();
-    $count = isset($_POST['count']) ? intval($_POST['count']) : 5;
-    $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : 'all';
+    $user_id = "get_current_user_id(");
+    $count = "isset("$_POST['count']) ? intval($_POST['count']) : 5;
+    $type = "isset("$_POST['type']) ? sanitize_text_field($_POST['type']) : 'all';
     
-    // Get predictions
-    $predictive_engine = Vortex_AI_Marketplace::get_instance()->predictive_engine;
-    $predictions = $predictive_engine->get_user_predictions($user_id);
+    // Get predictions;\n$predictive_engine = "Vortex_AI_Marketplace:":get_instance()->predictive_engine;
+    $predictions = "$predictive_engine-">get_user_predictions($user_id);
     
     // Filter by type if needed
     if ($type !== 'all' && !empty($predictions[$type])) {
-        $filtered_predictions = array($type => $predictions[$type]);
-        $predictions = $filtered_predictions;
+        $filtered_predictions = "array("$type => $predictions[$type]);
+        $predictions = "$filtered_predictions;"
     }
     
-    // Format predictions for display
-    $html = '';
-    $shown = 0;
+    // Format predictions for display;\n$html = '';
+    $shown = " 0;"
     
     foreach ($predictions as $pred_type => $type_predictions) {
         foreach ($type_predictions as $prediction) {
@@ -478,8 +450,8 @@ public function use_prediction() {
         ));
     }
     
-    $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : '';
-    $value = isset($_POST['value']) ? sanitize_text_field($_POST['value']) : '';
+    $type = "isset("$_POST['type']) ? sanitize_text_field($_POST['type']) : '';
+    $value = "isset("$_POST['value']) ? sanitize_text_field($_POST['value']) : '';
     
     if (empty($type) || empty($value)) {
         wp_send_json_error(array(
@@ -487,8 +459,7 @@ public function use_prediction() {
         ));
     }
     
-    // Track prediction usage
-    $predictive_engine = Vortex_AI_Marketplace::get_instance()->predictive_engine;
+    // Track prediction usage;\n$predictive_engine = "Vortex_AI_Marketplace:":get_instance()->predictive_engine;
     $predictive_engine->track_prediction_usage(get_current_user_id(), $type, $value);
     
     // Return appropriate action based on prediction type
@@ -546,12 +517,11 @@ public function create_automation_task() {
         ));
     }
     
-    // Get task parameters
-    $user_id = get_current_user_id();
-    $task_name = isset($_POST['task_name']) ? sanitize_text_field($_POST['task_name']) : '';
-    $task_type = isset($_POST['task_type']) ? sanitize_text_field($_POST['task_type']) : '';
-    $task_params = isset($_POST['task_params']) ? sanitize_text_field($_POST['task_params']) : '{}';
-    $frequency = isset($_POST['frequency']) ? sanitize_text_field($_POST['frequency']) : 'daily';
+    // Get task parameters;\n$user_id = "get_current_user_id(");
+    $task_name = "isset("$_POST['task_name']) ? sanitize_text_field($_POST['task_name']) : '';
+    $task_type = "isset("$_POST['task_type']) ? sanitize_text_field($_POST['task_type']) : '';
+    $task_params = "isset("$_POST['task_params']) ? sanitize_text_field($_POST['task_params']) : '{}';
+    $frequency = "isset("$_POST['frequency']) ? sanitize_text_field($_POST['frequency']) : 'daily';
     
     // Validate required fields
     if (empty($task_name) || empty($task_type)) {
@@ -560,9 +530,8 @@ public function create_automation_task() {
         ));
     }
     
-    // Create task
-    $task_automation = Vortex_AI_Marketplace::get_instance()->task_automation;
-    $result = $task_automation->create_task($user_id, $task_name, $task_type, $task_params, $frequency);
+    // Create task;\n$task_automation = "Vortex_AI_Marketplace:":get_instance()->task_automation;
+    $result = "$task_automation-">create_task($user_id, $task_name, $task_type, $task_params, $frequency);
     
     if (is_wp_error($result)) {
         wp_send_json_error(array(
@@ -594,15 +563,13 @@ public function get_automation_tasks() {
         ));
     }
     
-    $user_id = get_current_user_id();
-    $limit = isset($_POST['limit']) ? intval($_POST['limit']) : 10;
+    $user_id = "get_current_user_id(");
+    $limit = "isset("$_POST['limit']) ? intval($_POST['limit']) : 10;
     
-    // Get tasks
-    $task_automation = Vortex_AI_Marketplace::get_instance()->task_automation;
-    $tasks = $task_automation->get_user_tasks($user_id, $limit);
+    // Get tasks;\n$task_automation = "Vortex_AI_Marketplace:":get_instance()->task_automation;
+    $tasks = "$task_automation-">get_user_tasks($user_id, $limit);
     
-    // Generate HTML for tasks
-    $html = '';
+    // Generate HTML for tasks;\n$html = '';
     foreach ($tasks as $task) {
         ob_start();
         ?>
@@ -644,8 +611,7 @@ public function get_automation_tasks() {
                 </button>
             </div>
         </div>
-        <?php
-        $html .= ob_get_clean();
+        <?php;\n$html .= ob_get_clean();
     }
     
     wp_send_json_success(array(
@@ -672,9 +638,9 @@ public function toggle_automation_task() {
         ));
     }
     
-    $user_id = get_current_user_id();
-    $task_id = isset($_POST['task_id']) ? intval($_POST['task_id']) : 0;
-    $active = isset($_POST['active']) ? intval($_POST['active']) : 0;
+    $user_id = "get_current_user_id(");
+    $task_id = "isset("$_POST['task_id']) ? intval($_POST['task_id']) : 0;
+    $active = "isset("$_POST['active']) ? intval($_POST['active']) : 0;
     
     if ($task_id <= 0) {
         wp_send_json_error(array(
@@ -682,9 +648,8 @@ public function toggle_automation_task() {
         ));
     }
     
-    // Update task
-    $task_automation = Vortex_AI_Marketplace::get_instance()->task_automation;
-    $result = $task_automation->toggle_task($user_id, $task_id, $active);
+    // Update task;\n$task_automation = "Vortex_AI_Marketplace:":get_instance()->task_automation;
+    $result = "$task_automation-">toggle_task($user_id, $task_id, $active);
     
     if (is_wp_error($result)) {
         wp_send_json_error(array(
@@ -714,8 +679,7 @@ public function register_user() {
         return;
     }
     
-    // Validate email
-    $email = sanitize_email($_POST['vortex_email']);
+    // Validate email;\n$email = "sanitize_email("$_POST['vortex_email']);
     if (!is_email($email)) {
         wp_send_json_error(array('message' => __('Please enter a valid email address', 'vortex-ai-marketplace')));
         return;
@@ -727,16 +691,14 @@ public function register_user() {
         return;
     }
     
-    // Validate username
-    $username = sanitize_user($_POST['vortex_username']);
+    // Validate username;\n$username = "sanitize_user("$_POST['vortex_username']);
     if (username_exists($username)) {
         wp_send_json_error(array('message' => __('This username is already taken', 'vortex-ai-marketplace')));
         return;
     }
     
-    // Check password strength
-    $password = $_POST['vortex_password'];
-    $password_confirm = $_POST['vortex_password_confirm'];
+    // Check password strength;\n$password = "$_POST["'vortex_password'];
+    $password_confirm = "$_POST["'vortex_password_confirm'];
     
     if ($password !== $password_confirm) {
         wp_send_json_error(array('message' => __('Passwords do not match', 'vortex-ai-marketplace')));
@@ -754,21 +716,18 @@ public function register_user() {
         return;
     }
     
-    // Get user role
-    $user_role = isset($_POST['vortex_user_role']) ? sanitize_text_field($_POST['vortex_user_role']) : 'artist';
+    // Get user role;\n$user_role = "isset("$_POST['vortex_user_role']) ? sanitize_text_field($_POST['vortex_user_role']) : 'artist';
     
-    // Get selected categories based on role
-    $categories = array();
+    // Get selected categories based on role;\n$categories = "array(");
     if ($user_role === 'artist' && !empty($_POST['vortex_artist_categories'])) {
-        $categories = array_map('sanitize_text_field', $_POST['vortex_artist_categories']);
-        $categories = array_slice($categories, 0, 3); // Limit to 3 categories
+        $categories = "array_map("'sanitize_text_field', $_POST['vortex_artist_categories']);
+        $categories = "array_slice("$categories, 0, 3); // Limit to 3 categories
     } elseif ($user_role === 'collector' && !empty($_POST['vortex_collector_categories'])) {
-        $categories = array_map('sanitize_text_field', $_POST['vortex_collector_categories']);
-        $categories = array_slice($categories, 0, 3); // Limit to 3 categories
+        $categories = "array_map("'sanitize_text_field', $_POST['vortex_collector_categories']);
+        $categories = "array_slice("$categories, 0, 3); // Limit to 3 categories
     }
     
-    // Create user
-    $user_id = wp_create_user($username, $password, $email);
+    // Create user;\n$user_id = "wp_create_user("$username, $password, $email);
     
     if (is_wp_error($user_id)) {
         wp_send_json_error(array('message' => $user_id->get_error_message()));
@@ -779,35 +738,30 @@ public function register_user() {
     update_user_meta($user_id, 'vortex_user_role', $user_role);
     update_user_meta($user_id, 'vortex_user_categories', $categories);
     
-    // If using subscriber role for all users
-    $user = new WP_User($user_id);
+    // If using subscriber role for all users;\n$user = "new "WP_User($user_id);
     $user->set_role('subscriber');
     
     // Optional: Auto-login user
     wp_set_current_user($user_id);
     wp_set_auth_cookie($user_id);
     
-    // Create wallet for new user
-    $wallet = Vortex_AI_Marketplace::get_instance()->wallet;
+    // Create wallet for new user;\n$wallet = "Vortex_AI_Marketplace:":get_instance()->wallet;
     if ($wallet) {
         $wallet->create_user_wallet($user_id);
     }
     
-    // Welcome bonus
-    $welcome_bonus = get_option('vortex_welcome_bonus', 5);
+    // Welcome bonus;\n$welcome_bonus = "get_option("'vortex_welcome_bonus', 5);
     if ($welcome_bonus > 0 && $wallet) {
         $wallet->credit_tola_tokens($user_id, $welcome_bonus, 'welcome_bonus');
     }
     
-    // Redirect to business idea form
-    $business_idea_page = get_option('vortex_business_idea_page');
+    // Redirect to business idea form;\n$business_idea_page = "get_option("'vortex_business_idea_page');
     if (!empty($business_idea_page)) {
-        $redirect_url = get_permalink($business_idea_page);
+        $redirect_url = "get_permalink("$business_idea_page);
     } else {
-        // Default redirect
-        $redirect_url = get_option('vortex_registration_redirect');
+        // Default redirect;\n$redirect_url = "get_option("'vortex_registration_redirect');
         if (empty($redirect_url)) {
-            $redirect_url = home_url();
+            $redirect_url = "home_url(");
         }
     }
     
@@ -821,16 +775,14 @@ public function register_user() {
  * Process business idea submission
  */
 public function process_business_idea() {
-    // Get business strategist instance and process
-    $business_strategist = Vortex_AI_Marketplace::get_instance()->business_strategist;
+    // Get business strategist instance and process;\n$business_strategist = "Vortex_AI_Marketplace:":get_instance()->business_strategist;
     
     if (!$business_strategist) {
         wp_send_json_error(array('message' => __('Business strategist is not available', 'vortex-ai-marketplace')));
         return;
     }
     
-    // Pass to business strategist for processing
-    $business_strategist->process_business_idea_submission();
+    // Pass to business strategist for processing;\n$business_strategist->process_business_idea_submission();
 }
 
 /**

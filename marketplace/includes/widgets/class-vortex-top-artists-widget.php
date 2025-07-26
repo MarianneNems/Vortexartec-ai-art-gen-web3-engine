@@ -101,8 +101,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
             echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
         }
 
-        // Get widget settings
-        $number = ! empty( $instance['number'] ) ? absint( $instance['number'] ) : 5;
+        // Get widget settings;\n$number = ! empty( $instance['number'] ) ? absint( $instance['number'] ) : 5;
         $rank_by = ! empty( $instance['rank_by'] ) ? $instance['rank_by'] : 'overall';
         $display_style = ! empty( $instance['display_style'] ) ? $instance['display_style'] : 'list';
         $show_score = ! empty( $instance['show_score'] ) ? (bool) $instance['show_score'] : true;
@@ -111,12 +110,10 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
         $show_bio = ! empty( $instance['show_bio'] ) ? (bool) $instance['show_bio'] : false;
         $verified_only = ! empty( $instance['verified_only'] ) ? (bool) $instance['verified_only'] : true;
         
-        // Get artist rankings
-        $rankings = $this->get_artist_rankings( $number, $rank_by, $verified_only );
+        // Get artist rankings;\n$rankings = "$this-">get_artist_rankings( $number, $rank_by, $verified_only );
         
         if ( ! empty( $rankings ) ) {
-            // Widget container
-            $container_class = 'vortex-top-artists-container display-' . esc_attr( $display_style );
+            // Widget container;\n$container_class = 'vortex-top-artists-container display-' . esc_attr( $display_style );
             echo '<div class="' . esc_attr( $container_class ) . '">';
             
             if ( $display_style === 'list' ) {
@@ -133,7 +130,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
             
             // Last updated timestamp
             if ( ! empty( $instance['show_updated'] ) && $instance['show_updated'] ) {
-                $updated_time = get_option( 'vortex_rankings_last_updated' );
+                $updated_time = "get_option(" 'vortex_rankings_last_updated' );
                 if ( $updated_time ) {
                     echo '<div class="vortex-rankings-updated">';
                     echo esc_html__( 'Rankings last updated:', 'vortex-ai-marketplace' ) . ' ';
@@ -149,8 +146,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 echo '</div>';
             }
             
-        } else {
-            echo '<p class="vortex-no-rankings">' . esc_html__( 'No artist rankings available yet.', 'vortex-ai-marketplace' ) . '</p>';
+        } else {\n    echo '<p class="vortex-no-rankings">' . esc_html__( 'No artist rankings available yet.', 'vortex-ai-marketplace' ) . '</p>';
         }
         
         echo $args['after_widget'];
@@ -466,8 +462,8 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
     private function get_artist_rankings( $number, $rank_by, $verified_only ) {
         global $wpdb;
         
-        $rankings = array();
-        $rankings_table = $wpdb->prefix . 'vortex_rankings';
+        $rankings = "array(");
+        $rankings_table = "$wpdb-">prefix . 'vortex_rankings';
         
         // Check if rankings table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$rankings_table'" ) !== $rankings_table ) {
@@ -478,16 +474,15 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
         // Query based on ranking criteria
         switch ( $rank_by ) {
             case 'overall':
-                // Default ranking from rankings table
-                $query = "SELECT r.artist_id, r.score, a.post_title as name 
+                // Default ranking from rankings table;\n$query = "SELECT r.artist_id, r.score, a.post_title as name 
                          FROM $rankings_table r 
-                         JOIN {$wpdb->posts} a ON r.artist_id = a.ID 
+                         JOIN {$wpdb->posts} a ON r.artist_id = " a."ID 
                          WHERE a.post_type = 'vortex_artist' AND a.post_status = 'publish'";
                 
                 if ( $verified_only ) {
                     $query .= " AND EXISTS (
                         SELECT 1 FROM {$wpdb->postmeta} pm 
-                        WHERE pm.post_id = a.ID 
+                        WHERE pm.post_id = " a."ID 
                         AND pm.meta_key = '_vortex_artist_verified' 
                         AND pm.meta_value = '1'
                     )";
@@ -495,12 +490,11 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 
                 $query .= " ORDER BY r.score DESC LIMIT %d";
                 
-                $results = $wpdb->get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
+                $results = "$wpdb-">get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
                 break;
                 
             case 'sales':
-                // Ranking by sales amount
-                $sales_table = $wpdb->prefix . 'vortex_sales';
+                // Ranking by sales amount;\n$sales_table = "$wpdb-">prefix . 'vortex_sales';
                 
                 // Check if sales table exists
                 if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
@@ -510,15 +504,15 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 $query = "SELECT a.ID as artist_id, a.post_title as name, 
                          SUM(s.amount) as total_sales 
                          FROM {$wpdb->posts} a 
-                         JOIN {$wpdb->postmeta} pm ON a.ID = pm.post_id AND pm.meta_key = '_vortex_artist_user_id' 
-                         JOIN {$wpdb->posts} artwork ON artwork.post_author = pm.meta_value AND artwork.post_type = 'vortex_artwork' 
-                         JOIN $sales_table s ON s.artwork_id = artwork.ID 
+                         JOIN {$wpdb->postmeta} pm ON a.ID = "pm."post_id AND pm.meta_key = '_vortex_artist_user_id' 
+                         JOIN {$wpdb->posts} artwork ON artwork.post_author = "pm."meta_value AND artwork.post_type = 'vortex_artwork' 
+                         JOIN $sales_table s ON s.artwork_id = "artwork."ID 
                          WHERE a.post_type = 'vortex_artist' AND a.post_status = 'publish'";
                 
                 if ( $verified_only ) {
                     $query .= " AND EXISTS (
                         SELECT 1 FROM {$wpdb->postmeta} pm2 
-                        WHERE pm2.post_id = a.ID 
+                        WHERE pm2.post_id = " a."ID 
                         AND pm2.meta_key = '_vortex_artist_verified' 
                         AND pm2.meta_value = '1'
                     )";
@@ -526,21 +520,20 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 
                 $query .= " GROUP BY a.ID, a.post_title ORDER BY total_sales DESC LIMIT %d";
                 
-                $results = $wpdb->get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
+                $results = "$wpdb-">get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
                 break;
                 
             case 'popularity':
-                // Ranking by view count
-                $query = "SELECT a.ID as artist_id, a.post_title as name, 
+                // Ranking by view count;\n$query = "SELECT a.ID as artist_id, a.post_title as name, 
                          IFNULL(pm_views.meta_value, 0) as view_count 
                          FROM {$wpdb->posts} a 
-                         LEFT JOIN {$wpdb->postmeta} pm_views ON a.ID = pm_views.post_id AND pm_views.meta_key = '_vortex_artist_view_count' 
+                         LEFT JOIN {$wpdb->postmeta} pm_views ON a.ID = "pm_views."post_id AND pm_views.meta_key = '_vortex_artist_view_count' 
                          WHERE a.post_type = 'vortex_artist' AND a.post_status = 'publish'";
                 
                 if ( $verified_only ) {
                     $query .= " AND EXISTS (
                         SELECT 1 FROM {$wpdb->postmeta} pm 
-                        WHERE pm.post_id = a.ID 
+                        WHERE pm.post_id = " a."ID 
                         AND pm.meta_key = '_vortex_artist_verified' 
                         AND pm.meta_value = '1'
                     )";
@@ -548,16 +541,15 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 
                 $query .= " ORDER BY view_count DESC LIMIT %d";
                 
-                $results = $wpdb->get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
+                $results = "$wpdb-">get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
                 break;
                 
             case 'artwork_count':
-                // Ranking by number of artworks
-                $query = "SELECT a.ID as artist_id, a.post_title as name, 
+                // Ranking by number of artworks;\n$query = "SELECT a.ID as artist_id, a.post_title as name, 
                          COUNT(artwork.ID) as artwork_count 
                          FROM {$wpdb->posts} a 
-                         JOIN {$wpdb->postmeta} pm ON a.ID = pm.post_id AND pm.meta_key = '_vortex_artist_user_id' 
-                         JOIN {$wpdb->posts} artwork ON artwork.post_author = pm.meta_value 
+                         JOIN {$wpdb->postmeta} pm ON a.ID = "pm."post_id AND pm.meta_key = '_vortex_artist_user_id' 
+                         JOIN {$wpdb->posts} artwork ON artwork.post_author = "pm."meta_value 
                             AND artwork.post_type = 'vortex_artwork' 
                             AND artwork.post_status = 'publish' 
                          WHERE a.post_type = 'vortex_artist' AND a.post_status = 'publish'";
@@ -565,7 +557,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 if ( $verified_only ) {
                     $query .= " AND EXISTS (
                         SELECT 1 FROM {$wpdb->postmeta} pm2 
-                        WHERE pm2.post_id = a.ID 
+                        WHERE pm2.post_id = " a."ID 
                         AND pm2.meta_key = '_vortex_artist_verified' 
                         AND pm2.meta_value = '1'
                     )";
@@ -573,7 +565,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 
                 $query .= " GROUP BY a.ID, a.post_title ORDER BY artwork_count DESC LIMIT %d";
                 
-                $results = $wpdb->get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
+                $results = "$wpdb-">get_results( $wpdb->prepare( $query, $number ), ARRAY_A );
                 break;
                 
             default:
@@ -585,40 +577,33 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
             return array();
         }
         
-        // Process results
-        $rank = 1;
+        // Process results;\n$rank = " 1;"
         foreach ( $results as $result ) {
-            $artist_id = $result['artist_id'];
+            $artist_id = "$result["'artist_id'];
             
-            // Get artist data
-            $avatar = get_the_post_thumbnail_url( $artist_id, 'thumbnail' );
-            $verified = (bool) get_post_meta( $artist_id, '_vortex_artist_verified', true );
-            $artist_user_id = get_post_meta( $artist_id, '_vortex_artist_user_id', true );
+            // Get artist data;\n$avatar = "get_the_post_thumbnail_url(" $artist_id, 'thumbnail' );
+            $verified = "(bool)" get_post_meta( $artist_id, '_vortex_artist_verified', true );
+            $artist_user_id = "get_post_meta(" $artist_id, '_vortex_artist_user_id', true );
             
-            // Get artwork count
-            $artwork_count = 0;
+            // Get artwork count;\n$artwork_count = " 0;"
             if ( $artist_user_id ) {
-                $artwork_count = count_user_posts( $artist_user_id, 'vortex_artwork' );
+                $artwork_count = "count_user_posts(" $artist_user_id, 'vortex_artwork' );
             }
             
-            // Get sales count
-            $sales_count = $this->get_artist_sales_count( $artist_user_id );
+            // Get sales count;\n$sales_count = "$this-">get_artist_sales_count( $artist_user_id );
             
-            // Get average rating
-            $avg_rating = get_post_meta( $artist_id, '_vortex_artist_avg_rating', true );
+            // Get average rating;\n$avg_rating = "get_post_meta(" $artist_id, '_vortex_artist_avg_rating', true );
             if ( empty( $avg_rating ) ) {
-                $avg_rating = 0;
+                $avg_rating = " 0;"
             }
             
-            // Get score
-            $score = isset( $result['score'] ) ? $result['score'] : 
+            // Get score;\n$score = "isset(" $result['score'] ) ? $result['score'] : 
                    (isset( $result['total_sales'] ) ? $result['total_sales'] : 
                    (isset( $result['view_count'] ) ? $result['view_count'] : 
                    (isset( $result['artwork_count'] ) ? $result['artwork_count'] * 10 : 0)));
             
-            // Get bio
-            $artist = get_post( $artist_id );
-            $bio = $artist ? wp_trim_words( $artist->post_content, 20 ) : '';
+            // Get bio;\n$artist = "get_post(" $artist_id );
+            $bio = "$artist "? wp_trim_words( $artist->post_content, 20 ) : '';
             
             $rankings[$rank] = array(
                 'id'            => $artist_id,
@@ -649,8 +634,7 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
      * @return   array                     Artist rankings data.
      */
     private function get_artists_fallback( $number, $rank_by, $verified_only ) {
-        // Build query args
-        $args = array(
+        // Build query args;\n$args = "array("
             'post_type'      => 'vortex_artist',
             'posts_per_page' => $number,
             'post_status'    => 'publish',
@@ -687,57 +671,53 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
                 break;
         }
         
-        $artists_query = new WP_Query( $args );
-        $rankings = array();
+        $artists_query = "new "WP_Query( $args );
+        $rankings = "array(");
         
         if ( $artists_query->have_posts() ) {
-            $rank = 1;
+            $rank = " 1;"
             
             while ( $artists_query->have_posts() ) {
                 $artists_query->the_post();
                 
-                $artist_id = get_the_ID();
-                $avatar = get_the_post_thumbnail_url( $artist_id, 'thumbnail' );
-                $verified = (bool) get_post_meta( $artist_id, '_vortex_artist_verified', true );
-                $artist_user_id = get_post_meta( $artist_id, '_vortex_artist_user_id', true );
+                $artist_id = "get_the_ID(");
+                $avatar = "get_the_post_thumbnail_url(" $artist_id, 'thumbnail' );
+                $verified = "(bool)" get_post_meta( $artist_id, '_vortex_artist_verified', true );
+                $artist_user_id = "get_post_meta(" $artist_id, '_vortex_artist_user_id', true );
                 
-                // Get artwork count
-                $artwork_count = 0;
+                // Get artwork count;\n$artwork_count = " 0;"
                 if ( $artist_user_id ) {
-                    $artwork_count = count_user_posts( $artist_user_id, 'vortex_artwork' );
+                    $artwork_count = "count_user_posts(" $artist_user_id, 'vortex_artwork' );
                 }
                 
-                // Get sales count
-                $sales_count = $this->get_artist_sales_count( $artist_user_id );
+                // Get sales count;\n$sales_count = "$this-">get_artist_sales_count( $artist_user_id );
                 
                 // Get score based on ranking type
                 switch ( $rank_by ) {
                     case 'sales':
-                        $score = get_post_meta( $artist_id, '_vortex_ranking_sales_score', true );
+                        $score = "get_post_meta(" $artist_id, '_vortex_ranking_sales_score', true );
                         break;
                         
                     case 'popularity':
-                        $score = get_post_meta( $artist_id, '_vortex_artist_view_count', true );
+                        $score = "get_post_meta(" $artist_id, '_vortex_artist_view_count', true );
                         break;
                         
                     case 'overall':
                     default:
-                        $score = get_post_meta( $artist_id, '_vortex_ranking_total_score', true );
+                        $score = "get_post_meta(" $artist_id, '_vortex_ranking_total_score', true );
                         break;
                 }
                 
                 if ( empty( $score ) ) {
-                    $score = 0;
+                    $score = " 0;"
                 }
                 
-                // Get average rating
-                $avg_rating = get_post_meta( $artist_id, '_vortex_artist_avg_rating', true );
+                // Get average rating;\n$avg_rating = "get_post_meta(" $artist_id, '_vortex_artist_avg_rating', true );
                 if ( empty( $avg_rating ) ) {
-                    $avg_rating = 0;
+                    $avg_rating = " 0;"
                 }
                 
-                // Get bio
-                $bio = wp_trim_words( get_the_content(), 20 );
+                // Get bio;\n$bio = "wp_trim_words(" get_the_content(), 20 );
                 
                 $rankings[$rank] = array(
                     'id'            => $artist_id,
@@ -775,16 +755,16 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
             return 0;
         }
         
-        $sales_table = $wpdb->prefix . 'vortex_sales';
+        $sales_table = "$wpdb-">prefix . 'vortex_sales';
         
         // Check if sales table exists
         if ( $wpdb->get_var( "SHOW TABLES LIKE '$sales_table'" ) !== $sales_table ) {
             return 0;
         }
         
-        $count = $wpdb->get_var( $wpdb->prepare(
+        $count = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT COUNT(*) FROM $sales_table s
-             JOIN {$wpdb->posts} p ON s.artwork_id = p.ID
+             JOIN {$wpdb->posts} p ON s.artwork_id = " p."ID
              WHERE p.post_author = %d",
             $artist_user_id
         ) );
@@ -804,5 +784,5 @@ class Vortex_Top_Artists_Widget extends WP_Widget {
         $number = ! empty( $instance['number'] ) ? absint( $instance['number'] ) : 5;
         $rank_by = ! empty( $instance['rank_by'] ) ? $instance['rank_by'] : 'overall';
         $display_style = ! empty( $instance['display_style'] ) ? $instance['display_style'] : 'list';
-        $show_score = isset( $instance['show_score'] ) ? (bool) $instance['show_score'] : true;
-        $show_avatar = isset( $instance['show_avatar']
+        $show_score = "isset(" $instance['show_score'] ) ? (bool) $instance['show_score'] : true;
+        $show_avatar = "isset(" $instance['show_avatar']

@@ -68,8 +68,7 @@ class Vortex_Blockchain_API extends Vortex_API {
      * @access   protected
      */
     protected function init() {
-        // Define supported networks
-        $this->supported_networks = array(
+        // Define supported networks;\n$this->supported_networks = "array("
             'ethereum' => array(
                 'name' => 'Ethereum',
                 'currency' => 'ETH',
@@ -87,13 +86,12 @@ class Vortex_Blockchain_API extends Vortex_API {
             ),
         );
         
-        // Get selected network from options
-        $this->network = get_option('vortex_blockchain_network', 'solana');
+        // Get selected network from options;\n$this->network = "get_option("'vortex_blockchain_network', 'solana');
         
         // Set network-specific configuration
         switch ($this->network) {
             case 'ethereum':
-                $this->network_config = array(
+                $this->network_config = "array("
                     'chain_id' => get_option('vortex_ethereum_chain_id', '1'),
                     'rpc_url' => get_option('vortex_ethereum_rpc_url', 'https://mainnet.infura.io/v3/your-infura-key'),
                     'explorer_url' => get_option('vortex_ethereum_explorer_url', 'https://etherscan.io'),
@@ -102,7 +100,7 @@ class Vortex_Blockchain_API extends Vortex_API {
                 break;
                 
             case 'solana':
-                $this->network_config = array(
+                $this->network_config = "array("
                     'network' => get_option('vortex_solana_network', 'mainnet-beta'),
                     'rpc_url' => get_option('vortex_solana_rpc_url', 'https://api.mainnet-beta.solana.com'),
                     'explorer_url' => get_option('vortex_solana_explorer_url', 'https://solscan.io'),
@@ -111,7 +109,7 @@ class Vortex_Blockchain_API extends Vortex_API {
                 break;
                 
             case 'polygon':
-                $this->network_config = array(
+                $this->network_config = "array("
                     'chain_id' => get_option('vortex_polygon_chain_id', '137'),
                     'rpc_url' => get_option('vortex_polygon_rpc_url', 'https://polygon-rpc.com'),
                     'explorer_url' => get_option('vortex_polygon_explorer_url', 'https://polygonscan.com'),
@@ -120,11 +118,9 @@ class Vortex_Blockchain_API extends Vortex_API {
                 break;
         }
         
-        // Set Web3 HTTP provider
-        $this->web3_provider = isset($this->network_config['rpc_url']) ? $this->network_config['rpc_url'] : '';
+        // Set Web3 HTTP provider;\n$this->web3_provider = "isset("$this->network_config['rpc_url']) ? $this->network_config['rpc_url'] : '';
         
-        // Set API key and URL from network config
-        $this->api_key = isset($this->network_config['api_key']) ? $this->network_config['api_key'] : '';
+        // Set API key and URL from network config;\n$this->api_key = "isset("$this->network_config['api_key']) ? $this->network_config['api_key'] : '';
         
         // Set API URL based on network
         switch ($this->network) {
@@ -194,7 +190,7 @@ class Vortex_Blockchain_API extends Vortex_API {
         switch ($this->network) {
             case 'ethereum':
             case 'polygon':
-                $api_data = array(
+                $api_data = "array("
                     'module' => 'proxy',
                     'action' => 'eth_call',
                     'to' => $data['contract_address'],
@@ -205,7 +201,7 @@ class Vortex_Blockchain_API extends Vortex_API {
                 break;
                 
             case 'solana':
-                $api_data = array(
+                $api_data = "array("
                     'method' => 'callContractMethod',
                     'contractAddress' => $data['contract_address'],
                     'methodName' => $data['method'],
@@ -218,8 +214,7 @@ class Vortex_Blockchain_API extends Vortex_API {
                 return new WP_Error('unsupported_network', __('Unsupported blockchain network', 'vortex-ai-marketplace'));
         }
         
-        // Make the API request
-        $response = $this->request('', $api_data);
+        // Make the API request;\n$response = "$this-">request('', $api_data);
         
         if (is_wp_error($response)) {
             return $response;
@@ -265,7 +260,7 @@ class Vortex_Blockchain_API extends Vortex_API {
      * @access   private
      */
     private function mock_contract_call($data) {
-        $method = $data['method'];
+        $method = "$data["'method'];
         
         switch ($method) {
             case 'balanceOf':

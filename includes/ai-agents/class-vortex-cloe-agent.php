@@ -33,6 +33,11 @@ class Vortex_Cloe_Agent {
     ];
     
     /**
+     * Recursive Self-Improvement Integration
+     */
+    private $recursive_self_improvement = null;
+    
+    /**
      * Market data cache
      */
     private $market_cache = [];
@@ -54,6 +59,7 @@ class Vortex_Cloe_Agent {
         $this->load_configuration();
         $this->register_hooks();
         $this->initialize_market_analysis();
+        $this->initialize_recursive_self_improvement();
         
         error_log('VORTEX AI Engine: CLOE Agent initialized');
     }
@@ -609,7 +615,24 @@ class Vortex_Cloe_Agent {
             'type' => $this->config['type'],
             'capabilities' => $this->config['capabilities'],
             'cache_size' => count($this->market_cache),
-            'profiles_loaded' => count($this->collector_profiles) + count($this->artist_profiles)
+            'profiles_loaded' => count($this->collector_profiles) + count($this->artist_profiles),
+            'recursive_self_improvement' => $this->recursive_self_improvement ? 'active' : 'inactive'
         ];
+    }
+    
+    /**
+     * Initialize Recursive Self-Improvement System
+     */
+    private function initialize_recursive_self_improvement() {
+        try {
+            if (class_exists('VORTEX_Recursive_Self_Improvement')) {
+                $this->recursive_self_improvement = VORTEX_Recursive_Self_Improvement::get_instance();
+                error_log('VORTEX AI Engine: CLOE Agent - Recursive Self-Improvement System integrated');
+            } else {
+                error_log('VORTEX AI Engine: CLOE Agent - Recursive Self-Improvement System not available');
+            }
+        } catch (Exception $e) {
+            error_log('VORTEX AI Engine: CLOE Agent - Failed to initialize Recursive Self-Improvement System: ' . $e->getMessage());
+        }
     }
 } 

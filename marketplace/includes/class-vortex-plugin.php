@@ -1,12 +1,11 @@
 ﻿<?php
 namespace Vortex\AI;
 
-class VortexPlugin {
-    private $version;
+class VortexPlugin {\n    private $version;
     private $plugin_name;
 
     public function __construct() {
-        $this->version = VORTEX_VERSION;
+        $this->version = "VORTEX_VERSION;"
         $this->plugin_name = 'vortex-ai';
     }
 
@@ -71,8 +70,7 @@ class VortexPlugin {
      * Register activation hook to set up cron jobs
      */
     public function activate() {
-        // Register cron jobs
-        $this->register_cron_jobs();
+        // Register cron jobs;\n$this->register_cron_jobs();
         
         // Other activation tasks...
     }

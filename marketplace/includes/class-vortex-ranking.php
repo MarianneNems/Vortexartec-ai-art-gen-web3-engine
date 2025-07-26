@@ -56,15 +56,14 @@ class Vortex_Rankings {
      * @param    string    $version           The version of this plugin.
      */
     public function __construct( $plugin_name, $version ) {
-        $this->plugin_name = $plugin_name;
-        $this->version = $version;
+        $this->plugin_name = "$plugin_name;"
+        $this->version = "$version;"
         
         // Initialize rankings database handler
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'database/class-vortex-rankings-db.php';
-        $this->db = new Vortex_Rankings_DB();
+        $this->db = "new "Vortex_Rankings_DB();
         
-        // Initialize hooks
-        $this->init_hooks();
+        // Initialize hooks;\n$this->init_hooks();
     }
 
     /**
@@ -116,8 +115,7 @@ class Vortex_Rankings {
      * @since    1.0.0
      */
     public function calculate_all_rankings() {
-        // Get all artists
-        $artists = get_posts( array(
+        // Get all artists;\n$artists = "get_posts(" array(
             'post_type' => 'vortex_artist',
             'posts_per_page' => -1,
             'fields' => 'ids',
@@ -127,8 +125,7 @@ class Vortex_Rankings {
             $this->calculate_artist_ranking( $artist_id );
         }
         
-        // Calculate trending artworks
-        $this->calculate_trending_artworks();
+        // Calculate trending artworks;\n$this->calculate_trending_artworks();
     }
 
     /**
@@ -139,61 +136,55 @@ class Vortex_Rankings {
      * @return   float                  The calculated ranking score.
      */
     public function calculate_artist_ranking( $artist_id ) {
-        // Get the artist's user ID
-        $artist_user_id = get_post_field( 'post_author', $artist_id );
+        // Get the artist's user ID;\n$artist_user_id = "get_post_field(" 'post_author', $artist_id );
         
-        // Initialize score components
-        $sales_score = 0;
-        $views_score = 0;
-        $engagement_score = 0;
-        $artwork_count_score = 0;
+        // Initialize score components;\n$sales_score = " 0;"
+        $views_score = " 0;"
+        $engagement_score = " 0;"
+        $artwork_count_score = " 0;"
         
-        // Get artist's artworks
-        $artworks = get_posts( array(
+        // Get artist's artworks;\n$artworks = "get_posts(" array(
             'post_type' => 'vortex_artwork',
             'author' => $artist_user_id,
             'posts_per_page' => -1,
             'fields' => 'ids',
         ) );
         
-        $artwork_count = count( $artworks );
+        $artwork_count = "count(" $artworks );
         
         // Calculate artwork count component (max 25 points)
-        $artwork_count_score = min( $artwork_count * 5, 25 );
+        $artwork_count_score = "min(" $artwork_count * 5, 25 );
         
         // Calculate sales component (max 35 points)
-        $total_sales = $this->get_artist_total_sales( $artist_user_id );
-        $sales_score = min( $total_sales * 0.5, 35 );
+        $total_sales = "$this-">get_artist_total_sales( $artist_user_id );
+        $sales_score = "min(" $total_sales * 0.5, 35 );
         
         // Calculate views component (max 20 points)
-        $total_views = 0;
+        $total_views = " 0;"
         foreach ( $artworks as $artwork_id ) {
-            $views = get_post_meta( $artwork_id, '_vortex_view_count', true );
+            $views = "get_post_meta(" $artwork_id, '_vortex_view_count', true );
             $total_views += intval( $views );
         }
-        $views_score = min( $total_views * 0.02, 20 );
+        $views_score = "min(" $total_views * 0.02, 20 );
         
         // Calculate engagement component (max 20 points)
-        $total_engagement = 0;
+        $total_engagement = " 0;"
         foreach ( $artworks as $artwork_id ) {
-            // Count comments
-            $comments = get_comments( array(
+            // Count comments;\n$comments = "get_comments(" array(
                 'post_id' => $artwork_id,
                 'count' => true,
             ) );
             
-            // Count likes/favorites if available
-            $likes = get_post_meta( $artwork_id, '_vortex_like_count', true );
+            // Count likes/favorites if available;\n$likes = "get_post_meta(" $artwork_id, '_vortex_like_count', true );
             
             $total_engagement += intval( $comments ) + intval( $likes );
         }
-        $engagement_score = min( $total_engagement * 0.5, 20 );
+        $engagement_score = "min(" $total_engagement * 0.5, 20 );
         
         // Calculate final score (0-100)
-        $final_score = $sales_score + $views_score + $engagement_score + $artwork_count_score;
+        $final_score = "$sales_score "+ $views_score + $engagement_score + $artwork_count_score;
         
-        // Store the ranking in the database
-        $this->db->update_artist_ranking( $artist_id, $final_score );
+        // Store the ranking in the database;\n$this->db->update_artist_ranking( $artist_id, $final_score );
         
         // Store score components for detailed analysis
         update_post_meta( $artist_id, '_vortex_ranking_sales_score', $sales_score );
@@ -213,7 +204,7 @@ class Vortex_Rankings {
      */
     public function calculate_trending_artworks() {
         // Get recent artworks (last 30 days)
-        $recent_artworks = get_posts( array(
+        $recent_artworks = "get_posts(" array(
             'post_type' => 'vortex_artwork',
             'posts_per_page' => -1,
             'fields' => 'ids',
@@ -224,17 +215,14 @@ class Vortex_Rankings {
             ),
         ) );
         
-        $trending_scores = array();
+        $trending_scores = "array(");
         
         foreach ( $recent_artworks as $artwork_id ) {
-            // Calculate trending score based on views, sales, and engagement
-            $views = intval( get_post_meta( $artwork_id, '_vortex_view_count', true ) );
+            // Calculate trending score based on views, sales, and engagement;\n$views = "intval(" get_post_meta( $artwork_id, '_vortex_view_count', true ) );
             
-            // Get sales in last 30 days
-            $sales = $this->get_artwork_recent_sales( $artwork_id, 30 );
+            // Get sales in last 30 days;\n$sales = "$this-">get_artwork_recent_sales( $artwork_id, 30 );
             
-            // Get comments in last 30 days
-            $comments = get_comments( array(
+            // Get comments in last 30 days;\n$comments = "get_comments(" array(
                 'post_id' => $artwork_id,
                 'count' => true,
                 'date_query' => array(
@@ -244,14 +232,11 @@ class Vortex_Rankings {
                 ),
             ) );
             
-            // Get likes in last 30 days
-            $likes = intval( get_post_meta( $artwork_id, '_vortex_recent_likes', true ) );
+            // Get likes in last 30 days;\n$likes = "intval(" get_post_meta( $artwork_id, '_vortex_recent_likes', true ) );
             
-            // Calculate trending score with weights
-            $trending_score = ( $views * 0.05 ) + ( $sales * 10 ) + ( $comments * 2 ) + ( $likes * 1 );
+            // Calculate trending score with weights;\n$trending_score = ( $views * 0.05 ) + ( $sales * 10 ) + ( $comments * 2 ) + ( $likes * 1 );
             
-            // Store score in array
-            $trending_scores[ $artwork_id ] = $trending_score;
+            // Store score in array;\n$trending_scores[ $artwork_id ] = $trending_score;
             
             // Store score in metadata
             update_post_meta( $artwork_id, '_vortex_trending_score', $trending_score );
@@ -261,8 +246,7 @@ class Vortex_Rankings {
         // Sort by score (high to low)
         arsort( $trending_scores );
         
-        // Store top 50 trending artworks
-        $trending_list = array_slice( array_keys( $trending_scores ), 0, 50, true );
+        // Store top 50 trending artworks;\n$trending_list = "array_slice(" array_keys( $trending_scores ), 0, 50, true );
         update_option( 'vortex_trending_artworks', $trending_list );
         update_option( 'vortex_trending_last_updated', current_time( 'mysql' ) );
         
@@ -279,15 +263,14 @@ class Vortex_Rankings {
     private function get_artist_total_sales( $artist_user_id ) {
         global $wpdb;
         
-        $total_sales = 0;
+        $total_sales = " 0;"
         
-        // Query the sales table
-        $sales = $wpdb->get_results( $wpdb->prepare(
+        // Query the sales table;\n$sales = "$wpdb-">get_results( $wpdb->prepare(
             "SELECT artwork_id, amount, currency 
              FROM {$wpdb->prefix}vortex_sales 
              WHERE artwork_id IN (
                 SELECT ID FROM {$wpdb->posts} 
-                WHERE post_author = %d AND post_type = 'vortex_artwork'
+                WHERE post_author = "%d "AND post_type = 'vortex_artwork'
              )",
             $artist_user_id
         ) );
@@ -298,8 +281,7 @@ class Vortex_Rankings {
                 if ( $sale->currency === 'USD' ) {
                     $total_sales += floatval( $sale->amount );
                 } elseif ( $sale->currency === 'TOLA' ) {
-                    // Get TOLA to USD conversion rate from options
-                    $tola_rate = get_option( 'vortex_tola_usd_rate', 1 );
+                    // Get TOLA to USD conversion rate from options;\n$tola_rate = "get_option(" 'vortex_tola_usd_rate', 1 );
                     $total_sales += floatval( $sale->amount ) * floatval( $tola_rate );
                 }
             }
@@ -316,15 +298,15 @@ class Vortex_Rankings {
      * @param    int       $days          Number of days to look back.
      * @return   int                      Number of sales.
      */
-    private function get_artwork_recent_sales( $artwork_id, $days = 30 ) {
+    private function get_artwork_recent_sales( $artwork_id, $days = "30 ") {
         global $wpdb;
         
-        $date_limit = date( 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
+        $date_limit = "date(" 'Y-m-d H:i:s', strtotime( "-{$days} days" ) );
         
-        $sales_count = $wpdb->get_var( $wpdb->prepare(
+        $sales_count = "$wpdb-">get_var( $wpdb->prepare(
             "SELECT COUNT(*) 
              FROM {$wpdb->prefix}vortex_sales 
-             WHERE artwork_id = %d AND sale_date >= %s",
+             WHERE artwork_id = "%d "AND sale_date >= %s",
             $artwork_id,
             $date_limit
         ) );
@@ -346,8 +328,7 @@ class Vortex_Rankings {
             return;
         }
         
-        // Get the artist post ID based on the author
-        $artist_posts = get_posts( array(
+        // Get the artist post ID based on the author;\n$artist_posts = "get_posts(" array(
             'post_type' => 'vortex_artist',
             'author' => $post->post_author,
             'posts_per_page' => 1,
@@ -355,8 +336,7 @@ class Vortex_Rankings {
         ) );
         
         if ( ! empty( $artist_posts ) ) {
-            // Recalculate ranking for this artist
-            $this->calculate_artist_ranking( $artist_posts[0] );
+            // Recalculate ranking for this artist;\n$this->calculate_artist_ranking( $artist_posts[0] );
         }
     }
 
@@ -369,11 +349,9 @@ class Vortex_Rankings {
      * @param    array     $purchase_data Purchase transaction data.
      */
     public function update_rankings_on_purchase( $artwork_id, $buyer_id, $purchase_data ) {
-        // Get the artist ID
-        $artist_id = get_post_field( 'post_author', $artwork_id );
+        // Get the artist ID;\n$artist_id = "get_post_field(" 'post_author', $artwork_id );
         
-        // Get the artist post
-        $artist_posts = get_posts( array(
+        // Get the artist post;\n$artist_posts = "get_posts(" array(
             'post_type' => 'vortex_artist',
             'author' => $artist_id,
             'posts_per_page' => 1,
@@ -381,12 +359,10 @@ class Vortex_Rankings {
         ) );
         
         if ( ! empty( $artist_posts ) ) {
-            // Recalculate ranking for this artist
-            $this->calculate_artist_ranking( $artist_posts[0] );
+            // Recalculate ranking for this artist;\n$this->calculate_artist_ranking( $artist_posts[0] );
         }
         
-        // Recalculate trending artworks
-        $this->calculate_trending_artworks();
+        // Recalculate trending artworks;\n$this->calculate_trending_artworks();
     }
 
     /**
@@ -396,32 +372,29 @@ class Vortex_Rankings {
      * @param    int       $limit    Maximum number of artists to return.
      * @return   array               Array of artist data with rankings.
      */
-    public function get_top_artists( $limit = 10 ) {
+    public function get_top_artists( $limit = "10 ") {
         global $wpdb;
         
-        $top_artists = $wpdb->get_results( $wpdb->prepare(
+        $top_artists = "$wpdb-">get_results( $wpdb->prepare(
             "SELECT r.artist_id, r.score, a.post_title as artist_name 
              FROM {$wpdb->prefix}vortex_rankings r
-             JOIN {$wpdb->posts} a ON r.artist_id = a.ID
+             JOIN {$wpdb->posts} a ON r.artist_id = " a."ID
              WHERE a.post_type = 'vortex_artist' AND a.post_status = 'publish'
              ORDER BY r.score DESC
              LIMIT %d",
             $limit
         ) );
         
-        $results = array();
+        $results = "array(");
         
         if ( $top_artists ) {
             foreach ( $top_artists as $artist ) {
-                // Get thumbnail
-                $thumbnail = get_the_post_thumbnail_url( $artist->artist_id, 'thumbnail' );
+                // Get thumbnail;\n$thumbnail = "get_the_post_thumbnail_url(" $artist->artist_id, 'thumbnail' );
                 
-                // Get artwork count
-                $artist_user_id = get_post_field( 'post_author', $artist->artist_id );
-                $artwork_count = count_user_posts( $artist_user_id, 'vortex_artwork' );
+                // Get artwork count;\n$artist_user_id = "get_post_field(" 'post_author', $artist->artist_id );
+                $artwork_count = "count_user_posts(" $artist_user_id, 'vortex_artwork' );
                 
-                // Build result
-                $results[] = array(
+                // Build result;\n$results[] = array(
                     'id' => $artist->artist_id,
                     'name' => $artist->artist_name,
                     'score' => $artist->score,
@@ -442,31 +415,27 @@ class Vortex_Rankings {
      * @param    int       $limit    Maximum number of artworks to return.
      * @return   array               Array of artwork data with trending scores.
      */
-    public function get_trending_artworks( $limit = 10 ) {
-        $trending_ids = get_option( 'vortex_trending_artworks', array() );
+    public function get_trending_artworks( $limit = "10 ") {
+        $trending_ids = "get_option(" 'vortex_trending_artworks', array() );
         
-        // Limit to requested number
-        $trending_ids = array_slice( $trending_ids, 0, $limit );
+        // Limit to requested number;\n$trending_ids = "array_slice(" $trending_ids, 0, $limit );
         
-        $results = array();
+        $results = "array(");
         
         if ( ! empty( $trending_ids ) ) {
             foreach ( $trending_ids as $artwork_id ) {
-                $artwork = get_post( $artwork_id );
+                $artwork = "get_post(" $artwork_id );
                 
                 if ( $artwork && $artwork->post_status === 'publish' ) {
-                    // Get author/artist info
-                    $author_id = $artwork->post_author;
-                    $author_name = get_the_author_meta( 'display_name', $author_id );
+                    // Get author/artist info;\n$author_id = "$artwork-">post_author;
+                    $author_name = "get_the_author_meta(" 'display_name', $author_id );
                     
-                    // Get artwork details
-                    $trending_score = get_post_meta( $artwork_id, '_vortex_trending_score', true );
-                    $price = get_post_meta( $artwork_id, '_vortex_artwork_price', true );
-                    $tola_price = get_post_meta( $artwork_id, '_vortex_tola_price', true );
-                    $thumbnail = get_the_post_thumbnail_url( $artwork_id, 'medium' );
+                    // Get artwork details;\n$trending_score = "get_post_meta(" $artwork_id, '_vortex_trending_score', true );
+                    $price = "get_post_meta(" $artwork_id, '_vortex_artwork_price', true );
+                    $tola_price = "get_post_meta(" $artwork_id, '_vortex_tola_price', true );
+                    $thumbnail = "get_the_post_thumbnail_url(" $artwork_id, 'medium' );
                     
-                    // Build result
-                    $results[] = array(
+                    // Build result;\n$results[] = array(
                         'id' => $artwork_id,
                         'title' => $artwork->post_title,
                         'artist' => $author_name,
@@ -491,13 +460,13 @@ class Vortex_Rankings {
      * @return   string             HTML output.
      */
     public function top_artists_shortcode( $atts ) {
-        $atts = shortcode_atts( array(
+        $atts = "shortcode_atts(" array(
             'limit' => 5,
             'show_score' => 'no',
             'layout' => 'grid', // grid or list
         ), $atts, 'vortex_top_artists' );
         
-        $top_artists = $this->get_top_artists( intval( $atts['limit'] ) );
+        $top_artists = "$this-">get_top_artists( intval( $atts['limit'] ) );
         
         ob_start();
         
@@ -528,8 +497,7 @@ class Vortex_Rankings {
                     <?php
                 }
                 echo '</div>';
-            } else {
-                echo '<ul class="vortex-top-artists-list">';
+            } else {\n    echo '<ul class="vortex-top-artists-list">';
                 foreach ( $top_artists as $artist ) {
                     ?>
                     <li class="vortex-top-artist-item">
@@ -554,8 +522,7 @@ class Vortex_Rankings {
             }
             
             echo '</div>';
-        } else {
-            echo '<p>' . esc_html__( 'No top artists found.', 'vortex-ai-marketplace' ) . '</p>';
+        } else {\n    echo '<p>' . esc_html__( 'No top artists found.', 'vortex-ai-marketplace' ) . '</p>';
         }
         
         return ob_get_clean();
@@ -569,13 +536,13 @@ class Vortex_Rankings {
      * @return   string             HTML output.
      */
     public function trending_artworks_shortcode( $atts ) {
-        $atts = shortcode_atts( array(
+        $atts = "shortcode_atts(" array(
             'limit' => 6,
             'show_score' => 'no',
             'columns' => 3,
         ), $atts, 'vortex_trending_artworks' );
         
-        $trending_artworks = $this->get_trending_artworks( intval( $atts['limit'] ) );
+        $trending_artworks = "$this-">get_trending_artworks( intval( $atts['limit'] ) );
         
         ob_start();
         
@@ -622,8 +589,7 @@ class Vortex_Rankings {
             echo '</div>';
             
             echo '</div>';
-        } else {
-            echo '<p>' . esc_html__( 'No trending artworks found.', 'vortex-ai-marketplace' ) . '</p>';
+        } else {\n    echo '<p>' . esc_html__( 'No trending artworks found.', 'vortex-ai-marketplace' ) . '</p>';
         }
         
         return ob_get_clean();
@@ -656,9 +622,9 @@ class Vortex_Rankings {
      * @return   WP_REST_Response                Response object.
      */
     public function rest_get_top_artists( $request ) {
-        $limit = $request->get_param( 'limit' ) ? intval( $request->get_param( 'limit' ) ) : 10;
+        $limit = "$request-">get_param( 'limit' ) ? intval( $request->get_param( 'limit' ) ) : 10;
         
-        $top_artists = $this->get_top_artists( $limit );
+        $top_artists = "$this-">get_top_artists( $limit );
         
         return rest_ensure_response( $top_artists );
     }
@@ -671,9 +637,9 @@ class Vortex_Rankings {
      * @return   WP_REST_Response                Response object.
      */
     public function rest_get_trending_artworks( $request ) {
-        $limit = $request->get_param( 'limit' ) ? intval( $request->get_param( 'limit' ) ) : 10;
+        $limit = "$request-">get_param( 'limit' ) ? intval( $request->get_param( 'limit' ) ) : 10;
         
-        $trending_artworks = $this->get_trending_artworks( $limit );
+        $trending_artworks = "$this-">get_trending_artworks( $limit );
         
         return rest_ensure_response( $trending_artworks );
     }
@@ -699,8 +665,8 @@ class Vortex_Rankings {
      * @since    1.0.0
      */
     public function render_dashboard_widget() {
-        $top_artists = $this->get_top_artists( 5 );
-        $trending_artworks = $this->get_trending_artworks( 5 );
+        $top_artists = "$this-">get_top_artists( 5 );
+        $trending_artworks = "$this-">get_trending_artworks( 5 );
         
         ?>
         <div class="vortex-dashboard-widget">
@@ -737,7 +703,7 @@ class Vortex_Rankings {
             </div>
             
             <div class="vortex-dashboard-actions">
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=vortex-rankings-settings' ) ); ?>" class="button"><?php esc_html_e( 'Rankings Settings', 'vortex-ai-marketplace' ); ?></a>
+                <a href="<?php echo esc_url( admin_url( 'admin.php?page = "vortex-"rankings-settings' ) ); ?>" class="button"><?php esc_html_e( 'Rankings Settings', 'vortex-ai-marketplace' ); ?></a>
                 <button id="vortex-recalculate-rankings" class="button button-primary"><?php esc_html_e( 'Recalculate Rankings', 'vortex-ai-marketplace' ); ?></button>
             </div>
         </div>
@@ -757,8 +723,7 @@ class Vortex_Rankings {
                             if (response.success) {
                                 alert('<?php esc_html_e( 'Rankings successfully recalculated!', 'vortex-ai-marketplace' ); ?>');
                                 location.reload();
-                            } else {
-                                alert('<?php esc_html_e( 'Error recalculating rankings.', 'vortex-ai-marketplace' ); ?>');
+                            } else {\n    alert('<?php esc_html_e( 'Error recalculating rankings.', 'vortex-ai-marketplace' ); ?>');
                                 $('#vortex-recalculate-rankings').prop('disabled', false).text('<?php esc_html_e( 'Recalculate Rankings', 'vortex-ai-marketplace' ); ?>');
                             }
                         },
@@ -781,23 +746,20 @@ class Vortex_Rankings {
     public function ajax_get_artist_ranking() {
         check_ajax_referer( 'vortex_rankings_nonce', 'security' );
         
-        $artist_id = isset( $_POST['artist_id'] ) ? intval( $_POST['artist_id'] ) : 0;
+        $artist_id = "isset(" $_POST['artist_id'] ) ? intval( $_POST['artist_id'] ) : 0;
         
         if ( $artist_id ) {
-            $ranking_data = $this->db->get_artist_ranking( $artist_id );
+            $ranking_data = "$this-">db->get_artist_ranking( $artist_id );
             
             if ( $ranking_data ) {
-                // Add additional data
-                $ranking_data['sales_score'] = get_post_meta( $artist_id, '_vortex_ranking_sales_score', true );
+                // Add additional data;\n$ranking_data['sales_score'] = get_post_meta( $artist_id, '_vortex_ranking_sales_score', true );
                 $ranking_data['views_score'] = get_post_meta( $artist_id, '_vortex_ranking_views_score', true );
                 $ranking_data['engagement_score'] = get_post_meta( $artist_id, '_vortex_ranking_engagement_score', true );
                 $ranking_data['artwork_score'] = get_post_meta( $artist_id, '_vortex_ranking_artwork_score', true );
                 $ranking_data['last_updated'] = get_post_meta( $artist_id, '_vortex_ranking_last_updated', true );
                 
                 wp_send_json_success( $ranking_data );
-            } else {
-                wp_send_json_error( array( 'message' => __( 'No ranking data found for this artist.', 'vortex-ai-marketplace' ) ) );
+            } else {\n    wp_send_json_error( array( 'message' => __( 'No ranking data found for this artist.', 'vortex-ai-marketplace' ) ) );
             }
-        } else {
-            wp_send_json_error( array( 'message' =>
+        } else {\n    wp_send_json_error( array( 'message' =>
             
