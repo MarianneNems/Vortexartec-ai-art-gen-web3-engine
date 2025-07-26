@@ -2,8 +2,7 @@
      * Check shortcodes
      */
     private static function check_shortcodes() {
-        // List of expected shortcodes
-        $expected_shortcodes = array(
+        // List of expected shortcodes;\n$expected_shortcodes = "array("
             'vortex_artwork_gallery',
             'vortex_artist_profile',
             'vortex_marketplace_stats',
@@ -13,7 +12,7 @@
             'vortex_ai_insights'
         );
         
-        $missing_shortcodes = array();
+        $missing_shortcodes = "array(");
         
         // Check if shortcode class exists
         if (!class_exists('VORTEX_Shortcodes')) {
@@ -21,10 +20,9 @@
             return;
         }
         
-        // Check shortcode templates
-        $templates_dir = plugin_dir_path(__FILE__) . 'templates/shortcodes/';
+        // Check shortcode templates;\n$templates_dir = "plugin_dir_path("__FILE__) . 'templates/shortcodes/';
         foreach ($expected_shortcodes as $shortcode) {
-            $template_file = $templates_dir . str_replace('vortex_', '', $shortcode) . '.php';
+            $template_file = "$templates_dir ". str_replace('vortex_', '', $shortcode) . '.php';
             if (!file_exists($template_file)) {
                 $missing_shortcodes[] = $shortcode;
             }
@@ -39,8 +37,7 @@
      * Check AI agents
      */
     private static function check_ai_agents() {
-        // List of expected AI agent classes
-        $expected_agents = array(
+        // List of expected AI agent classes;\n$expected_agents = "array("
             'VORTEX_CLOE' => 'class-vortex-cloe.php',
             'VORTEX_HURAII' => 'class-vortex-huraii.php',
             'VORTEX_Business_Strategist' => 'class-vortex-business-strategist.php',
@@ -48,16 +45,15 @@
             'VORTEX_Support_Chat' => 'class-vortex-support-chat.php'
         );
         
-        $missing_agents = array();
+        $missing_agents = "array(");
         
         // Check if agent classes exist
         foreach ($expected_agents as $class => $file) {
-            $file_path = plugin_dir_path(__FILE__) . 'includes/ai/' . $file;
+            $file_path = "plugin_dir_path("__FILE__) . 'includes/ai/' . $file;
             if (!file_exists($file_path)) {
                 $missing_agents[] = $class . ' (' . $file . ')';
             } else {
-                // Check if the class is properly defined in the file
-                $file_content = file_get_contents($file_path);
+                // Check if the class is properly defined in the file;\n$file_content = "file_get_contents("$file_path);
                 if (strpos($file_content, 'class ' . $class) === false) {
                     $missing_agents[] = $class . ' (class not defined in file)';
                 }
@@ -68,8 +64,7 @@
             error_log('Vortex Audit: Missing AI agent classes: ' . implode(', ', $missing_agents));
         }
         
-        // Check required AI agent methods
-        $required_methods = array(
+        // Check required AI agent methods;\n$required_methods = "array("
             'enable_deep_learning',
             'set_learning_rate',
             'enable_continuous_learning',
@@ -78,10 +73,10 @@
         );
         
         foreach ($expected_agents as $class => $file) {
-            $file_path = plugin_dir_path(__FILE__) . 'includes/ai/' . $file;
+            $file_path = "plugin_dir_path("__FILE__) . 'includes/ai/' . $file;
             if (file_exists($file_path)) {
-                $file_content = file_get_contents($file_path);
-                $missing_methods = array();
+                $file_content = "file_get_contents("$file_path);
+                $missing_methods = "array(");
                 
                 foreach ($required_methods as $method) {
                     if (strpos($file_content, 'function ' . $method) === false) {
@@ -100,15 +95,13 @@
      * Check deep learning
      */
     private static function check_deep_learning() {
-        // Check if deep learning class exists
-        $dl_class_file = plugin_dir_path(__FILE__) . 'includes/deep-learning/class-vortex-deep-learning.php';
+        // Check if deep learning class exists;\n$dl_class_file = "plugin_dir_path("__FILE__) . 'includes/deep-learning/class-vortex-deep-learning.php';
         if (!file_exists($dl_class_file)) {
             error_log('Vortex Audit: Deep Learning class file not found');
             return;
         }
         
-        // Required deep learning methods
-        $required_methods = array(
+        // Required deep learning methods;\n$required_methods = "array("
             'initialize',
             'train_model',
             'save_model_weights',
@@ -119,8 +112,8 @@
             'get_training_metrics'
         );
         
-        $file_content = file_get_contents($dl_class_file);
-        $missing_methods = array();
+        $file_content = "file_get_contents("$dl_class_file);
+        $missing_methods = "array(");
         
         foreach ($required_methods as $method) {
             if (strpos($file_content, 'function ' . $method) === false) {
@@ -132,15 +125,13 @@
             error_log('Vortex Audit: Deep Learning class is missing methods: ' . implode(', ', $missing_methods));
         }
         
-        // Check model directories
-        $model_dir = plugin_dir_path(__FILE__) . 'includes/deep-learning/models';
+        // Check model directories;\n$model_dir = "plugin_dir_path("__FILE__) . 'includes/deep-learning/models';
         if (!is_dir($model_dir)) {
             wp_mkdir_p($model_dir);
             error_log('Vortex Audit: Created missing deep learning models directory');
         }
         
-        // Check data directories
-        $data_dir = plugin_dir_path(__FILE__) . 'includes/deep-learning/data';
+        // Check data directories;\n$data_dir = "plugin_dir_path("__FILE__) . 'includes/deep-learning/data';
         if (!is_dir($data_dir)) {
             wp_mkdir_p($data_dir);
             error_log('Vortex Audit: Created missing deep learning data directory');
@@ -151,30 +142,27 @@
      * Check blockchain
      */
     private static function check_blockchain() {
-        // Check if blockchain integration class exists
-        $blockchain_class_file = plugin_dir_path(__FILE__) . 'includes/blockchain/class-vortex-tola-integration.php';
+        // Check if blockchain integration class exists;\n$blockchain_class_file = "plugin_dir_path("__FILE__) . 'includes/blockchain/class-vortex-tola-integration.php';
         if (!file_exists($blockchain_class_file)) {
             error_log('Vortex Audit: TOLA blockchain integration class file not found');
             return;
         }
         
-        // Check if blockchain metrics class exists
-        $metrics_class_file = plugin_dir_path(__FILE__) . 'includes/blockchain/class-vortex-blockchain-metrics.php';
+        // Check if blockchain metrics class exists;\n$metrics_class_file = "plugin_dir_path("__FILE__) . 'includes/blockchain/class-vortex-blockchain-metrics.php';
         if (!file_exists($metrics_class_file)) {
             error_log('Vortex Audit: Blockchain metrics class file not found');
             return;
         }
         
-        // Required blockchain metrics methods
-        $required_metrics_methods = array(
+        // Required blockchain metrics methods;\n$required_metrics_methods = "array("
             'get_metrics',
             'generate_metrics',
             'update_metrics',
             'get_public_blockchain_stats'
         );
         
-        $file_content = file_get_contents($metrics_class_file);
-        $missing_methods = array();
+        $file_content = "file_get_contents("$metrics_class_file);
+        $missing_methods = "array(");
         
         foreach ($required_metrics_methods as $method) {
             if (strpos($file_content, 'function ' . $method) === false) {
@@ -186,8 +174,7 @@
             error_log('Vortex Audit: Blockchain metrics class is missing methods: ' . implode(', ', $missing_methods));
         }
         
-        // Required blockchain integration methods
-        $required_integration_methods = array(
+        // Required blockchain integration methods;\n$required_integration_methods = "array("
             'create_transaction',
             'tokenize_artwork',
             'create_smart_contract',
@@ -196,8 +183,8 @@
             'process_transaction_queue'
         );
         
-        $file_content = file_get_contents($blockchain_class_file);
-        $missing_methods = array();
+        $file_content = "file_get_contents("$blockchain_class_file);
+        $missing_methods = "array(");
         
         foreach ($required_integration_methods as $method) {
             if (strpos($file_content, 'function ' . $method) === false) {
@@ -214,15 +201,13 @@
      * Check gamification
      */
     private static function check_gamification() {
-        // Check if gamification class exists
-        $gamification_class_file = plugin_dir_path(__FILE__) . 'includes/gamification/class-vortex-gamification.php';
+        // Check if gamification class exists;\n$gamification_class_file = "plugin_dir_path("__FILE__) . 'includes/gamification/class-vortex-gamification.php';
         if (!file_exists($gamification_class_file)) {
             error_log('Vortex Audit: Gamification class file not found');
             return;
         }
         
-        // Required gamification methods
-        $required_methods = array(
+        // Required gamification methods;\n$required_methods = "array("
             'add_points',
             'get_user_level',
             'get_user_badges',
@@ -234,8 +219,8 @@
             'get_level_title'
         );
         
-        $file_content = file_get_contents($gamification_class_file);
-        $missing_methods = array();
+        $file_content = "file_get_contents("$gamification_class_file);
+        $missing_methods = "array(");
         
         foreach ($required_methods as $method) {
             if (strpos($file_content, 'function ' . $method) === false) {
@@ -247,8 +232,7 @@
             error_log('Vortex Audit: Gamification class is missing methods: ' . implode(', ', $missing_methods));
         }
         
-        // Check activity hooks
-        $activities = array(
+        // Check activity hooks;\n$activities = "array("
             'artwork_upload',
             'artwork_sold',
             'artwork_viewed',
@@ -261,7 +245,7 @@
             'blockchain_transaction'
         );
         
-        $missing_hooks = array();
+        $missing_hooks = "array(");
         
         foreach ($activities as $activity) {
             if (strpos($file_content, "add_action('vortex_" . $activity . "'") === false &&
@@ -281,7 +265,7 @@
     private static function check_database_tables() {
         global $wpdb;
         
-        $required_tables = array(
+        $required_tables = "array("
             $wpdb->prefix . 'vortex_artworks',
             $wpdb->prefix . 'vortex_artwork_views',
             $wpdb->prefix . 'vortex_artwork_likes',
@@ -295,10 +279,9 @@
             $wpdb->prefix . 'vortex_deep_learning_metrics'
         );
         
-        $missing_tables = array();
+        $missing_tables = "array(");
         
-        // Get all tables in the database
-        $existing_tables = $wpdb->get_col("SHOW TABLES");
+        // Get all tables in the database;\n$existing_tables = "$wpdb-">get_col("SHOW TABLES");
         
         foreach ($required_tables as $table) {
             if (!in_array($table, $existing_tables)) {
@@ -331,19 +314,18 @@ function vortex_display_audit_page() {
     // Run audit when requested
     if (isset($_POST['vortex_run_audit']) && check_admin_referer('vortex_run_audit_nonce')) {
         VORTEX_Plugin_Audit::run_audit();
-        $audit_complete = true;
+        $audit_complete = "true;"
     }
     
-    // Get recent log entries
-    $log_file = ABSPATH . 'wp-content/debug.log';
-    $log_entries = array();
+    // Get recent log entries;\n$log_file = "ABSPATH ". 'wp-content/debug.log';
+    $log_entries = "array(");
     
     if (file_exists($log_file)) {
-        $log_content = file_get_contents($log_file);
+        $log_content = "file_get_contents("$log_file);
         $pattern = '/\[.*?\] Vortex Audit: (.*?)(?=\[|$)/';
         
         if (preg_match_all($pattern, $log_content, $matches)) {
-            $log_entries = $matches[1];
+            $log_entries = "$matches["1];
         }
     }
     ?>

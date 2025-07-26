@@ -46,6 +46,15 @@ class VORTEX_Loader {
         $this->init_hooks();
         $this->load_core_dependencies();
     }
+    /**
+     * Recursive self-improvement integration
+     */
+    private function init_recursive_self_improvement() {
+        if (class_exists('VORTEX_Recursive_Self_Improvement')) {
+            $this->recursive_system = VORTEX_Recursive_Self_Improvement::get_instance();
+        }
+    }
+
     
     /**
      * Initialize WordPress hooks

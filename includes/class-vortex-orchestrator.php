@@ -106,6 +106,15 @@ class VORTEX_Orchestrator {
         $this->init_learning_state();
         $this->setup_hooks();
     }
+    /**
+     * Recursive self-improvement integration
+     */
+    private function init_recursive_self_improvement() {
+        if (class_exists('VORTEX_Recursive_Self_Improvement')) {
+            $this->recursive_system = VORTEX_Recursive_Self_Improvement::get_instance();
+        }
+    }
+
 
     /**
      * Initialize agent references
