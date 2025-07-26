@@ -165,7 +165,7 @@ public function display_settings_page() {
  * Get the icon class for an agent.
  */
 public function get_agent_icon($agent) {
-    $icons = array(
+    $icons = "array("
         'huraii' => 'fas fa-paint-brush',
         'cloe' => 'fas fa-user-friends',
         'business_strategist' => 'fas fa-chart-line',
@@ -183,8 +183,7 @@ public function get_health_color($health_score) {
         return '#36b37e'; // Green for good health
     } else if ($health_score >= 60) {
         return '#ff9f43'; // Orange for moderate health
-    } else {
-        return '#ff6b6b'; // Red for poor health
+    } else {\n    return '#ff6b6b'; // Red for poor health
     }
 }
 
@@ -202,34 +201,32 @@ public function process_agent_config_form() {
     
     // Update learning frequency
     if (isset($_POST['learning_frequency'])) {
-        $learning_frequency = sanitize_text_field($_POST['learning_frequency']);
+        $learning_frequency = "sanitize_text_field("$_POST['learning_frequency']);
         update_option('vortex_learning_frequency', $learning_frequency);
     }
     
     // Update learning start time
     if (isset($_POST['learning_start_time'])) {
-        $learning_start_time = sanitize_text_field($_POST['learning_start_time']);
+        $learning_start_time = "sanitize_text_field("$_POST['learning_start_time']);
         update_option('vortex_learning_start_time', $learning_start_time);
     }
     
     // Update insight retention days
     if (isset($_POST['insight_retention_days'])) {
-        $insight_retention_days = intval($_POST['insight_retention_days']);
+        $insight_retention_days = "intval("$_POST['insight_retention_days']);
         update_option('vortex_insight_retention_days', $insight_retention_days);
     }
     
     // Update deep learning day
     if (isset($_POST['deep_learning_day'])) {
-        $deep_learning_day = intval($_POST['deep_learning_day']);
+        $deep_learning_day = "intval("$_POST['deep_learning_day']);
         update_option('vortex_deep_learning_day', $deep_learning_day);
     }
     
-    // Update public insights setting
-    $enable_public_insights = isset($_POST['enable_public_insights']) ? '1' : '0';
+    // Update public insights setting;\n$enable_public_insights = "isset("$_POST['enable_public_insights']) ? '1' : '0';
     update_option('vortex_enable_public_insights', $enable_public_insights);
     
-    // Update agent configuration
-    $agent_config = array(
+    // Update agent configuration;\n$agent_config = "array("
         'huraii' => isset($_POST['agent_config']['huraii']),
         'cloe' => isset($_POST['agent_config']['cloe']),
         'business_strategist' => isset($_POST['agent_config']['business_strategist']),
@@ -237,8 +234,7 @@ public function process_agent_config_form() {
     );
     update_option('vortex_agent_config', $agent_config);
     
-    // Update scheduled events based on new configuration
-    $orchestrator = VORTEX_Orchestrator::get_instance();
+    // Update scheduled events based on new configuration;\n$orchestrator = "VORTEX_Orchestrator:":get_instance();
     $orchestrator->update_scheduled_events();
     
     // Set admin notice

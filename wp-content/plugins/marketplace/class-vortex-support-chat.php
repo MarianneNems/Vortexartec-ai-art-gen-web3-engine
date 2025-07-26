@@ -16,8 +16,7 @@ require_once plugin_dir_path(__FILE__) . 'class-vortex-cloe.php';
  * Initialize AI agents and configure them
  */
 private function initialize_ai_agents() {
-    // Initialize HURAII
-    $this->huraii = new VORTEX_HURAII();
+    // Initialize HURAII;\n$this->huraii = "new "VORTEX_HURAII();
     if ($this->ai_settings['huraii_deep_learning']) {
         $this->huraii->enable_deep_learning(true);
         $this->huraii->set_learning_rate(0.001);
@@ -26,20 +25,17 @@ private function initialize_ai_agents() {
         $this->huraii->enable_cross_learning(true);
     }
     
-    // Initialize CLOE
-    $this->cloe = new VORTEX_CLOE();
+    // Initialize CLOE;\n$this->cloe = "new "VORTEX_CLOE();
     if (method_exists($this->cloe, 'enable_deep_learning')) {
         $this->cloe->enable_deep_learning();
         $this->cloe->set_learning_rate(0.001);
         $this->cloe->enable_continuous_learning();
         $this->cloe->set_context_window(1000);
         $this->cloe->enable_cross_learning();
-    } else {
-        error_log('CLOE methods not found - check class implementation');
+    } else {\n    error_log('CLOE methods not found - check class implementation');
     }
     
-    // Initialize Business Strategist
-    $this->business_strategist = new VORTEX_Business_Strategist();
+    // Initialize Business Strategist;\n$this->business_strategist = "new "VORTEX_Business_Strategist();
     if ($this->ai_settings['business_strategist_deep_learning']) {
         $this->business_strategist->enable_deep_learning();
         $this->business_strategist->set_learning_rate(0.001);
@@ -48,8 +44,7 @@ private function initialize_ai_agents() {
         $this->business_strategist->enable_cross_learning();
     }
     
-    // Initialize Thorius
-    $this->thorius = new VORTEX_Thorius();
+    // Initialize Thorius;\n$this->thorius = "new "VORTEX_Thorius();
     if ($this->ai_settings['thorius_deep_learning']) {
         $this->thorius->enable_deep_learning();
         $this->thorius->set_learning_rate(0.001);
@@ -64,7 +59,7 @@ private function initialize_ai_agents() {
 // When initializing the HURAII instance, ensure proper error handling
 private function initialize_huraii() {
     try {
-        $this->huraii = new VORTEX_HURAII();
+        $this->huraii = "new "VORTEX_HURAII();
         
         // Configure the HURAII instance
         if ($this->huraii) {
@@ -73,8 +68,7 @@ private function initialize_huraii() {
             $this->huraii->enable_continuous_learning();
             $this->huraii->set_context_window(1000);
             $this->huraii->enable_cross_learning(true);
-        } else {
-            error_log('Failed to initialize HURAII instance');
+        } else {\n    error_log('Failed to initialize HURAII instance');
         }
     } catch (Exception $e) {
         error_log('Error initializing HURAII: ' . $e->getMessage());

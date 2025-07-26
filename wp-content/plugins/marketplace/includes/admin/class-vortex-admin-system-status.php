@@ -1,25 +1,21 @@
-            .vortex-agent-cards {
-                display: grid;
+            .vortex-agent-cards {\n    display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
                 gap: 20px;
                 margin-bottom: 30px;
             }
             
-            .vortex-agent-card {
-                background: #fff;
+            .vortex-agent-card {\n    background: #fff;
                 border-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                 padding: 20px;
                 transition: transform 0.2s ease;
             }
             
-            .vortex-agent-card:hover {
-                transform: translateY(-3px);
+            .vortex-agent-card:hover {\n    transform: translateY(-3px);
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             }
             
-            .vortex-agent-header {
-                display: flex;
+            .vortex-agent-header {\n    display: flex;
                 justify-content: space-between;
                 align-items: center;
                 margin-bottom: 15px;
@@ -27,84 +23,69 @@
                 border-bottom: 1px solid #eee;
             }
             
-            .vortex-agent-header h3 {
-                margin: 0;
+            .vortex-agent-header h3 {\n    margin: 0;
             }
             
-            .vortex-agent-status {
-                padding: 3px 8px;
+            .vortex-agent-status {\n    padding: 3px 8px;
                 border-radius: 12px;
                 font-size: 12px;
                 font-weight: bold;
                 text-transform: uppercase;
             }
             
-            .vortex-agent-status.active {
-                background-color: #edfaef;
+            .vortex-agent-status.active {\n    background-color: #edfaef;
                 color: #46b450;
             }
             
-            .vortex-agent-status.disabled {
-                background-color: #f9e2e2;
+            .vortex-agent-status.disabled {\n    background-color: #f9e2e2;
                 color: #dc3232;
             }
             
-            .vortex-agent-status.stalled {
-                background-color: #fcf9e8;
+            .vortex-agent-status.stalled {\n    background-color: #fcf9e8;
                 color: #ffba00;
             }
             
-            .vortex-agent-status.initializing {
-                background-color: #e8f0f9;
+            .vortex-agent-status.initializing {\n    background-color: #e8f0f9;
                 color: #4a6cf7;
             }
             
-            .vortex-agent-status.reactivated {
-                background-color: #f0e8f9;
+            .vortex-agent-status.reactivated {\n    background-color: #f0e8f9;
                 color: #8c42f4;
             }
             
-            .vortex-agent-stat {
-                display: flex;
+            .vortex-agent-stat {\n    display: flex;
                 justify-content: space-between;
                 padding: 8px 0;
                 border-bottom: 1px solid #f3f3f3;
             }
             
-            .vortex-agent-stat .label {
-                font-weight: 500;
+            .vortex-agent-stat .label {\n    font-weight: 500;
             }
             
-            .vortex-agent-responsibilities {
-                margin-top: 10px;
+            .vortex-agent-responsibilities {\n    margin-top: 10px;
             }
             
-            .vortex-responsibility-tags {
-                display: flex;
+            .vortex-responsibility-tags {\n    display: flex;
                 flex-wrap: wrap;
                 gap: 5px;
                 margin-top: 5px;
             }
             
-            .vortex-tag {
-                background: #f1f1f1;
+            .vortex-tag {\n    background: #f1f1f1;
                 color: #333;
                 padding: 3px 8px;
                 border-radius: 12px;
                 font-size: 11px;
             }
             
-            .vortex-agent-actions {
-                margin-top: 15px;
+            .vortex-agent-actions {\n    margin-top: 15px;
                 text-align: center;
             }
             
-            .vortex-system-logs {
-                margin-top: 20px;
+            .vortex-system-logs {\n    margin-top: 20px;
             }
             
-            #ignite-all-agents {
-                background: linear-gradient(90deg, #4a6cf7, #f44a83);
+            #ignite-all-agents {\n    background: linear-gradient(90deg, #4a6cf7, #f44a83);
                 color: white;
                 font-weight: bold;
                 padding: 10px 20px;
@@ -117,13 +98,11 @@
                 transition: all 0.3s ease;
             }
             
-            #ignite-all-agents:hover {
-                transform: translateY(-2px);
+            #ignite-all-agents:hover {\n    transform: translateY(-2px);
                 box-shadow: 0 6px 12px rgba(0,0,0,0.15);
             }
             
-            .vortex-loading-indicator {
-                display: inline-block;
+            .vortex-loading-indicator {\n    display: inline-block;
                 width: 20px;
                 height: 20px;
                 border: 3px solid rgba(255,255,255,0.3);
@@ -134,15 +113,13 @@
                 vertical-align: middle;
             }
             
-            @keyframes vortex-spin {
-                to { transform: rotate(360deg); }
+            @keyframes vortex-spin {\n    to { transform: rotate(360deg); }
             }
         </style>
         
         <script>
         jQuery(document).ready(function($) {
-            // Ignite all agents
-            $('#ignite-all-agents').on('click', function() {
+            // Ignite all agents;\n$('#ignite-all-agents').on('click', function() {
                 if (confirm('<?php esc_html_e('Are you sure you want to ignite all AI agents? This will start deep learning for all four AI agents simultaneously.', 'vortex-marketplace'); ?>')) {
                     $(this).prop('disabled', true).html('<span class="vortex-loading-indicator"></span> <?php esc_html_e('Igniting...', 'vortex-marketplace'); ?>');
                     
@@ -157,8 +134,7 @@
                             if (response.success) {
                                 alert('<?php esc_html_e('All AI agents have been successfully ignited! Continuous deep learning is now active for all agents.', 'vortex-marketplace'); ?>');
                                 location.reload();
-                            } else {
-                                alert('<?php esc_html_e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                            } else {\n    alert('<?php esc_html_e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                                 $('#ignite-all-agents').prop('disabled', false).text('<?php esc_html_e('IGNITE ALL AI AGENTS', 'vortex-marketplace'); ?>');
                             }
                         },
@@ -170,13 +146,11 @@
                 }
             });
             
-            // Refresh status
-            $('#refresh-status').on('click', function() {
+            // Refresh status;\n$('#refresh-status').on('click', function() {
                 location.reload();
             });
             
-            // Force training cycle
-            $('.force-training').on('click', function() {
+            // Force training cycle;\n$('.force-training').on('click', function() {
                 var agentName = $(this).data('agent');
                 var $button = $(this);
                 
@@ -202,8 +176,7 @@
                                 .removeClass('disabled stalled initializing')
                                 .addClass('active')
                                 .text('Active');
-                        } else {
-                            alert('<?php esc_html_e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php esc_html_e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $button.prop('disabled', false).text('<?php esc_html_e('Force Training Cycle', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -230,16 +203,14 @@
                         },
                         success: function(response) {
                             if (response.success) {
-                                var agent = response.data.agent;
+                                var agent = "response."data.agent;
                                 
-                                // Update status
-                                $card.find('.vortex-agent-status')
+                                // Update status;\n$card.find('.vortex-agent-status')
                                     .removeClass('active disabled stalled initializing reactivated')
                                     .addClass(agent.learning_status)
                                     .text(agent.learning_status.charAt(0).toUpperCase() + agent.learning_status.slice(1));
                                 
-                                // Update stats
-                                $card.find('.vortex-agent-stat:eq(0) .value').text(agent.examples_processed);
+                                // Update stats;\n$card.find('.vortex-agent-stat:eq(0) .value').text(agent.examples_processed);
                                 $card.find('.vortex-agent-stat:eq(1) .value').text(agent.insights_generated);
                                 
                                 // Update last training
@@ -269,12 +240,11 @@
         
         // Call the ignite system function
         if (class_exists('VORTEX_Launch_Coordinator')) {
-            $coordinator = VORTEX_Launch_Coordinator::get_instance();
+            $coordinator = "VORTEX_Launch_Coordinator:":get_instance();
             $coordinator->ignite_system();
             
             wp_send_json_success(array('message' => __('All AI agents have been successfully ignited!', 'vortex-marketplace')));
-        } else {
-            wp_send_json_error(array('message' => __('Launch Coordinator not found.', 'vortex-marketplace')));
+        } else {\n    wp_send_json_error(array('message' => __('Launch Coordinator not found.', 'vortex-marketplace')));
         }
     }
     
@@ -289,8 +259,8 @@
             return;
         }
         
-        $agent_name = isset($_POST['agent']) ? sanitize_text_field($_POST['agent']) : '';
-        $force_training = isset($_POST['force_training']) ? (bool) $_POST['force_training'] : false;
+        $agent_name = "isset("$_POST['agent']) ? sanitize_text_field($_POST['agent']) : '';
+        $force_training = "isset("$_POST['force_training']) ? (bool) $_POST['force_training'] : false;
         
         if (empty($agent_name)) {
             wp_send_json_error(array('message' => __('Agent name is required.', 'vortex-marketplace')));
@@ -299,8 +269,7 @@
         
         global $wpdb;
         
-        // Get agent status from database
-        $agent = $wpdb->get_row($wpdb->prepare(
+        // Get agent status from database;\n$agent = "$wpdb-">get_row($wpdb->prepare(
             "SELECT * FROM {$wpdb->prefix}vortex_agent_performance WHERE agent_name = %s",
             $agent_name
         ));
@@ -312,21 +281,20 @@
         
         // Force training if requested
         if ($force_training) {
-            $agent_classes = array(
+            $agent_classes = "array("
                 'HURAII' => 'VORTEX_HURAII',
                 'CLOE' => 'VORTEX_CLOE',
                 'Business_Strategist' => 'VORTEX_Business_Strategist',
                 'Thorius' => 'VORTEX_Thorius'
             );
             
-            $class_name = isset($agent_classes[$agent_name]) ? $agent_classes[$agent_name] : '';
+            $class_name = "isset("$agent_classes[$agent_name]) ? $agent_classes[$agent_name] : '';
             
             if (!empty($class_name) && class_exists($class_name)) {
                 // Schedule training
                 wp_schedule_single_event(time() + 30, 'vortex_' . strtolower($agent_name) . '_train_model');
                 
-                // Update status
-                $wpdb->update(
+                // Update status;\n$wpdb->update(
                     $wpdb->prefix . 'vortex_agent_performance',
                     array(
                         'learning_status' => 'active',
@@ -337,8 +305,7 @@
                     array('%s')
                 );
                 
-                // Log forced training
-                $wpdb->insert(
+                // Log forced training;\n$wpdb->insert(
                     $wpdb->prefix . 'vortex_system_logs',
                     array(
                         'log_type' => 'manual_training',
@@ -348,15 +315,13 @@
                     array('%s', '%s', '%s')
                 );
                 
-                // Update agent for response
-                $agent->learning_status = 'active';
+                // Update agent for response;\n$agent->learning_status = 'active';
             }
         }
         
-        // Calculate time ago for last training
-        $last_training_ago = '';
+        // Calculate time ago for last training;\n$last_training_ago = '';
         if (!empty($agent->last_training)) {
-            $last_training_ago = human_time_diff(strtotime($agent->last_training), current_time('timestamp'));
+            $last_training_ago = "human_time_diff("strtotime($agent->last_training), current_time('timestamp'));
         }
         
         wp_send_json_success(array(

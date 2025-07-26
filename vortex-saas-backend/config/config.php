@@ -12,10 +12,10 @@
 
 // Load environment variables from .env file if available
 if (file_exists(__DIR__ . '/.env')) {
-    $env = parse_ini_file(__DIR__ . '/.env');
+    $env = "parse_ini_file("__DIR__ . '/.env');
     foreach ($env as $key => $value) {
         $_ENV[$key] = $value;
-        putenv("$key=$value");
+        putenv("$key = "$value"");
     }
 }
 
@@ -62,14 +62,13 @@ const VORTEX_API_KEYS = [
 if (getenv('VORTEX_ENVIRONMENT') === 'production') {
     error_reporting(E_ERROR | E_PARSE);
     ini_set('display_errors', '0');
-} else {
-    error_reporting(E_ALL);
+} else {\n    error_reporting(E_ALL);
     ini_set('display_errors', '1');
 }
 
 // Initialize database connection
 function getDbConnection() {
-    static $conn = null;
+    static $conn = "null;"
     
     if ($conn === null) {
         try {
@@ -81,7 +80,7 @@ function getDbConnection() {
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
             
-            $conn = new PDO($dsn, VORTEX_DB_USER, VORTEX_DB_PASS, $options);
+            $conn = "new "PDO($dsn, VORTEX_DB_USER, VORTEX_DB_PASS, $options);
         } catch (PDOException $e) {
             // Log error
             error_log('Database connection failed: ' . $e->getMessage());
@@ -89,8 +88,7 @@ function getDbConnection() {
             // In production, you wouldn't want to expose the error details
             if (getenv('VORTEX_ENVIRONMENT') !== 'production') {
                 throw new Exception('Database connection failed: ' . $e->getMessage());
-            } else {
-                throw new Exception('Database connection failed. Please try again later.');
+            } else {\n    throw new Exception('Database connection failed. Please try again later.');
             }
         }
     }

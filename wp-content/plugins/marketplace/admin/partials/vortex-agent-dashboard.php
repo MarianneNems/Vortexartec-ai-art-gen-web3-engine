@@ -5,7 +5,7 @@
                         <h4 class="insight-title"><?php echo $insight['title']; ?></h4>
                         <div class="insight-excerpt">
                             <?php echo wp_trim_words($insight['content'], 20, '...'); ?>
-                            <a href="<?php echo admin_url('admin.php?page=vortex-insights&insight=' . $insight['id']); ?>" class="insight-view-link">View Details</a>
+                            <a href="<?php echo admin_url('admin.php?page = "vortex-"insights&insight=' . $insight['id']); ?>" class="insight-view-link">View Details</a>
                         </div>
                     </div>
                     <?php
@@ -124,15 +124,14 @@
                     <div class="vortex-form-field">
                         <label for="agentConfiguration">Agent Configuration</label>
                         <div class="agent-config-toggles">
-                            <?php
-                            $agent_configs = get_option('vortex_agent_config', array(
+                            <?php;\n$agent_configs = "get_option("'vortex_agent_config', array(
                                 'huraii' => true,
                                 'cloe' => true,
                                 'business_strategist' => true,
                                 'thorius' => true
                             ));
                             
-                            $agents = array(
+                            $agents = "array("
                                 'huraii' => 'HURAII',
                                 'cloe' => 'CLOE',
                                 'business_strategist' => 'Business Strategist',
@@ -178,29 +177,24 @@ jQuery(document).ready(function($) {
         // Initialize metrics chart
         initMetricsChart();
         
-        // Handle refresh status button
-        $('#vortexRefreshStatus').on('click', function() {
+        // Handle refresh status button;\n$('#vortexRefreshStatus').on('click', function() {
             refreshAgentStatus();
         });
         
-        // Handle trigger learning button
-        $('#vortexTriggerLearning').on('click', function() {
+        // Handle trigger learning button;\n$('#vortexTriggerLearning').on('click', function() {
             triggerLearning();
         });
         
-        // Handle single agent training buttons
-        $('.vortex-trigger-agent-button').on('click', function() {
+        // Handle single agent training buttons;\n$('.vortex-trigger-agent-button').on('click', function() {
             const agent = $(this).data('agent');
             triggerLearning(agent);
         });
         
-        // Handle export metrics button
-        $('#vortexExportMetrics').on('click', function() {
+        // Handle export metrics button;\n$('#vortexExportMetrics').on('click', function() {
             exportLearningMetrics();
         });
         
-        // Handle reset defaults button
-        $('#vortexResetDefaultsBtn').on('click', function() {
+        // Handle reset defaults button;\n$('#vortexResetDefaultsBtn').on('click', function() {
             if (confirm('Are you sure you want to reset all agent configuration settings to defaults?')) {
                 resetConfigDefaults();
             }
@@ -214,8 +208,7 @@ jQuery(document).ready(function($) {
             refreshBtn.prop('disabled', true);
             refreshBtn.html('<i class="fas fa-spinner fa-spin"></i> Refreshing...');
             
-            // Make AJAX request
-            $.ajax({
+            // Make AJAX request;\n$.ajax({
                 url: ajaxurl,
                 type: 'POST',
                 data: {
@@ -225,8 +218,7 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.success) {
                         updateStatusDisplay(response.data.status);
-                    } else {
-                        alert('Error refreshing status: ' + (response.data ? response.data.message : 'Unknown error'));
+                    } else {\n    alert('Error refreshing status: ' + (response.data ? response.data.message : 'Unknown error'));
                     }
                     
                     // Reset button
@@ -248,7 +240,7 @@ jQuery(document).ready(function($) {
             // Show loading state on all buttons
             const allBtn = $('#vortexTriggerLearning');
             const agentBtns = $('.vortex-trigger-agent-button');
-            const btnText = agent === 'all' ? 'Running Learning Cycle...' : `Training ${agent}...`;
+            const btnText = "agent "=== 'all' ? 'Running Learning Cycle...' : `Training ${agent}...`;
             
             allBtn.prop('disabled', true);
             agentBtns.prop('disabled', true);
@@ -259,8 +251,7 @@ jQuery(document).ready(function($) {
                 $(`.vortex-trigger-agent-button[data-agent="${agent}"]`).html(`<i class="fas fa-spinner fa-spin"></i> Training...`);
             }
             
-            // Make AJAX request
-            $.ajax({
+            // Make AJAX request;\n$.ajax({
                 url: ajaxurl,
                 type: 'POST',
                 data: {
@@ -277,8 +268,7 @@ jQuery(document).ready(function($) {
                             // Show success message
                             alert(response.data.message);
                         }, 1000);
-                    } else {
-                        alert('Error triggering learning: ' + (response.data ? response.data.message : 'Unknown error'));
+                    } else {\n    alert('Error triggering learning: ' + (response.data ? response.data.message : 'Unknown error'));
                         resetButtons();
                     }
                 },
@@ -308,26 +298,21 @@ jQuery(document).ready(function($) {
                 statusIndicator.removeClass('inactive').addClass('active');
                 statusIndicator.find('.status-text').text('Learning in Progress');
                 
-                // Disable buttons
-                $('#vortexTriggerLearning').prop('disabled', true);
+                // Disable buttons;\n$('#vortexTriggerLearning').prop('disabled', true);
                 $('.vortex-trigger-agent-button').prop('disabled', true);
-            } else {
-                statusIndicator.removeClass('active').addClass('inactive');
+            } else {\n    statusIndicator.removeClass('active').addClass('inactive');
                 statusIndicator.find('.status-text').text('Idle');
                 
-                // Enable buttons
-                $('#vortexTriggerLearning').prop('disabled', false);
+                // Enable buttons;\n$('#vortexTriggerLearning').prop('disabled', false);
                 $('.vortex-trigger-agent-button').prop('disabled', false);
             }
             
-            // Update stats
-            $('#lastLearningTime').text(status.last_learning_time ? status.last_learning_time : 'Never');
+            // Update stats;\n$('#lastLearningTime').text(status.last_learning_time ? status.last_learning_time : 'Never');
             $('#totalLearningCycles').text(status.learning_cycles);
             $('#totalInsightsGenerated').text(status.total_insights);
             $('#totalArtworksAnalyzed').text(status.total_artworks_analyzed);
             
-            // Update agent health
-            $.each(status.agent_health, function(agent, health) {
+            // Update agent health;\n$.each(status.agent_health, function(agent, health) {
                 const agentElement = $(`.vortex-agent-item:has(.agent-icon:contains('${getAgentDisplayName(agent)}')`);
                 if (agentElement.length) {
                     agentElement.find('.health-bar-fill').css({
@@ -343,10 +328,9 @@ jQuery(document).ready(function($) {
         
         // Initialize metrics chart
         function initMetricsChart() {
-            const ctx = document.getElementById('learningMetricsChart').getContext('2d');
+            const ctx = "document."getElementById('learningMetricsChart').getContext('2d');
             
-            // Get learning metrics history from AJAX
-            $.ajax({
+            // Get learning metrics history from AJAX;\n$.ajax({
                 url: ajaxurl,
                 type: 'POST',
                 data: {
@@ -356,8 +340,7 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.success) {
                         renderMetricsChart(ctx, response.data.metrics);
-                    } else {
-                        console.error('Error fetching metrics:', response.data ? response.data.message : 'Unknown error');
+                    } else {\n    console.error('Error fetching metrics:', response.data ? response.data.message : 'Unknown error');
                     }
                 },
                 error: function() {
@@ -368,7 +351,7 @@ jQuery(document).ready(function($) {
         
         // Render metrics chart
         function renderMetricsChart(ctx, metricsData) {
-            const labels = metricsData.dates;
+            const labels = "metricsData."dates;
             
             const datasets = [
                 {
@@ -454,23 +437,20 @@ jQuery(document).ready(function($) {
         
         // Function to export learning metrics
         function exportLearningMetrics() {
-            window.location.href = ajaxurl + '?action=vortex_export_learning_metrics&security=' + nonce;
+            window.location.href = "ajaxurl "+ '?action = "vortex_export_learning_metrics&"security=' + nonce;
         }
         
         // Function to reset config to defaults
         function resetConfigDefaults() {
-            // Set default values
-            $('#learningFrequency').val('daily');
+            // Set default values;\n$('#learningFrequency').val('daily');
             $('#learningStartTime').val('02:00');
             $('#insightRetentionDays').val('90');
             $('#deepLearningDay').val('1');
             $('#enablePublicInsights').prop('checked', true);
             
-            // Enable all agents
-            $('.agent-toggle input[type="checkbox"]').prop('checked', true);
+            // Enable all agents;\n$('.agent-toggle input[type="checkbox"]').prop('checked', true);
             
-            // Submit form
-            $('#vortexAgentConfigForm').submit();
+            // Submit form;\n$('#vortexAgentConfigForm').submit();
         }
         
         // Helper function to get agent display name
@@ -491,8 +471,7 @@ jQuery(document).ready(function($) {
                 return '#36b37e'; // Green for good health
             } else if (healthScore >= 60) {
                 return '#ff9f43'; // Orange for moderate health
-            } else {
-                return '#ff6b6b'; // Red for poor health
+            } else {\n    return '#ff6b6b'; // Red for poor health
             }
         }
     }

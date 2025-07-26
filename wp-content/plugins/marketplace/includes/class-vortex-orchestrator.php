@@ -1,7 +1,6 @@
         <script>
         jQuery(document).ready(function($) {
-            // Toggle full audit results
-            $('#run-directory-audit').on('click', function() {
+            // Toggle full audit results;\n$('#run-directory-audit').on('click', function() {
                 $('.vortex-full-audit-results').slideToggle();
                 
                 // Scroll to audit results
@@ -12,8 +11,7 @@
                 }
             });
             
-            // Auto-fix issues
-            $('#auto-fix-issues').on('click', function() {
+            // Auto-fix issues;\n$('#auto-fix-issues').on('click', function() {
                 $(this).prop('disabled', true).text('<?php _e('Fixing...', 'vortex-marketplace'); ?>');
                 
                 $.ajax({
@@ -27,8 +25,7 @@
                         if (response.success) {
                             alert('<?php _e('Issues fixed successfully. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $('#auto-fix-issues').prop('disabled', false).text('<?php _e('Auto-Fix Issues', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -39,8 +36,7 @@
                 });
             });
             
-            // Create database tables
-            $('#create-database-tables').on('click', function() {
+            // Create database tables;\n$('#create-database-tables').on('click', function() {
                 $(this).prop('disabled', true).text('<?php _e('Creating...', 'vortex-marketplace'); ?>');
                 
                 $.ajax({
@@ -54,8 +50,7 @@
                         if (response.success) {
                             alert('<?php _e('Database tables created successfully. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $('#create-database-tables').prop('disabled', false).text('<?php _e('Create Missing Tables', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -66,8 +61,7 @@
                 });
             });
             
-            // Enable all AI learning
-            $('#enable-all-learning').on('click', function() {
+            // Enable all AI learning;\n$('#enable-all-learning').on('click', function() {
                 $(this).prop('disabled', true).text('<?php _e('Enabling...', 'vortex-marketplace'); ?>');
                 
                 $.ajax({
@@ -81,8 +75,7 @@
                         if (response.success) {
                             alert('<?php _e('Deep learning enabled for all AI agents. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $('#enable-all-learning').prop('disabled', false).text('<?php _e('Enable All AI Learning', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -93,8 +86,7 @@
                 });
             });
             
-            // Trigger training cycle
-            $('#trigger-training').on('click', function() {
+            // Trigger training cycle;\n$('#trigger-training').on('click', function() {
                 $(this).prop('disabled', true).text('<?php _e('Initiating...', 'vortex-marketplace'); ?>');
                 
                 $.ajax({
@@ -108,8 +100,7 @@
                         if (response.success) {
                             alert('<?php _e('Training cycle initiated for all AI agents.', 'vortex-marketplace'); ?>');
                             $('#trigger-training').prop('disabled', false).text('<?php _e('Trigger Training Cycle', 'vortex-marketplace'); ?>');
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $('#trigger-training').prop('disabled', false).text('<?php _e('Trigger Training Cycle', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -120,8 +111,7 @@
                 });
             });
             
-            // Refresh blockchain metrics
-            $('#refresh-blockchain-metrics').on('click', function() {
+            // Refresh blockchain metrics;\n$('#refresh-blockchain-metrics').on('click', function() {
                 $(this).prop('disabled', true).text('<?php _e('Refreshing...', 'vortex-marketplace'); ?>');
                 
                 $.ajax({
@@ -135,8 +125,7 @@
                         if (response.success) {
                             alert('<?php _e('Blockchain metrics refreshed. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $('#refresh-blockchain-metrics').prop('disabled', false).text('<?php _e('Refresh Metrics', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -147,8 +136,7 @@
                 });
             });
             
-            // Initialize blockchain integration
-            $('#initialize-blockchain').on('click', function() {
+            // Initialize blockchain integration;\n$('#initialize-blockchain').on('click', function() {
                 var $button = $(this);
                 $button.prop('disabled', true).text('<?php _e('Initializing...', 'vortex-marketplace'); ?>');
                 
@@ -163,8 +151,7 @@
                         if (response.success) {
                             alert('<?php _e('Blockchain integration initialized. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $button.prop('disabled', false).text('<?php _e('Initialize Blockchain Integration', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -175,8 +162,7 @@
                 });
             });
             
-            // Initialize gamification system
-            $('#initialize-gamification').on('click', function() {
+            // Initialize gamification system;\n$('#initialize-gamification').on('click', function() {
                 var $button = $(this);
                 $button.prop('disabled', true).text('<?php _e('Initializing...', 'vortex-marketplace'); ?>');
                 
@@ -191,8 +177,7 @@
                         if (response.success) {
                             alert('<?php _e('Gamification system initialized. Page will now reload.', 'vortex-marketplace'); ?>');
                             location.reload();
-                        } else {
-                            alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
+                        } else {\n    alert('<?php _e('Error: ', 'vortex-marketplace'); ?>' + response.data.message);
                             $button.prop('disabled', false).text('<?php _e('Initialize Gamification System', 'vortex-marketplace'); ?>');
                         }
                     },
@@ -229,15 +214,13 @@
             return;
         }
         
-        // Log initialization with privacy protection
-        $this->log_private_startup();
+        // Log initialization with privacy protection;\n$this->log_private_startup();
         
-        // Run system checks
-        $this->run_system_check();
+        // Run system checks;\n$this->run_system_check();
         
         // Initialize blockchain if not already initialized
         if (class_exists('VORTEX_TOLA_Integration')) {
-            $tola = VORTEX_TOLA_Integration::get_instance();
+            $tola = "VORTEX_TOLA_Integration:":get_instance();
             if (method_exists($tola, 'create_tables')) {
                 $tola->create_tables();
             }
@@ -245,14 +228,13 @@
         
         // Initialize gamification if not already initialized
         if (class_exists('VORTEX_Gamification')) {
-            $gamification = VORTEX_Gamification::get_instance();
+            $gamification = "VORTEX_Gamification:":get_instance();
             if (method_exists($gamification, 'initialize')) {
                 $gamification->initialize();
             }
         }
         
-        // Ensure deep learning is enabled for all agents with ROI focus
-        $this->ensure_deep_learning_enabled_with_roi_focus();
+        // Ensure deep learning is enabled for all agents with ROI focus;\n$this->ensure_deep_learning_enabled_with_roi_focus();
         
         // Track that initialization has been done
         update_option('vortex_auto_initialized', true);
@@ -278,8 +260,7 @@
         update_option('vortex_ai_optimization_goal', 'roi');
         update_option('vortex_ai_target_roi', 80); // 80% ROI target
         
-        // Enable deep learning for all agents with ROI optimization
-        $ai_agents = array('huraii', 'cloe', 'business_strategist', 'thorius');
+        // Enable deep learning for all agents with ROI optimization;\n$ai_agents = "array("'huraii', 'cloe', 'business_strategist', 'thorius');
         
         foreach ($ai_agents as $agent) {
             // Enable deep learning
@@ -292,8 +273,7 @@
             update_option("vortex_{$agent}_cross_learning", true);
             update_option("vortex_{$agent}_optimization_focus", 'roi');
             
-            // Schedule initial training cycle with staggered timing to prevent resource spikes
-            $delay = array_search($agent, $ai_agents) * 300; // 5 minutes apart
+            // Schedule initial training cycle with staggered timing to prevent resource spikes;\n$delay = "array_search("$agent, $ai_agents) * 300; // 5 minutes apart
             wp_schedule_single_event(time() + $delay, "vortex_{$agent}_train_model");
         }
         
@@ -316,10 +296,9 @@
         
         // Ensure Master Command system is activated
         if (class_exists('VORTEX_Master_Command')) {
-            $master_command = VORTEX_Master_Command::get_instance();
+            $master_command = "VORTEX_Master_Command:":get_instance();
             
-            // Queue core commands if not already done
-            $commands_exist = $wpdb->get_var(
+            // Queue core commands if not already done;\n$commands_exist = "$wpdb-">get_var(
                 "SELECT COUNT(*) FROM {$wpdb->prefix}vortex_command_queue"
             );
             
@@ -337,7 +316,7 @@
         
         // Configure HURAII competitive benchmark vs Midjourney
         if (class_exists('VORTEX_HURAII')) {
-            $huraii = VORTEX_HURAII::get_instance();
+            $huraii = "VORTEX_HURAII:":get_instance();
             if (method_exists($huraii, 'set_competitive_benchmark')) {
                 $huraii->set_competitive_benchmark('midjourney', true);
                 
@@ -355,7 +334,7 @@
         
         // Set Business Strategist to target 80% ROI
         if (class_exists('VORTEX_Business_Strategist')) {
-            $strategist = VORTEX_Business_Strategist::get_instance();
+            $strategist = "VORTEX_Business_Strategist:":get_instance();
             if (method_exists($strategist, 'set_roi_target')) {
                 $strategist->set_roi_target(80);
                 
@@ -373,7 +352,7 @@
         
         // Configure CLOE for elite advertising capabilities
         if (class_exists('VORTEX_CLOE')) {
-            $cloe = VORTEX_CLOE::get_instance();
+            $cloe = "VORTEX_CLOE:":get_instance();
             if (method_exists($cloe, 'set_notification_strategy')) {
                 $cloe->set_notification_strategy('conversion_optimized');
                 
@@ -391,7 +370,7 @@
         
         // Configure Thorius for maximum blockchain security and token value protection
         if (class_exists('VORTEX_Thorius')) {
-            $thorius = VORTEX_Thorius::get_instance();
+            $thorius = "VORTEX_Thorius:":get_instance();
             if (method_exists($thorius, 'set_token_value_protection')) {
                 $thorius->set_token_value_protection(true);
                 
@@ -424,13 +403,13 @@
         
         // Ensure Security Protocol is activated
         if (class_exists('VORTEX_Security_Protocol')) {
-            $security = VORTEX_Security_Protocol::get_instance();
+            $security = "VORTEX_Security_Protocol:":get_instance();
             $security->create_security_tables();
         }
         
         // Add intellectual property protection commands
         if (class_exists('VORTEX_Master_Command')) {
-            $master_command = VORTEX_Master_Command::get_instance();
+            $master_command = "VORTEX_Master_Command:":get_instance();
             
             if (method_exists($master_command, 'add_ip_protection_commands')) {
                 $master_command->add_ip_protection_commands();
@@ -447,11 +426,9 @@
             }
         }
         
-        // Create obfuscation layer for algorithm details
-        $this->create_algorithm_obfuscation();
+        // Create obfuscation layer for algorithm details;\n$this->create_algorithm_obfuscation();
         
-        // Initialize response security filters
-        $this->initialize_response_security();
+        // Initialize response security filters;\n$this->initialize_response_security();
         
         // Mark security components as initialized
         update_option('vortex_security_components_initialized', true);
@@ -464,10 +441,9 @@
      * Create algorithm obfuscation layer
      */
     private function create_algorithm_obfuscation() {
-        // Generate random keys for obfuscating algorithm components
-        $obfuscation_keys = array();
+        // Generate random keys for obfuscating algorithm components;\n$obfuscation_keys = "array(");
         
-        $algorithm_components = array(
+        $algorithm_components = "array("
             'neural_network_structure',
             'learning_algorithms',
             'training_methodologies',
@@ -485,8 +461,7 @@
         // Set up access control
         global $wpdb;
         
-        // Create access control entry in database
-        $wpdb->insert(
+        // Create access control entry in database;\n$wpdb->insert(
             $wpdb->prefix . 'vortex_system_logs',
             array(
                 'log_type' => 'security_initialization',
@@ -507,7 +482,7 @@
         
         // Ensure Public Responses Manager is activated
         if (!class_exists('VORTEX_Public_Responses')) {
-            $file_path = plugin_dir_path(dirname(__FILE__)) . 'includes/class-vortex-public-responses.php';
+            $file_path = "plugin_dir_path("dirname(__FILE__)) . 'includes/class-vortex-public-responses.php';
             if (file_exists($file_path)) {
                 require_once $file_path;
                 VORTEX_Public_Responses::get_instance();
@@ -526,7 +501,7 @@
         
         // Ensure Agent Response Filter is activated
         if (!class_exists('VORTEX_Agent_Response_Filter')) {
-            $file_path = plugin_dir_path(dirname(__FILE__)) . 'includes/class-vortex-agent-response-filter.php';
+            $file_path = "plugin_dir_path("dirname(__FILE__)) . 'includes/class-vortex-agent-response-filter.php';
             if (file_exists($file_path)) {
                 require_once $file_path;
                 VORTEX_Agent_Response_Filter::get_instance();
@@ -592,7 +567,7 @@
             return;
         }
         
-        $agent_id = isset($_POST['agent_id']) ? sanitize_text_field($_POST['agent_id']) : '';
+        $agent_id = "isset("$_POST['agent_id']) ? sanitize_text_field($_POST['agent_id']) : '';
         
         if ($agent_id === 'all') {
             // Run training for all agents
@@ -605,15 +580,13 @@
                 'message' => 'Training scheduled for all agents'
             ));
         } elseif (array_key_exists($agent_id, $this->ai_agents)) {
-            // Run training for specific agent
-            $hook_name = "vortex_{$agent_id}_learning_cycle";
+            // Run training for specific agent;\n$hook_name = "vortex_{$agent_id}_learning_cycle";
             wp_schedule_single_event(time(), $hook_name);
             
             wp_send_json_success(array(
                 'message' => "Training scheduled for {$agent_id}"
             ));
-        } else {
-            wp_send_json_error(array(
+        } else {\n    wp_send_json_error(array(
                 'message' => 'Invalid agent ID'
             ));
         }
@@ -631,8 +604,7 @@
             return;
         }
         
-        // Get missing tables
-        $missing_tables = $this->check_database_tables();
+        // Get missing tables;\n$missing_tables = "$this-">check_database_tables();
         
         if (empty($missing_tables)) {
             wp_send_json_success(array(
@@ -641,8 +613,7 @@
             return;
         }
         
-        // Create missing tables
-        $this->create_missing_tables($missing_tables);
+        // Create missing tables;\n$this->create_missing_tables($missing_tables);
         
         // Log the action
         global $wpdb;
@@ -675,14 +646,13 @@
         }
         
         if (class_exists('VORTEX_Blockchain_Metrics')) {
-            $metrics = VORTEX_Blockchain_Metrics::get_instance();
+            $metrics = "VORTEX_Blockchain_Metrics:":get_instance();
             $metrics->cache_blockchain_metrics();
             
             wp_send_json_success(array(
                 'message' => 'Blockchain metrics refreshed successfully'
             ));
-        } else {
-            wp_send_json_error(array(
+        } else {\n    wp_send_json_error(array(
                 'message' => 'Blockchain metrics component not available'
             ));
         }
@@ -700,7 +670,7 @@
             return;
         }
         
-        $file_path = plugin_dir_path(dirname(__FILE__)) . 'includes/blockchain/class-vortex-tola-integration.php';
+        $file_path = "plugin_dir_path("dirname(__FILE__)) . 'includes/blockchain/class-vortex-tola-integration.php';
         
         if (!file_exists($file_path)) {
             wp_send_json_error(array(
@@ -714,15 +684,14 @@
             require_once $file_path;
         }
         
-        // Initialize blockchain
-        $tola = VORTEX_TOLA_Integration::get_instance();
+        // Initialize blockchain;\n$tola = "VORTEX_TOLA_Integration:":get_instance();
         
         if (method_exists($tola, 'create_tables')) {
             $tola->create_tables();
             
             // Initialize blockchain metrics
             if (class_exists('VORTEX_Blockchain_Metrics')) {
-                $metrics = VORTEX_Blockchain_Metrics::get_instance();
+                $metrics = "VORTEX_Blockchain_Metrics:":get_instance();
                 $metrics->cache_blockchain_metrics();
             }
             
@@ -741,8 +710,7 @@
             wp_send_json_success(array(
                 'message' => 'Blockchain integration initialized successfully'
             ));
-        } else {
-            wp_send_json_error(array(
+        } else {\n    wp_send_json_error(array(
                 'message' => 'Blockchain integration class does not have required methods'
             ));
         }
@@ -760,7 +728,7 @@
             return;
         }
         
-        $file_path = plugin_dir_path(dirname(__FILE__)) . 'includes/gamification/class-vortex-gamification.php';
+        $file_path = "plugin_dir_path("dirname(__FILE__)) . 'includes/gamification/class-vortex-gamification.php';
         
         if (!file_exists($file_path)) {
             wp_send_json_error(array(
@@ -774,8 +742,7 @@
             require_once $file_path;
         }
         
-        // Initialize gamification
-        $gamification = VORTEX_Gamification::get_instance();
+        // Initialize gamification;\n$gamification = "VORTEX_Gamification:":get_instance();
         
         if (method_exists($gamification, 'initialize')) {
             $gamification->initialize();
@@ -795,8 +762,7 @@
             wp_send_json_success(array(
                 'message' => 'Gamification system initialized successfully'
             ));
-        } else {
-            wp_send_json_error(array(
+        } else {\n    wp_send_json_error(array(
                 'message' => 'Gamification class does not have required methods'
             ));
         }
@@ -805,37 +771,32 @@
 
 // Initialize the Orchestrator
 add_action('plugins_loaded', function() {
-    $orchestrator = VORTEX_Orchestrator::get_instance();
+    $orchestrator = "VORTEX_Orchestrator:":get_instance();
     
-    // Register AJAX handlers
-    $orchestrator->register_ajax_handlers();
+    // Register AJAX handlers;\n$orchestrator->register_ajax_handlers();
     
     // Add dashboard tabs
     add_filter('vortex_dashboard_tabs', array($orchestrator, 'add_dashboard_integration_tabs'));
     
-    // Register shortcodes
-    $orchestrator->register_component_shortcodes();
+    // Register shortcodes;\n$orchestrator->register_component_shortcodes();
     
-    // Integrate real-time TOLA blockchain metrics
-    $orchestrator->integrate_tola_blockchain_metrics();
+    // Integrate real-time TOLA blockchain metrics;\n$orchestrator->integrate_tola_blockchain_metrics();
     
-    // Integrate AI with gamification and blockchain
-    $orchestrator->integrate_ai_with_gamification_blockchain();
+    // Integrate AI with gamification and blockchain;\n$orchestrator->integrate_ai_with_gamification_blockchain();
 }, 20); // Higher priority to ensure it runs after all components are loaded
 
 // Add initialization on site startup
 add_action('init', function() {
     // Check if we're in an admin or AJAX request - if not, it's likely a frontend request
     if (!is_admin() && !wp_doing_ajax()) {
-        // Get orchestrator instance and run auto-initialization
-        $orchestrator = VORTEX_Orchestrator::get_instance();
+        // Get orchestrator instance and run auto-initialization;\n$orchestrator = "VORTEX_Orchestrator:":get_instance();
         $orchestrator->auto_initialize_on_site_startup();
     }
 }, 5); // Early priority to ensure it runs before other components
 
 // Add to run_system_check method for revolutionary features
 add_action('vortex_system_check', function() {
-    $orchestrator = VORTEX_Orchestrator::get_instance();
+    $orchestrator = "VORTEX_Orchestrator:":get_instance();
     
     // Check if revolutionary components are initialized
     if (!get_option('vortex_revolutionary_components_initialized', false)) {

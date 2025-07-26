@@ -100,6 +100,7 @@ class Vortex_AI_Engine {
      * AI agents instances
      */
     private $recursive_self_improvement = null;
+    private $realtime_learning_orchestrator = null;
     private $archer_orchestrator = null;
     private $huraii_agent = null;
     private $cloe_agent = null;
@@ -191,12 +192,13 @@ class Vortex_AI_Engine {
      * Load all plugin dependencies
      */
     private function load_dependencies() {
-        // Recursive Self-Improvement System (MUST BE LOADED FIRST)
-require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement.php';
-require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-deep-learning-engine.php';
-require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-reinforcement-engine.php';
-require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-real-time-processor.php';
-require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement-wrapper.php';
+                // Recursive Self-Improvement System (MUST BE LOADED FIRST)
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-deep-learning-engine.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-reinforcement-engine.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-real-time-processor.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-realtime-learning-orchestrator.php';
+        require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-self-improvement-wrapper.php';
         
         // Supervisor System Components (MUST BE LOADED SECOND)
         require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-supervisor-system.php';
@@ -283,6 +285,11 @@ require_once VORTEX_AI_ENGINE_PLUGIN_PATH . 'includes/class-vortex-recursive-sel
         // Initialize Recursive Self-Improvement System (MUST BE FIRST)
         if (class_exists('VORTEX_Recursive_Self_Improvement')) {
             $this->recursive_self_improvement = VORTEX_Recursive_Self_Improvement::get_instance();
+        }
+        
+        // Initialize Real-Time Learning Orchestrator
+        if (class_exists('VORTEX_Realtime_Learning_Orchestrator')) {
+            $this->realtime_learning_orchestrator = VORTEX_Realtime_Learning_Orchestrator::get_instance();
         }
         
         // Initialize ARCHER Orchestrator (master coordinator)

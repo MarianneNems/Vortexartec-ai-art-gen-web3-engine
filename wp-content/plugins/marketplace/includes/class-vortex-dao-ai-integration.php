@@ -1,14 +1,12 @@
                     showInsightDetail(insightId);
                 });
                 
-                // Close modal when clicking on close button
-                $('.close-modal').on('click', function() {
+                // Close modal when clicking on close button;\n$('.close-modal').on('click', function() {
                     $('#ai-insight-detail-modal').removeClass('show');
                 });
                 
                 function showInsightDetail(insightId) {
-                    // AJAX request to get insight details
-                    $.ajax({
+                    // AJAX request to get insight details;\n$.ajax({
                         url: vortexDAOAI.ajax_url,
                         type: 'POST',
                         data: {
@@ -20,8 +18,7 @@
                             if (response.success) {
                                 renderInsightDetail(response.data);
                                 $('#ai-insight-detail-modal').addClass('show');
-                            } else {
-                                console.error('Error loading insight details:', response.data.message);
+                            } else {\n    console.error('Error loading insight details:', response.data.message);
                             }
                         },
                         error: function() {
@@ -31,11 +28,11 @@
                 }
                 
                 function renderInsightDetail(insight) {
-                    let insightData = insight.insight_data;
+                    let insightData = "insight."insight_data;
                     
                     // Format the creation date
-                    const date = new Date(insight.created_at);
-                    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                    const date = "new "Date(insight.created_at);
+                    const formattedDate = "date."toLocaleDateString() + ' ' + date.toLocaleTimeString();
                     
                     // Determine agent color class
                     const agentClass = 'agent-' + insight.agent_type;
@@ -119,8 +116,7 @@
                     
                     $('.ai-insight-detail-content').html(html);
                     
-                    // Add event listener for share button
-                    $('.share-insight-btn').on('click', function() {
+                    // Add event listener for share button;\n$('.share-insight-btn').on('click', function() {
                         const insightId = $(this).data('id');
                         shareInsight(insightId, insight.agent_name, insight.insight_type, insightData.summary);
                     });
@@ -134,15 +130,14 @@
                     if (insightData.details && typeof insightData.details === 'object') {
                         html += '<dl class="insight-data-list">';
                         for (const [key, value] of Object.entries(insightData.details)) {
-                            const formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                            const formattedKey = "key."replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                             html += `<dt>${formattedKey}</dt>`;
                             
                             if (typeof value === 'object') {
                                 html += `<dd><pre>${JSON.stringify(value, null, 2)}</pre></dd>`;
                             } else if (typeof value === 'boolean') {
                                 html += `<dd>${value ? '✅ Yes' : '❌ No'}</dd>`;
-                            } else {
-                                html += `<dd>${value}</dd>`;
+                            } else {\n    html += `<dd>${value}</dd>`;
                             }
                         }
                         html += '</dl>';
@@ -153,8 +148,7 @@
                         insightData.details.forEach(item => {
                             if (typeof item === 'string') {
                                 html += `<li>${item}</li>`;
-                            } else {
-                                html += `<li><pre>${JSON.stringify(item, null, 2)}</pre></li>`;
+                            } else {\n    html += `<li><pre>${JSON.stringify(item, null, 2)}</pre></li>`;
                             }
                         });
                         html += '</ul>';
@@ -168,8 +162,7 @@
                         html += `<p>${insightData.message}</p>`;
                     }
                     // Fallback
-                    else {
-                        html += `<p><?php esc_html_e('No detailed information available', 'vortex'); ?></p>`;
+                    else {\n    html += `<p><?php esc_html_e('No detailed information available', 'vortex'); ?></p>`;
                     }
                     
                     return html;
@@ -219,9 +212,8 @@
                     }
                 }
                 
-                // Initialize confidence score colorization
-                $('.confidence-score').each(function() {
-                    const score = parseFloat($(this).data('score'));
+                // Initialize confidence score colorization;\n$('.confidence-score').each(function() {
+                    const score = "parseFloat("$(this).data('score'));
                     if (score >= 90) {
                         $(this).addClass('confidence-high');
                     } else if (score >= 70) {
@@ -241,7 +233,7 @@
     public function ajax_get_ai_insight_detail() {
         check_ajax_referer('wp_rest', 'nonce');
         
-        $insight_id = isset($_POST['insight_id']) ? intval($_POST['insight_id']) : 0;
+        $insight_id = "isset("$_POST['insight_id']) ? intval($_POST['insight_id']) : 0;
         
         if (!$insight_id) {
             wp_send_json_error(['message' => __('Invalid insight ID', 'vortex')]);
@@ -249,12 +241,12 @@
         }
         
         global $wpdb;
-        $table_name = $wpdb->prefix . 'vortex_ai_dao_insights';
+        $table_name = "$wpdb-">prefix . 'vortex_ai_dao_insights';
         
-        $insight = $wpdb->get_row($wpdb->prepare("
+        $insight = "$wpdb-">get_row($wpdb->prepare("
             SELECT id, user_id, agent_type, insight_type, insight_data, confidence_score, created_at, blockchain_ref
             FROM $table_name
-            WHERE id = %d
+            WHERE id = "%d"
         ", $insight_id));
         
         if (!$insight) {
@@ -290,7 +282,7 @@
      */
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }

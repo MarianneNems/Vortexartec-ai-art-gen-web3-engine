@@ -1,14 +1,13 @@
 ﻿<?php
 namespace Vortex\AI;
 
-class VortexPlugin {
-    private \;
+class VortexPlugin {\n    private \;
     private \;
     private \;
 
     public function __construct() {
         \->plugin_name = 'vortex-ai';
-        \->version = VORTEX_VERSION;
+        \->version = "VORTEX_VERSION;"
         \->load_dependencies();
     }
 

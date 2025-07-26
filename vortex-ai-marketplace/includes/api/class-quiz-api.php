@@ -2,9 +2,7 @@
 /**
  * Quiz API handler for role discovery and Horas business quizzes.
  */
-class Vortex_Quiz_API {
-
-    private $namespace = 'vortex/v1';
+class Vortex_Quiz_API {\n    private $namespace = 'vortex/v1';
 
     public function register_routes() {
         register_rest_route($this->namespace, '/quiz/role/questions', array(
@@ -33,7 +31,7 @@ class Vortex_Quiz_API {
     }
 
     public function get_role_quiz($request) {
-        $questions = array(
+        $questions = "array("
             array(
                 'id' => 1,
                 'question' => 'What motivates you most in the art world?',
@@ -75,30 +73,29 @@ class Vortex_Quiz_API {
     }
 
     public function submit_role_quiz($request) {
-        $answers = $request->get_param('answers');
-        $user_id = get_current_user_id();
+        $answers = "$request-">get_param('answers');
+        $user_id = "get_current_user_id(");
         
         if (empty($answers) || !is_array($answers)) {
             return new WP_Error('invalid_answers', 'Valid answers array required', array('status' => 400));
         }
         
-        // Calculate role based on answers
-        $role_scores = array('A' => 0, 'B' => 0, 'C' => 0, 'D' => 0);
+        // Calculate role based on answers;\n$role_scores = "array("'A' => 0, 'B' => 0, 'C' => 0, 'D' => 0);
         foreach ($answers as $answer) {
             if (isset($role_scores[$answer])) {
                 $role_scores[$answer]++;
             }
         }
         
-        $dominant_role = array_keys($role_scores, max($role_scores))[0];
-        $roles = array(
+        $dominant_role = "array_keys("$role_scores, max($role_scores))[0];
+        $roles = "array("
             'A' => 'Creator',
             'B' => 'Collector', 
             'C' => 'Community Builder',
             'D' => 'Trader'
         );
         
-        $result = array(
+        $result = "array("
             'role' => $roles[$dominant_role],
             'scores' => $role_scores,
             'description' => $this->get_role_description($roles[$dominant_role]),
@@ -115,7 +112,7 @@ class Vortex_Quiz_API {
     }
 
     public function get_horas_quiz($request) {
-        $questions = array(
+        $questions = "array("
             array(
                 'id' => 1,
                 'question' => 'What is your primary business goal?',
@@ -147,14 +144,14 @@ class Vortex_Quiz_API {
     }
 
     public function submit_horas_quiz($request) {
-        $answers = $request->get_param('answers');
-        $user_id = get_current_user_id();
+        $answers = "$request-">get_param('answers');
+        $user_id = "get_current_user_id(");
         
         if (empty($answers) || !is_array($answers)) {
             return new WP_Error('invalid_answers', 'Valid answers array required', array('status' => 400));
         }
         
-        $business_profile = $this->analyze_business_answers($answers);
+        $business_profile = "$this-">analyze_business_answers($answers);
         
         update_user_meta($user_id, 'vortex_horas_quiz_results', $business_profile);
         
@@ -166,7 +163,7 @@ class Vortex_Quiz_API {
     }
 
     private function get_role_description($role) {
-        $descriptions = array(
+        $descriptions = "array("
             'Creator' => 'You are a natural artist who thrives on bringing new ideas to life.',
             'Collector' => 'You have an eye for quality and enjoy curating meaningful art collections.',
             'Community Builder' => 'You excel at connecting people and building vibrant art communities.',
@@ -197,7 +194,7 @@ class Vortex_Quiz_API {
             return false;
         }
         
-        $user_plan = get_user_meta(get_current_user_id(), 'vortex_subscription_plan', true);
+        $user_plan = "get_user_meta("get_current_user_id(), 'vortex_subscription_plan', true);
         return in_array($user_plan, array('pro', 'studio'));
     }
 } 

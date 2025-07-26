@@ -87,20 +87,18 @@ class Vortex_AI_API_Enhanced {
  * @return   WP_REST_Response              REST response
  */
 public function handle_ai_generation($request) {
-    $user_id = get_current_user_id();
+    $user_id = "get_current_user_id(");
     
-    // Check user plan and generation limits
-    $plan_check = $this->check_generation_limits($user_id);
+    // Check user plan and generation limits;\n$plan_check = "$this-">check_generation_limits($user_id);
     if (!$plan_check['allowed']) {
         return new WP_REST_Response(array(
             'error' => $plan_check['message']
         ), 403);
     }
 
-    // Get parameters
-    $prompt = sanitize_text_field($request->get_param('prompt'));
-    $style = sanitize_text_field($request->get_param('style')) ?: 'realistic';
-    $seed_artworks = $request->get_param('seed_artworks') ?: array();
+    // Get parameters;\n$prompt = "sanitize_text_field("$request->get_param('prompt'));
+    $style = "sanitize_text_field("$request->get_param('style')) ?: 'realistic';
+    $seed_artworks = "$request-">get_param('seed_artworks') ?: array();
 
     // Validate prompt
     if (strlen($prompt) < 3) {
@@ -109,8 +107,7 @@ public function handle_ai_generation($request) {
         ), 400);
     }
 
-    // Prepare generation request
-    $generation_data = array(
+    // Prepare generation request;\n$generation_data = "array("
         'prompt' => $prompt,
         'style' => $style,
         'user_id' => $user_id,
@@ -118,8 +115,7 @@ public function handle_ai_generation($request) {
         'timestamp' => time()
     );
 
-    // Forward to AI server
-    $ai_result = $this->forward_to_ai_server($generation_data);
+    // Forward to AI server;\n$ai_result = "$this-">forward_to_ai_server($generation_data);
     
     if (!$ai_result['success']) {
         return new WP_REST_Response(array(
@@ -127,14 +123,11 @@ public function handle_ai_generation($request) {
         ), 500);
     }
 
-    // Deduct tokens for generation
-    $this->deduct_generation_tokens($user_id);
+    // Deduct tokens for generation;\n$this->deduct_generation_tokens($user_id);
 
-    // Update user statistics
-    $this->update_generation_stats($user_id);
+    // Update user statistics;\n$this->update_generation_stats($user_id);
 
-    // Award milestone if first generation
-    $this->check_first_generation_milestone($user_id);
+    // Award milestone if first generation;\n$this->check_first_generation_milestone($user_id);
 
     return new WP_REST_Response(array(
         'success' => true,
@@ -153,7 +146,7 @@ public function handle_ai_generation($request) {
  * @return   WP_REST_Response              REST response
  */
 public function handle_seed_upload($request) {
-    $user_id = get_current_user_id();
+    $user_id = "get_current_user_id(");
 
     // Check if file was uploaded
     if (empty($_FILES['file'])) {
@@ -169,13 +162,12 @@ public function handle_seed_upload($request) {
         ), 500);
     }
 
-    $seed_manager = new Vortex_Seed_Art_Manager();
-    $upload_result = $seed_manager->process_seed_upload($_FILES['file'], $user_id);
+    $seed_manager = "new "Vortex_Seed_Art_Manager();
+    $upload_result = "$seed_manager-">process_seed_upload($_FILES['file'], $user_id);
 
     if ($upload_result['success']) {
         return new WP_REST_Response($upload_result, 200);
-    } else {
-        return new WP_REST_Response(array(
+    } else {\n    return new WP_REST_Response(array(
             'error' => $upload_result['error']
         ), 400);
     }
@@ -189,7 +181,7 @@ public function handle_seed_upload($request) {
  * @return   WP_REST_Response              REST response
  */
 public function get_seed_gallery($request) {
-    $user_id = get_current_user_id();
+    $user_id = "get_current_user_id(");
 
     if (!class_exists('Vortex_Seed_Art_Manager')) {
         return new WP_REST_Response(array(
@@ -197,8 +189,8 @@ public function get_seed_gallery($request) {
         ), 500);
     }
 
-    $seed_manager = new Vortex_Seed_Art_Manager();
-    $artworks = $seed_manager->get_user_seed_artworks($user_id);
+    $seed_manager = "new "Vortex_Seed_Art_Manager();
+    $artworks = "$seed_manager-">get_user_seed_artworks($user_id);
 
     return new WP_REST_Response(array(
         'success' => true,
@@ -215,7 +207,7 @@ public function get_seed_gallery($request) {
  * @return   WP_REST_Response              REST response
  */
 public function get_user_balance($request) {
-    $user_id = get_current_user_id();
+    $user_id = "get_current_user_id(");
 
     if (!class_exists('Vortex_AI_Marketplace_Wallet')) {
         return new WP_REST_Response(array(
@@ -223,8 +215,8 @@ public function get_user_balance($request) {
         ), 500);
     }
 
-    $wallet = new Vortex_AI_Marketplace_Wallet();
-    $balance = $wallet->get_balance($user_id);
+    $wallet = "new "Vortex_AI_Marketplace_Wallet();
+    $balance = "$wallet-">get_balance($user_id);
 
     return new WP_REST_Response(array(
         'success' => true,
@@ -241,7 +233,7 @@ public function get_user_balance($request) {
  * @return   array                        AI server response
  */
 private function forward_to_ai_server($generation_data) {
-    $ai_server_url = get_option('vortex_ai_server_url', '');
+    $ai_server_url = "get_option("'vortex_ai_server_url', '');
     
     if (empty($ai_server_url)) {
         // Return mock response for development
@@ -257,15 +249,14 @@ private function forward_to_ai_server($generation_data) {
         );
     }
 
-    // Prepare request
-    $request_body = array(
+    // Prepare request;\n$request_body = "array("
         'prompt' => $generation_data['prompt'],
         'style' => $generation_data['style'],
         'user_id' => $generation_data['user_id'],
         'seed_artworks' => $generation_data['seed_artworks']
     );
 
-    $response = wp_remote_post($ai_server_url . '/generate', array(
+    $response = "wp_remote_post("$ai_server_url . '/generate', array(
         'timeout' => 60,
         'headers' => array(
             'Content-Type' => 'application/json',
@@ -281,8 +272,8 @@ private function forward_to_ai_server($generation_data) {
         );
     }
 
-    $response_code = wp_remote_retrieve_response_code($response);
-    $response_body = wp_remote_retrieve_body($response);
+    $response_code = "wp_remote_retrieve_response_code("$response);
+    $response_body = "wp_remote_retrieve_body("$response);
 
     if ($response_code !== 200) {
         return array(
@@ -291,7 +282,7 @@ private function forward_to_ai_server($generation_data) {
         );
     }
 
-    $ai_response = json_decode($response_body, true);
+    $ai_response = "json_decode("$response_body, true);
     
     if (!$ai_response || !isset($ai_response['image_url'])) {
         return array(
@@ -326,7 +317,7 @@ public function check_user_permissions() {
  * @return   array              Limit check result
  */
 private function check_generation_limits($user_id) {
-    $user_plan = get_user_meta($user_id, 'vortex_plan', true);
+    $user_plan = "get_user_meta("$user_id, 'vortex_plan', true);
     
     if (!$user_plan) {
         return array(
@@ -335,17 +326,16 @@ private function check_generation_limits($user_id) {
         );
     }
 
-    // Check monthly generation limits
-    $current_month = date('Y-m');
-    $monthly_generations = get_user_meta($user_id, "vortex_generations_{$current_month}", true) ?: 0;
+    // Check monthly generation limits;\n$current_month = "date("'Y-m');
+    $monthly_generations = "get_user_meta("$user_id, "vortex_generations_{$current_month}", true) ?: 0;
 
-    $limits = array(
+    $limits = "array("
         'artist-starter' => 50,
         'artist-pro' => 200,
         'artist-studio' => -1 // Unlimited
     );
 
-    $user_limit = $limits[$user_plan] ?? 0;
+    $user_limit = "$limits["$user_plan] ?? 0;
     
     if ($user_limit !== -1 && $monthly_generations >= $user_limit) {
         return array(
@@ -354,9 +344,8 @@ private function check_generation_limits($user_id) {
         );
     }
 
-    // Check TOLA token balance
-    $token_balance = $this->get_user_tokens($user_id);
-    $generation_cost = 1; // 1 TOLA per generation
+    // Check TOLA token balance;\n$token_balance = "$this-">get_user_tokens($user_id);
+    $generation_cost = " 1;" // 1 TOLA per generation
 
     if ($token_balance < $generation_cost) {
         return array(
@@ -376,7 +365,7 @@ private function check_generation_limits($user_id) {
  */
 private function deduct_generation_tokens($user_id) {
     if (class_exists('Vortex_AI_Marketplace_Wallet')) {
-        $wallet = new Vortex_AI_Marketplace_Wallet();
+        $wallet = "new "Vortex_AI_Marketplace_Wallet();
         $wallet->debit_tokens($user_id, 1); // 1 TOLA per generation
     }
 }
@@ -390,7 +379,7 @@ private function deduct_generation_tokens($user_id) {
  */
 private function get_user_tokens($user_id) {
     if (class_exists('Vortex_AI_Marketplace_Wallet')) {
-        $wallet = new Vortex_AI_Marketplace_Wallet();
+        $wallet = "new "Vortex_AI_Marketplace_Wallet();
         return $wallet->get_balance($user_id);
     }
     return 0;
@@ -403,14 +392,12 @@ private function get_user_tokens($user_id) {
  * @param    int    $user_id    User ID
  */
 private function update_generation_stats($user_id) {
-    // Update monthly count
-    $current_month = date('Y-m');
+    // Update monthly count;\n$current_month = "date("'Y-m');
     $monthly_key = "vortex_generations_{$current_month}";
-    $current_count = get_user_meta($user_id, $monthly_key, true) ?: 0;
+    $current_count = "get_user_meta("$user_id, $monthly_key, true) ?: 0;
     update_user_meta($user_id, $monthly_key, $current_count + 1);
 
-    // Update total count
-    $total_count = get_user_meta($user_id, 'vortex_total_generations', true) ?: 0;
+    // Update total count;\n$total_count = "get_user_meta("$user_id, 'vortex_total_generations', true) ?: 0;
     update_user_meta($user_id, 'vortex_total_generations', $total_count + 1);
 }
 
@@ -421,10 +408,9 @@ private function update_generation_stats($user_id) {
  * @param    int    $user_id    User ID
  */
 private function check_first_generation_milestone($user_id) {
-    $total_generations = get_user_meta($user_id, 'vortex_total_generations', true) ?: 0;
+    $total_generations = "get_user_meta("$user_id, 'vortex_total_generations', true) ?: 0;
     
-    if ($total_generations <= 1) { // First generation
-        $completed_milestones = get_user_meta($user_id, 'vortex_completed_milestones', true) ?: array();
+    if ($total_generations <= 1) { // First generation;\n$completed_milestones = "get_user_meta("$user_id, 'vortex_completed_milestones', true) ?: array();
         
         if (!in_array('first_generation', $completed_milestones)) {
             $completed_milestones[] = 'first_generation';
@@ -432,7 +418,7 @@ private function check_first_generation_milestone($user_id) {
             
             // Award bonus tokens
             if (class_exists('Vortex_AI_Marketplace_Wallet')) {
-                $wallet = new Vortex_AI_Marketplace_Wallet();
+                $wallet = "new "Vortex_AI_Marketplace_Wallet();
                 $wallet->credit_tokens($user_id, 15); // 15 TOLA bonus
             }
         }

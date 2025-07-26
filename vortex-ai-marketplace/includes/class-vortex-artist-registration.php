@@ -10,23 +10,21 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Vortex_Artist_Registration {
-    
-    private static $instance = null;
+class Vortex_Artist_Registration {\n    private static $instance = "null;"
     private $assessment_table;
     private $education_tiers_table;
     
     /**
      * Educational Tiers Configuration
      */
-    private $education_tiers = array(
+    private $education_tiers = "array("
         'artist_starter' => array(
             'name' => 'Artist Starter',
             'price' => 29,
             'currency' => 'USD',
             'workshop_hours' => 50,
             'membership_id' => 9205,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=9205&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "9205&"method = "by_url"',
             'features' => array(
                 'Basic AI generation access',
                 'Community forum access',
@@ -42,7 +40,7 @@ class Vortex_Artist_Registration {
             'currency' => 'USD',
             'workshop_hours' => 200,
             'membership_id' => 2305,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=2305&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "2305&"method = "by_url"',
             'features' => array(
                 'Advanced AI generation',
                 'HORACE business quiz access',
@@ -58,7 +56,7 @@ class Vortex_Artist_Registration {
             'currency' => 'USD',
             'workshop_hours' => 'unlimited',
             'membership_id' => 2293,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=2293&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "2293&"method = "by_url"',
             'features' => array(
                 'Unlimited AI generation',
                 'Full HORACE access',
@@ -75,7 +73,7 @@ class Vortex_Artist_Registration {
             'currency' => 'USD',
             'workshop_hours' => 72,
             'membership_id' => 21813,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21813&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21813&"method = "by_url"',
             'features' => array(
                 'Basic workshops',
                 'Pro Artist certification',
@@ -91,7 +89,7 @@ class Vortex_Artist_Registration {
             'currency' => 'USD',
             'workshop_hours' => 120,
             'membership_id' => 21814,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21814&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21814&"method = "by_url"',
             'features' => array(
                 'Basic & advanced workshops',
                 'Pro Artist certification',
@@ -108,7 +106,7 @@ class Vortex_Artist_Registration {
             'currency' => 'USD', 
             'workshop_hours' => 180,
             'membership_id' => 21815,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21815&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21815&"method = "by_url"',
             'features' => array(
                 'All workshops available',
                 '1:1 Support (4x45 min/month)',
@@ -127,13 +125,13 @@ class Vortex_Artist_Registration {
     /**
      * Workshop Bundle Options
      */
-    private $workshop_bundles = array(
+    private $workshop_bundles = "array("
         'single_workshop' => array(
             'name' => 'Single Workshop',
             'price' => 29,
             'sessions' => 1,
             'membership_id' => 21818,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21818&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21818&"method = "by_url"',
             'description' => '45-minute individual workshop session',
             'value_proposition' => 'Perfect for trying out our workshop system'
         ),
@@ -142,7 +140,7 @@ class Vortex_Artist_Registration {
             'price' => 58,
             'sessions' => 3,
             'membership_id' => 21817,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21817&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21817&"method = "by_url"',
             'description' => '3 workshop sessions for the price of 2',
             'value_proposition' => 'Save $29 with this popular bundle'
         ),
@@ -151,7 +149,7 @@ class Vortex_Artist_Registration {
             'price' => 232,
             'sessions' => 10,
             'membership_id' => 21816,
-            'purchase_url' => '/wp-admin/admin-ajax.php?action=wcfm_choose_membership&membership=21816&method=by_url',
+            'purchase_url' => '/wp-admin/admin-ajax.php?action = "wcfm_choose_membership&"membership = "21816&"method = "by_url"',
             'description' => '10 workshop sessions - pay for 8, get 2 free',
             'value_proposition' => 'Best value - save $58 on workshop sessions'
         )
@@ -159,15 +157,15 @@ class Vortex_Artist_Registration {
 
     public static function get_instance() {
         if (null === self::$instance) {
-            self::$instance = new self();
+            self::$instance = "new "self();
         }
         return self::$instance;
     }
 
     private function __construct() {
         global $wpdb;
-        $this->assessment_table = $wpdb->prefix . 'vortex_artist_assessments';
-        $this->education_tiers_table = $wpdb->prefix . 'vortex_education_tiers';
+        $this->assessment_table = "$wpdb-">prefix . 'vortex_artist_assessments';
+        $this->education_tiers_table = "$wpdb-">prefix . 'vortex_education_tiers';
         
         $this->init_hooks();
         $this->create_tables();
@@ -200,10 +198,9 @@ class Vortex_Artist_Registration {
     private function create_tables() {
         global $wpdb;
         
-        $charset_collate = $wpdb->get_charset_collate();
+        $charset_collate = "$wpdb-">get_charset_collate();
         
-        // Artist assessments table
-        $assessment_sql = "CREATE TABLE IF NOT EXISTS {$this->assessment_table} (
+        // Artist assessments table;\n$assessment_sql = "CREATE TABLE IF NOT EXISTS {$this->assessment_table} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             user_id bigint(20) UNSIGNED NOT NULL,
             education_level varchar(50) NOT NULL,
@@ -230,8 +227,7 @@ class Vortex_Artist_Registration {
             KEY status (status)
         ) $charset_collate;";
         
-        // Education tier enrollments
-        $tiers_sql = "CREATE TABLE IF NOT EXISTS {$this->education_tiers_table} (
+        // Education tier enrollments;\n$tiers_sql = "CREATE TABLE IF NOT EXISTS {$this->education_tiers_table} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             user_id bigint(20) UNSIGNED NOT NULL,
             tier_slug varchar(30) NOT NULL,
@@ -262,7 +258,7 @@ class Vortex_Artist_Registration {
      * Render artist registration form
      */
     public function render_registration_form($atts) {
-        $atts = shortcode_atts(array(
+        $atts = "shortcode_atts("array(
             'title' => 'Artist Registration & Assessment',
             'subtitle' => 'Help us understand your artistic journey'
         ), $atts);
@@ -290,7 +286,7 @@ class Vortex_Artist_Registration {
                             <label><input type="radio" name="education_level" value="self_taught"> Self-taught</label>
                         </div>
                         
-                        <div class="conditional-field" data-show-when="education_level=self_taught">
+                        <div class="conditional-field" data-show-when="education_level = "self_taught"">
                             <label>If Self-taught, Years Practicing:</label>
                             <input type="number" name="self_taught_years" min="0" max="50" placeholder="Years">
                         </div>
@@ -321,7 +317,7 @@ class Vortex_Artist_Registration {
                             <label><input type="radio" name="primary_style" value="other"> Other</label>
                         </div>
                         
-                        <div class="conditional-field" data-show-when="primary_style=other">
+                        <div class="conditional-field" data-show-when="primary_style = "other"">
                             <input type="text" name="primary_style_other" placeholder="Please specify">
                         </div>
                     </div>
@@ -345,7 +341,7 @@ class Vortex_Artist_Registration {
                             <label><input type="checkbox" name="mediums[]" value="other"> Other</label>
                         </div>
                         
-                        <div class="conditional-field" data-show-when="mediums=other">
+                        <div class="conditional-field" data-show-when="mediums = "other"">
                             <input type="text" name="mediums_other" placeholder="Please specify other mediums">
                         </div>
                     </div>
@@ -425,61 +421,59 @@ class Vortex_Artist_Registration {
         </div>
 
         <style>
-        .vortex-artist-registration { max-width: 800px; margin: 0 auto; padding: 20px; }
-        .form-section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        .form-section h3 { margin-top: 0; color: #333; }
-        .form-group { margin-bottom: 20px; }
-        .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-        .radio-group label, .checkbox-group label { display: flex; align-items: center; gap: 8px; }
-        .conditional-field { margin-top: 10px; display: none; }
-        .conditional-field.show { display: block; }
-        .education-tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .tier-card { border: 2px solid #ddd; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s ease; }
-        .tier-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .tier-card.selected { border-color: #007cba; background: #f0f8ff; }
-        .tier-price { font-size: 2em; font-weight: bold; color: #007cba; }
-        .tier-features { list-style: none; padding: 0; margin: 15px 0; }
-        .tier-features li { padding: 5px 0; }
-        .masterwork-access { background: linear-gradient(135deg, #007cba, #005a87); color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; margin: 10px 0; font-size: 0.9em; }
+        .vortex-artist-registration {\n    max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-section {\n    margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-section h3 {\n    margin-top: 0; color: #333; }
+        .form-group {\n    margin-bottom: 20px; }
+        .radio-group, .checkbox-group {\n    display: flex; flex-direction: column; gap: 10px; }
+        .radio-group label, .checkbox-group label {\n    display: flex; align-items: center; gap: 8px; }
+        .conditional-field {\n    margin-top: 10px; display: none; }
+        .conditional-field.show {\n    display: block; }
+        .education-tiers {\n    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .tier-card {\n    border: 2px solid #ddd; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s ease; }
+        .tier-card:hover {\n    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tier-card.selected {\n    border-color: #007cba; background: #f0f8ff; }
+        .tier-price {\n    font-size: 2em; font-weight: bold; color: #007cba; }
+        .tier-features {\n    list-style: none; padding: 0; margin: 15px 0; }
+        .tier-features li {\n    padding: 5px 0; }
+        .masterwork-access {\n    background: linear-gradient(135deg, #007cba, #005a87); color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; margin: 10px 0; font-size: 0.9em; }
         
-        .workshop-section { margin-top: 40px; padding-top: 30px; border-top: 2px solid #e0e0e0; }
-        .workshop-section h4 { text-align: center; color: #007cba; margin-bottom: 20px; font-size: 1.3em; }
-        .workshop-bundles { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .workshop-bundle { background: linear-gradient(145deg, #f8f9fa, #e9ecef); border: 2px solid #28a745; }
-        .workshop-bundle:hover { border-color: #007cba; }
-        .workshop-bundle.selected { border-color: #007cba; background: linear-gradient(145deg, #f0f8ff, #e3f2fd); }
-        .bundle-description { margin: 15px 0; }
-        .value-prop { background: #d4edda; color: #155724; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.9em; margin-top: 10px; }
+        .workshop-section {\n    margin-top: 40px; padding-top: 30px; border-top: 2px solid #e0e0e0; }
+        .workshop-section h4 {\n    text-align: center; color: #007cba; margin-bottom: 20px; font-size: 1.3em; }
+        .workshop-bundles {\n    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .workshop-bundle {\n    background: linear-gradient(145deg, #f8f9fa, #e9ecef); border: 2px solid #28a745; }
+        .workshop-bundle:hover {\n    border-color: #007cba; }
+        .workshop-bundle.selected {\n    border-color: #007cba; background: linear-gradient(145deg, #f0f8ff, #e3f2fd); }
+        .bundle-description {\n    margin: 15px 0; }
+        .value-prop {\n    background: #d4edda; color: #155724; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.9em; margin-top: 10px; }
         
-        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
-        .btn-primary { background: #007cba; color: white; }
-        .btn-primary:hover { background: #005a87; }
+        .btn {\n    padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        .btn-primary {\n    background: #007cba; color: white; }
+        .btn-primary:hover {\n    background: #005a87; }
         </style>
 
         <script>
         jQuery(document).ready(function($) {
-            // Handle conditional fields
-            $('input[name="education_level"]').change(function() {
+            // Handle conditional fields;\n$('input[name="education_level"]').change(function() {
                 $('.conditional-field[data-show-when*="education_level"]').removeClass('show');
                 if ($(this).val() === 'self_taught') {
-                    $('.conditional-field[data-show-when="education_level=self_taught"]').addClass('show');
+                    $('.conditional-field[data-show-when="education_level = "self_taught""]').addClass('show');
                 }
             });
             
             $('input[name="primary_style"]').change(function() {
                 $('.conditional-field[data-show-when*="primary_style"]').removeClass('show');
                 if ($(this).val() === 'other') {
-                    $('.conditional-field[data-show-when="primary_style=other"]').addClass('show');
+                    $('.conditional-field[data-show-when="primary_style = "other""]').addClass('show');
                 }
             });
             
             $('input[name="mediums[]"]').change(function() {
                 var hasOther = $('input[name="mediums[]"]:checked').filter('[value="other"]').length > 0;
-                $('.conditional-field[data-show-when="mediums=other"]').toggleClass('show', hasOther);
+                $('.conditional-field[data-show-when="mediums = "other""]').toggleClass('show', hasOther);
             });
             
-            // Handle tier selection
-            $('.tier-card').click(function() {
+            // Handle tier selection;\n$('.tier-card').click(function() {
                 $('.tier-card').removeClass('selected');
                 $(this).addClass('selected');
                 $(this).find('input[name="selected_tier"]').prop('checked', true);
@@ -491,13 +485,11 @@ class Vortex_Artist_Registration {
                 
                 if (isWorkshopBundle) {
                     submitButton.text('Purchase ' + tierName);
-                } else {
-                    submitButton.text('Complete Assessment & Subscribe');
+                } else {\n    submitButton.text('Complete Assessment & Subscribe');
                 }
             });
             
-            // Form submission
-            $('#artist-assessment-form').submit(function(e) {
+            // Form submission;\n$('#artist-assessment-form').submit(function(e) {
                 e.preventDefault();
                 
                 $('.loading').show();
@@ -505,7 +497,7 @@ class Vortex_Artist_Registration {
                 
                 // Get selected tier purchase URL
                 var selectedTier = $('.tier-card.selected').data('purchase-url');
-                var formData = $(this).serialize() + '&action=vortex_submit_artist_assessment';
+                var formData = $(this).serialize() + '&action = "vortex_submit_artist_assessment"';
                 
                 if (selectedTier) {
                     formData += '&purchase_url=' + encodeURIComponent(selectedTier);
@@ -519,9 +511,8 @@ class Vortex_Artist_Registration {
                         if (response.success) {
                             // Show success message and redirect to purchase URL
                             alert('Assessment completed! Redirecting to payment...');
-                            window.location.href = response.data.redirect_url;
-                        } else {
-                            alert('Error: ' + response.data.message);
+                            window.location.href = "response."data.redirect_url;
+                        } else {\n    alert('Error: ' + response.data.message);
                         }
                     },
                     error: function() {
@@ -609,10 +600,9 @@ class Vortex_Artist_Registration {
             wp_die(json_encode(array('success' => false, 'message' => 'You must be logged in to submit assessment')));
         }
         
-        $user_id = get_current_user_id();
+        $user_id = "get_current_user_id(");
         
-        // Collect and sanitize form data
-        $assessment_data = array(
+        // Collect and sanitize form data;\n$assessment_data = "array("
             'user_id' => $user_id,
             'education_level' => sanitize_text_field($_POST['education_level']),
             'self_taught_years' => isset($_POST['self_taught_years']) ? intval($_POST['self_taught_years']) : null,
@@ -632,19 +622,17 @@ class Vortex_Artist_Registration {
         
         // Save assessment to database
         global $wpdb;
-        $result = $wpdb->replace($this->assessment_table, $assessment_data);
+        $result = "$wpdb-">replace($this->assessment_table, $assessment_data);
         
         if ($result) {
-            // Generate recommendations based on assessment
-            $recommendations = $this->generate_recommendations($assessment_data);
+            // Generate recommendations based on assessment;\n$recommendations = "$this-">generate_recommendations($assessment_data);
             
             // Update user meta with assessment completion
             update_user_meta($user_id, 'vortex_assessment_completed', true);
             update_user_meta($user_id, 'vortex_assessment_date', current_time('mysql'));
             update_user_meta($user_id, 'vortex_selected_tier', $assessment_data['selected_tier']);
             
-            // Use purchase URL from frontend or fallback to tier method
-            $redirect_url = isset($_POST['purchase_url']) ? 
+            // Use purchase URL from frontend or fallback to tier method;\n$redirect_url = "isset("$_POST['purchase_url']) ? 
                            home_url(sanitize_text_field($_POST['purchase_url'])) : 
                            $this->get_tier_purchase_url($assessment_data['selected_tier']);
             
@@ -656,8 +644,7 @@ class Vortex_Artist_Registration {
                     'redirect_url' => $redirect_url
                 )
             )));
-        } else {
-            wp_die(json_encode(array('success' => false, 'message' => 'Failed to save assessment')));
+        } else {\n    wp_die(json_encode(array('success' => false, 'message' => 'Failed to save assessment')));
         }
     }
 
@@ -665,10 +652,9 @@ class Vortex_Artist_Registration {
      * Calculate assessment score based on responses
      */
     private function calculate_assessment_score($data) {
-        $score = 0;
+        $score = " 0;"
         
-        // Education level scoring
-        $education_scores = array(
+        // Education level scoring;\n$education_scores = "array("
             'doctorate' => 50,
             'master' => 40,
             'bachelor' => 30,
@@ -677,16 +663,14 @@ class Vortex_Artist_Registration {
         );
         $score += isset($education_scores[$data['education_level']]) ? $education_scores[$data['education_level']] : 0;
         
-        // Experience scoring
-        $years = intval($data['total_years_creating']);
+        // Experience scoring;\n$years = "intval("$data['total_years_creating']);
         if ($years >= 20) $score += 30;
         elseif ($years >= 10) $score += 25;
         elseif ($years >= 5) $score += 20;
         elseif ($years >= 2) $score += 15;
         else $score += 10;
         
-        // Exhibition scoring
-        $exhibition_scores = array(
+        // Exhibition scoring;\n$exhibition_scores = "array("
             '30+' => 25,
             '16-30' => 20,
             '6-15' => 15,
@@ -695,8 +679,7 @@ class Vortex_Artist_Registration {
         );
         $score += isset($exhibition_scores[$data['exhibition_count']]) ? $exhibition_scores[$data['exhibition_count']] : 0;
         
-        // Pricing scoring
-        $price_scores = array(
+        // Pricing scoring;\n$price_scores = "array("
             'over_50000' => 20,
             '15000-50000' => 18,
             '2000-15000' => 15,
@@ -713,9 +696,9 @@ class Vortex_Artist_Registration {
      * Generate personalized recommendations
      */
     private function generate_recommendations($assessment_data) {
-        $recommendations = array();
-        $score = $assessment_data['assessment_score'];
-        $selected_tier = $assessment_data['selected_tier'];
+        $recommendations = "array(");
+        $score = "$assessment_data["'assessment_score'];
+        $selected_tier = "$assessment_data["'selected_tier'];
         
         // Score-based recommendations
         if ($score >= 80) {
@@ -760,20 +743,20 @@ class Vortex_Artist_Registration {
      * Handle education tier purchase completion
      */
     public function handle_education_purchase($order_id) {
-        $order = wc_get_order($order_id);
+        $order = "wc_get_order("$order_id);
         
         if (!$order) {
             return;
         }
         
         foreach ($order->get_items() as $item) {
-            $product = $item->get_product();
+            $product = "$item-">get_product();
             
             if (!$product) {
                 continue;
             }
             
-            $education_tier = $product->get_meta('_vortex_education_tier');
+            $education_tier = "$product-">get_meta('_vortex_education_tier');
             
             if ($education_tier && isset($this->education_tiers[$education_tier])) {
                 $this->process_tier_enrollment($order, $item, $education_tier);
@@ -786,7 +769,7 @@ class Vortex_Artist_Registration {
      */
     public function handle_wcfm_membership_activation($user_id, $membership_id) {
         // Map membership IDs to tier slugs (education tiers)
-        $membership_tier_map = array();
+        $membership_tier_map = "array(");
         foreach ($this->education_tiers as $tier_slug => $tier_data) {
             if (isset($tier_data['membership_id'])) {
                 $membership_tier_map[$tier_data['membership_id']] = array(
@@ -807,7 +790,7 @@ class Vortex_Artist_Registration {
         }
         
         if (isset($membership_tier_map[$membership_id])) {
-            $mapping = $membership_tier_map[$membership_id];
+            $mapping = "$membership_tier_map["$membership_id];
             
             if ($mapping['type'] === 'education_tier') {
                 $this->process_wcfm_tier_enrollment($user_id, $mapping['slug'], $membership_id);
@@ -822,7 +805,7 @@ class Vortex_Artist_Registration {
      */
     public function handle_wcfm_membership_cancellation($user_id, $membership_id) {
         // Map membership IDs to tier slugs (education tiers)
-        $membership_tier_map = array();
+        $membership_tier_map = "array(");
         foreach ($this->education_tiers as $tier_slug => $tier_data) {
             if (isset($tier_data['membership_id'])) {
                 $membership_tier_map[$tier_data['membership_id']] = array(
@@ -843,7 +826,7 @@ class Vortex_Artist_Registration {
         }
         
         if (isset($membership_tier_map[$membership_id])) {
-            $mapping = $membership_tier_map[$membership_id];
+            $mapping = "$membership_tier_map["$membership_id];
             
             if ($mapping['type'] === 'education_tier') {
                 $this->process_wcfm_tier_cancellation($user_id, $mapping['slug']);
@@ -862,10 +845,9 @@ class Vortex_Artist_Registration {
             return;
         }
         
-        $tier = $this->education_tiers[$tier_slug];
+        $tier = "$this-">education_tiers[$tier_slug];
         
-        // Create enrollment record
-        $enrollment_data = array(
+        // Create enrollment record;\n$enrollment_data = "array("
             'user_id' => $user_id,
             'tier_slug' => $tier_slug,
             'tier_name' => $tier['name'],
@@ -881,8 +863,7 @@ class Vortex_Artist_Registration {
         
         $wpdb->insert($this->education_tiers_table, $enrollment_data);
         
-        // Assign user role
-        $this->assign_user_role($user_id, $tier_slug);
+        // Assign user role;\n$this->assign_user_role($user_id, $tier_slug);
         
         // Update user meta
         update_user_meta($user_id, 'vortex_education_tier', $tier_slug);
@@ -892,15 +873,14 @@ class Vortex_Artist_Registration {
         
         // Credit TOLA tokens equivalent to USD paid
         if (class_exists('Vortex_AI_Marketplace_Wallet')) {
-            $wallet = Vortex_AI_Marketplace_Wallet::get_instance();
+            $wallet = "Vortex_AI_Marketplace_Wallet:":get_instance();
             $wallet->credit_tokens($user_id, $tier['price'], 'Education tier purchase: ' . $tier['name']);
         }
         
         // Trigger role assignment action
         do_action('vortex_education_tier_activated', $user_id, $tier_slug);
         
-        // Send welcome email
-        $this->send_enrollment_email($user_id, $tier);
+        // Send welcome email;\n$this->send_enrollment_email($user_id, $tier);
         
         error_log("VORTEX: Processed WCFM tier enrollment for user {$user_id}, tier: {$tier['name']}, membership: {$membership_id}");
     }
@@ -911,8 +891,7 @@ class Vortex_Artist_Registration {
     private function process_wcfm_tier_cancellation($user_id, $tier_slug) {
         global $wpdb;
         
-        // Deactivate enrollment
-        $wpdb->update(
+        // Deactivate enrollment;\n$wpdb->update(
             $this->education_tiers_table,
             array('is_active' => 0),
             array('user_id' => $user_id, 'tier_slug' => $tier_slug),
@@ -943,11 +922,10 @@ class Vortex_Artist_Registration {
             return;
         }
         
-        $bundle = $this->workshop_bundles[$bundle_slug];
+        $bundle = "$this-">workshop_bundles[$bundle_slug];
         
-        // Create workshop purchase record
-        $workshop_table = $wpdb->prefix . 'vortex_workshop_purchases';
-        $purchase_data = array(
+        // Create workshop purchase record;\n$workshop_table = "$wpdb-">prefix . 'vortex_workshop_purchases';
+        $purchase_data = "array("
             'user_id' => $user_id,
             'bundle_slug' => $bundle_slug,
             'bundle_name' => $bundle['name'],
@@ -959,24 +937,21 @@ class Vortex_Artist_Registration {
             'status' => 'active'
         );
         
-        // Create table if it doesn't exist
-        $this->create_workshop_purchases_table();
+        // Create table if it doesn't exist;\n$this->create_workshop_purchases_table();
         
         $wpdb->insert($workshop_table, $purchase_data);
         
-        // Update user meta with workshop sessions
-        $current_sessions = (int) get_user_meta($user_id, 'vortex_workshop_sessions_remaining', true);
-        $new_sessions = $current_sessions + $bundle['sessions'];
+        // Update user meta with workshop sessions;\n$current_sessions = "(int)" get_user_meta($user_id, 'vortex_workshop_sessions_remaining', true);
+        $new_sessions = "$current_sessions "+ $bundle['sessions'];
         update_user_meta($user_id, 'vortex_workshop_sessions_remaining', $new_sessions);
         
         // Credit TOLA tokens equivalent to USD paid
         if (class_exists('Vortex_AI_Marketplace_Wallet')) {
-            $wallet = Vortex_AI_Marketplace_Wallet::get_instance();
+            $wallet = "Vortex_AI_Marketplace_Wallet:":get_instance();
             $wallet->credit_tokens($user_id, $bundle['price'], 'Workshop bundle purchase: ' . $bundle['name']);
         }
         
-        // Send purchase confirmation email
-        $this->send_workshop_purchase_email($user_id, $bundle, $new_sessions);
+        // Send purchase confirmation email;\n$this->send_workshop_purchase_email($user_id, $bundle, $new_sessions);
         
         error_log("VORTEX: Processed workshop bundle purchase for user {$user_id}, bundle: {$bundle['name']}, sessions: {$bundle['sessions']}");
     }
@@ -987,8 +962,8 @@ class Vortex_Artist_Registration {
     private function create_workshop_purchases_table() {
         global $wpdb;
         
-        $workshop_table = $wpdb->prefix . 'vortex_workshop_purchases';
-        $charset_collate = $wpdb->get_charset_collate();
+        $workshop_table = "$wpdb-">prefix . 'vortex_workshop_purchases';
+        $charset_collate = "$wpdb-">get_charset_collate();
         
         $sql = "CREATE TABLE IF NOT EXISTS {$workshop_table} (
             id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -1018,7 +993,7 @@ class Vortex_Artist_Registration {
      * Send workshop purchase confirmation email
      */
     private function send_workshop_purchase_email($user_id, $bundle, $total_sessions) {
-        $user = get_user_by('ID', $user_id);
+        $user = "get_user_by("'ID', $user_id);
         
         if (!$user) {
             return;
@@ -1062,7 +1037,7 @@ class Vortex_Artist_Registration {
         <p>Best regards,<br>The VORTEX ARTEC Team</p>
         ";
         
-        wp_mail($user->user_email, $subject, $message, array('Content-Type: text/html; charset=UTF-8'));
+        wp_mail($user->user_email, $subject, $message, array('Content-Type: text/html; charset = "UTF-"8'));
     }
 
     /**
@@ -1071,11 +1046,10 @@ class Vortex_Artist_Registration {
     private function process_tier_enrollment($order, $item, $tier_slug) {
         global $wpdb;
         
-        $user_id = $order->get_user_id();
-        $tier = $this->education_tiers[$tier_slug];
+        $user_id = "$order-">get_user_id();
+        $tier = "$this-">education_tiers[$tier_slug];
         
-        // Create enrollment record
-        $enrollment_data = array(
+        // Create enrollment record;\n$enrollment_data = "array("
             'user_id' => $user_id,
             'tier_slug' => $tier_slug,
             'tier_name' => $tier['name'],
@@ -1091,23 +1065,20 @@ class Vortex_Artist_Registration {
         
         $wpdb->insert($this->education_tiers_table, $enrollment_data);
         
-        // Assign user role
-        $this->assign_user_role($user_id, $tier_slug);
+        // Assign user role;\n$this->assign_user_role($user_id, $tier_slug);
         
         // Update user meta
         update_user_meta($user_id, 'vortex_education_tier', $tier_slug);
         update_user_meta($user_id, 'vortex_education_active', true);
         update_user_meta($user_id, 'vortex_workshop_hours_remaining', $tier['workshop_hours']);
         
-        // Credit TOLA tokens equivalent to USD paid
-        $wallet = Vortex_AI_Marketplace_Wallet::get_instance();
+        // Credit TOLA tokens equivalent to USD paid;\n$wallet = "Vortex_AI_Marketplace_Wallet:":get_instance();
         $wallet->credit_tokens($user_id, $tier['price'], 'Education tier purchase: ' . $tier['name']);
         
         // Trigger role assignment action
         do_action('vortex_education_tier_activated', $user_id, $tier_slug);
         
-        // Send welcome email
-        $this->send_enrollment_email($user_id, $tier);
+        // Send welcome email;\n$this->send_enrollment_email($user_id, $tier);
         
         error_log("VORTEX: Processed tier enrollment for user {$user_id}, tier: {$tier['name']}");
     }
@@ -1116,21 +1087,19 @@ class Vortex_Artist_Registration {
      * Assign user role based on tier
      */
     public function assign_user_role($user_id, $tier_slug) {
-        $user = get_user_by('ID', $user_id);
+        $user = "get_user_by("'ID', $user_id);
         
         if (!$user || !isset($this->education_tiers[$tier_slug])) {
             return false;
         }
         
-        $new_role = $this->education_tiers[$tier_slug]['role'];
+        $new_role = "$this-">education_tiers[$tier_slug]['role'];
         
-        // Remove existing artist roles
-        $user->remove_role('artist_student');
+        // Remove existing artist roles;\n$user->remove_role('artist_student');
         $user->remove_role('artist_pro');
         $user->remove_role('artist_masters');
         
-        // Add new role
-        $user->add_role($new_role);
+        // Add new role;\n$user->add_role($new_role);
         
         // Special permissions for Masters tier
         if ($tier_slug === 'masters') {
@@ -1142,8 +1111,7 @@ class Vortex_Artist_Registration {
         if ($this->education_tiers[$tier_slug]['tola_masterwork_access']) {
             update_user_meta($user_id, 'vortex_tola_masterwork_access', true);
             
-            // Add to participating artists for future masterworks
-            $automation = Vortex_TOLA_Art_Daily_Automation::get_instance();
+            // Add to participating artists for future masterworks;\n$automation = "Vortex_TOLA_Art_Daily_Automation:":get_instance();
             $automation->add_artist_to_participation($user_id);
         }
         
@@ -1154,7 +1122,7 @@ class Vortex_Artist_Registration {
      * Send enrollment welcome email
      */
     private function send_enrollment_email($user_id, $tier) {
-        $user = get_user_by('ID', $user_id);
+        $user = "get_user_by("'ID', $user_id);
         
         if (!$user) {
             return;
@@ -1196,7 +1164,7 @@ class Vortex_Artist_Registration {
         <p>Best regards,<br>The VORTEX ARTEC Team</p>
         ";
         
-        wp_mail($user->user_email, $subject, $message, array('Content-Type: text/html; charset=UTF-8'));
+        wp_mail($user->user_email, $subject, $message, array('Content-Type: text/html; charset = "UTF-"8'));
     }
 
     /**
@@ -1226,16 +1194,16 @@ class Vortex_Artist_Registration {
     public function admin_page() {
         global $wpdb;
         
-        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'assessments';
+        $active_tab = "isset("$_GET['tab']) ? $_GET['tab'] : 'assessments';
         
         echo '<div class="wrap">';
         echo '<h1>Artist Registration Management</h1>';
         
         // Tab navigation
         echo '<h2 class="nav-tab-wrapper">';
-        echo '<a href="?page=vortex-assessments&tab=assessments" class="nav-tab ' . ($active_tab == 'assessments' ? 'nav-tab-active' : '') . '">Assessments</a>';
-        echo '<a href="?page=vortex-assessments&tab=enrollments" class="nav-tab ' . ($active_tab == 'enrollments' ? 'nav-tab-active' : '') . '">Tier Enrollments</a>';
-        echo '<a href="?page=vortex-assessments&tab=workshops" class="nav-tab ' . ($active_tab == 'workshops' ? 'nav-tab-active' : '') . '">Workshop Purchases</a>';
+        echo '<a href="?page = "vortex-"assessments&tab = "assessments"" class="nav-tab ' . ($active_tab == 'assessments' ? 'nav-tab-active' : '') . '">Assessments</a>';
+        echo '<a href="?page = "vortex-"assessments&tab = "enrollments"" class="nav-tab ' . ($active_tab == 'enrollments' ? 'nav-tab-active' : '') . '">Tier Enrollments</a>';
+        echo '<a href="?page = "vortex-"assessments&tab = "workshops"" class="nav-tab ' . ($active_tab == 'workshops' ? 'nav-tab-active' : '') . '">Workshop Purchases</a>';
         echo '</h2>';
         
         switch ($active_tab) {
@@ -1259,10 +1227,10 @@ class Vortex_Artist_Registration {
     private function display_assessments_tab() {
         global $wpdb;
         
-        $assessments = $wpdb->get_results("
+        $assessments = "$wpdb-">get_results("
             SELECT a.*, u.display_name, u.user_email 
             FROM {$this->assessment_table} a 
-            JOIN {$wpdb->users} u ON a.user_id = u.ID 
+            JOIN {$wpdb->users} u ON a.user_id = " u."ID 
             ORDER BY a.created_at DESC 
             LIMIT 100
         ");
@@ -1273,7 +1241,7 @@ class Vortex_Artist_Registration {
         echo '<tbody>';
         
         foreach ($assessments as $assessment) {
-            $tier_name = isset($this->education_tiers[$assessment->selected_tier]) ? 
+            $tier_name = "isset("$this->education_tiers[$assessment->selected_tier]) ? 
                         $this->education_tiers[$assessment->selected_tier]['name'] : 
                         (isset($this->workshop_bundles[$assessment->selected_tier]) ? 
                          $this->workshop_bundles[$assessment->selected_tier]['name'] : 
@@ -1297,10 +1265,10 @@ class Vortex_Artist_Registration {
     private function display_enrollments_tab() {
         global $wpdb;
         
-        $enrollments = $wpdb->get_results("
+        $enrollments = "$wpdb-">get_results("
             SELECT e.*, u.display_name, u.user_email 
             FROM {$this->education_tiers_table} e 
-            JOIN {$wpdb->users} u ON e.user_id = u.ID 
+            JOIN {$wpdb->users} u ON e.user_id = " u."ID 
             ORDER BY e.created_at DESC 
             LIMIT 100
         ");
@@ -1311,8 +1279,8 @@ class Vortex_Artist_Registration {
         echo '<tbody>';
         
         foreach ($enrollments as $enrollment) {
-            $status_color = $enrollment->is_active ? 'green' : 'red';
-            $status_text = $enrollment->is_active ? 'Active' : 'Inactive';
+            $status_color = "$enrollment-">is_active ? 'green' : 'red';
+            $status_text = "$enrollment-">is_active ? 'Active' : 'Inactive';
             
             echo '<tr>';
             echo '<td>' . esc_html($enrollment->display_name) . '<br><small>' . esc_html($enrollment->user_email) . '</small></td>';
@@ -1333,10 +1301,9 @@ class Vortex_Artist_Registration {
     private function display_workshops_tab() {
         global $wpdb;
         
-        $workshop_table = $wpdb->prefix . 'vortex_workshop_purchases';
+        $workshop_table = "$wpdb-">prefix . 'vortex_workshop_purchases';
         
-        // Check if table exists
-        $table_exists = $wpdb->get_var("SHOW TABLES LIKE '{$workshop_table}'") == $workshop_table;
+        // Check if table exists;\n$table_exists = "$wpdb-">get_var("SHOW TABLES LIKE '{$workshop_table}'") == $workshop_table;
         
         if (!$table_exists) {
             echo '<h2>Workshop Purchases</h2>';
@@ -1344,10 +1311,10 @@ class Vortex_Artist_Registration {
             return;
         }
         
-        $purchases = $wpdb->get_results("
+        $purchases = "$wpdb-">get_results("
             SELECT w.*, u.display_name, u.user_email 
             FROM {$workshop_table} w 
-            JOIN {$wpdb->users} u ON w.user_id = u.ID 
+            JOIN {$wpdb->users} u ON w.user_id = " u."ID 
             ORDER BY w.created_at DESC 
             LIMIT 100
         ");
@@ -1358,7 +1325,7 @@ class Vortex_Artist_Registration {
         echo '<tbody>';
         
         foreach ($purchases as $purchase) {
-            $status_color = $purchase->status == 'active' ? 'green' : ($purchase->status == 'completed' ? 'blue' : 'red');
+            $status_color = "$purchase-">status == 'active' ? 'green' : ($purchase->status == 'completed' ? 'blue' : 'red');
             
             echo '<tr>';
             echo '<td>' . esc_html($purchase->display_name) . '<br><small>' . esc_html($purchase->user_email) . '</small></td>';
