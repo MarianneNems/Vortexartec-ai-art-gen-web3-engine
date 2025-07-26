@@ -1,0 +1,126 @@
+{
+    "fix_summary": {
+        "timestamp": "2025-07-26 15:24:41",
+        "total_errors_found": 4,
+        "total_fixes_applied": 4,
+        "files_checked": 3,
+        "files_fixed": 4,
+        "fix_success_rate": 1,
+        "improvement_score": 1
+    },
+    "detailed_results": {
+        "pre_fix_assessment": {
+            "timestamp": "2025-07-26 15:24:31",
+            "php_version": "8.3.23",
+            "plugin_version": "3.0.0",
+            "workflow_files_count": 3,
+            "deprecation_patterns": 13
+        },
+        "validation": {
+            "remaining_errors": [],
+            "fixes_successful": true
+        },
+        "post_fix_assessment": {
+            "timestamp": "2025-07-26 15:24:41",
+            "total_errors_found": 4,
+            "total_fixes_applied": 4,
+            "files_checked": 3,
+            "files_fixed": 4,
+            "fix_success_rate": 1,
+            "improvement_score": 1
+        }
+    },
+    "errors_found": [
+        {
+            "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\audit-and-train.yml",
+            "type": "deprecated_action",
+            "deprecated": "actions\/download-artifact@v3",
+            "current": "actions\/download-artifact@v4",
+            "severity": "high",
+            "description": "Deprecated GitHub Action: actions\/download-artifact@v3",
+            "line_number": 179
+        },
+        {
+            "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\audit-and-train.yml",
+            "type": "deprecated_action",
+            "deprecated": "actions\/github-script@v6",
+            "current": "actions\/github-script@v7",
+            "severity": "high",
+            "description": "Deprecated GitHub Action: actions\/github-script@v6",
+            "line_number": 74
+        },
+        {
+            "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\ci.yml",
+            "type": "deprecated_action",
+            "deprecated": "actions\/download-artifact@v3",
+            "current": "actions\/download-artifact@v4",
+            "severity": "high",
+            "description": "Deprecated GitHub Action: actions\/download-artifact@v3",
+            "line_number": 185
+        },
+        {
+            "type": "missing_caching",
+            "severity": "low",
+            "description": "Missing caching for node_modules",
+            "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\deploy-plugin.yml"
+        }
+    ],
+    "fixes_applied": [
+        {
+            "error": {
+                "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\audit-and-train.yml",
+                "type": "deprecated_action",
+                "deprecated": "actions\/download-artifact@v3",
+                "current": "actions\/download-artifact@v4",
+                "severity": "high",
+                "description": "Deprecated GitHub Action: actions\/download-artifact@v3",
+                "line_number": 179
+            },
+            "fix_applied": true,
+            "timestamp": "2025-07-26 15:24:31"
+        },
+        {
+            "error": {
+                "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\audit-and-train.yml",
+                "type": "deprecated_action",
+                "deprecated": "actions\/github-script@v6",
+                "current": "actions\/github-script@v7",
+                "severity": "high",
+                "description": "Deprecated GitHub Action: actions\/github-script@v6",
+                "line_number": 74
+            },
+            "fix_applied": true,
+            "timestamp": "2025-07-26 15:24:31"
+        },
+        {
+            "error": {
+                "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\ci.yml",
+                "type": "deprecated_action",
+                "deprecated": "actions\/download-artifact@v3",
+                "current": "actions\/download-artifact@v4",
+                "severity": "high",
+                "description": "Deprecated GitHub Action: actions\/download-artifact@v3",
+                "line_number": 185
+            },
+            "fix_applied": true,
+            "timestamp": "2025-07-26 15:24:31"
+        },
+        {
+            "error": {
+                "type": "missing_caching",
+                "severity": "low",
+                "description": "Missing caching for node_modules",
+                "file": "C:\\Users\\mvill\\Documents\\vortex-ai-engine\\vortex-ai-engine\\scripts\/..\/.github\/workflows\\deploy-plugin.yml"
+            },
+            "fix_applied": true,
+            "timestamp": "2025-07-26 15:24:31"
+        }
+    ],
+    "recommendations": [
+        "Enable automatic GitHub Actions monitoring",
+        "Schedule regular GitHub Actions audits",
+        "Enable Dependabot for automatic dependency updates",
+        "Monitor GitHub Security tab for vulnerabilities",
+        "Implement automated testing for all workflows"
+    ]
+}
