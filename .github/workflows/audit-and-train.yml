@@ -43,7 +43,7 @@ jobs:
           php scripts/comprehensive-system-audit.php --full --json > audit-report-$(date +%Y%m%d-%H%M%S).json
           
       - name: Upload audit report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-report-${{ github.run_number }}
           path: ${{ env.VORTEX_PLUGIN_DIR }}/audit-report-*.json
@@ -160,7 +160,7 @@ jobs:
           aws s3 cp s3://${{ secrets.VORTEX_MODEL_STORAGE_BUCKET }}/models/$(cat training_job_id.txt)/model.zip ./trained_model.zip
           
       - name: Upload trained model artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trained-model-${{ github.run_number }}
           path: trained_model.zip

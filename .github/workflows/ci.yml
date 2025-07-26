@@ -61,7 +61,7 @@ jobs:
           WP_TESTS_DIR: /tmp/wordpress-tests-lib
           
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results
@@ -89,7 +89,7 @@ jobs:
           composer audit --format=json > security-audit.json
           
       - name: Upload security audit
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-audit
           path: security-audit.json
@@ -113,7 +113,7 @@ jobs:
           php scripts/comprehensive-system-audit.php --full --json > AUDIT-REPORT.json
           
       - name: Upload audit report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-report
           path: AUDIT-REPORT.md
@@ -141,7 +141,7 @@ jobs:
           php deployment/verify-environment.php
           
       - name: Upload verification results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: env-verification
           path: verification-results.txt
@@ -169,7 +169,7 @@ jobs:
           zip -r vortex-ai-engine.zip . -x "*.git*" "*.github*" "scripts/*" "tests/*" "vendor/*" "composer.*"
           
       - name: Upload plugin package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: vortex-ai-engine
           path: vortex-ai-engine.zip
@@ -283,7 +283,7 @@ jobs:
           echo "Daily health check completed at $(date)" > health-report.txt
           
       - name: Upload health report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: daily-health-report
           path: health-report.txt

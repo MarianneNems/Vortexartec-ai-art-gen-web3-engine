@@ -64,7 +64,7 @@ jobs:
           echo "Recursive Self-Improvement Analysis Complete" >> $RECURSIVE_IMPROVEMENT_LOG
 
       - name: 📤 Upload Recursive Improvement Log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: recursive-improvement-pre-deployment
           path: $RECURSIVE_IMPROVEMENT_LOG
@@ -251,7 +251,7 @@ jobs:
           scp ${{ secrets.SSH_USER }}@${{ secrets.WORDPRESS_HOST }}:/var/www/html/$RECURSIVE_IMPROVEMENT_LOG ./
 
       - name: 📤 Upload Improvement Logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: recursive-improvement-post-deployment
           path: $RECURSIVE_IMPROVEMENT_LOG
@@ -319,7 +319,7 @@ jobs:
           scp ${{ secrets.SSH_USER }}@${{ secrets.WORDPRESS_HOST }}:/var/www/html/$DEPLOYMENT_LOG ./
 
       - name: 📤 Upload Deployment Log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-report
           path: $DEPLOYMENT_LOG
